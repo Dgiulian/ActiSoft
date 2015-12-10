@@ -1,0 +1,341 @@
+<%@page import="bd.Activo"%>
+<%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
+<%@page import="transaccion.TSubrubro"%>
+<%@page import="bd.Subrubro"%>
+<%@page import="utils.TFecha"%>
+<%@page import="bd.Certificado"%>
+<%@page import="bd.Rubro"%>
+
+<%@page import="utils.OptionsCfg.Option"%>
+<%@page import="utils.OptionsCfg"%>
+<%@page import="utils.OptionsCfg"%>
+<%@page import="java.util.List"%>
+<% 
+    Certificado certificado = (Certificado) request.getAttribute("certificado");
+    Activo activo = (Activo) request.getAttribute("activo");
+    boolean nuevo = false;
+    if (certificado==null) {
+        certificado= new Certificado();        
+    }    
+    nuevo = certificado.getId()==0;
+%>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title><%= PathCfg.PAGE_TITLE %></title>
+     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <!-- Bootstrap Core CSS -->
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="bower_components/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+      <%@include file="tpl_navbar.jsp" %>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"><% if(nuevo) {%>Nuevo<%}else {%>Editar<%}%> certificado</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+                 <%
+                    String action = PathCfg.CERTIFICADO_EDIT;
+                    action += "?id_activo=" + activo.getId();
+                    action += (!nuevo)?"&id="+certificado.getId():"";
+                %>
+                <form role="form" method="POST" action="<%=action%>" enctype="multipart/form-data">                 
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                      <div class="panel-heading"> Datos b&aacute;sicos del certificado </div>            
+                      <div class="panel-body">
+                      <div class="row">
+                        <div class="col-lg-6" >
+                            <fieldset>
+                                <input type="hidden" name="id_activo" value="<%= activo.getId()%>">
+                                <% if (!nuevo) {%>
+                                    <input type="hidden" name="id" value="<%= certificado.getId()%>">                                    
+                                <% }%>
+                                
+                                <div class="col-lg-4 " >
+                                    <div class="form-group">
+                                        <label for="fecha">Fecha carga</label>
+                                        <input class="form-control date-picker" name="fecha" id="fecha" size="0"  value="<%=TFecha.formatearFechaBdVista(certificado.getFecha()) %>">
+                                    </div>
+                                </div>   
+                                <div class="col-lg-4 " >
+                                    <div class="form-group">
+                                        <label for="fecha_efectiva">Fecha desde</label>
+                                        <input class="form-control date-picker" name="fecha_efectiva" id="fecha_efectiva" size="0"  value="<%=TFecha.formatearFechaBdVista(certificado.getFecha_efectiva()) %>">
+                                    </div>
+                                </div>     
+                                <div class="col-lg-4 " >
+                                    <div class="form-group">
+                                        <label for="fecha_vigencia">Fecha hasta</label>
+                                        <input class="form-control date-picker" name="fecha_vigencia" id="fecha_vigencia" size="0"  value="<%=TFecha.formatearFechaBdVista(certificado.getFecha_vigencia()) %>">
+                                    </div>
+                                </div>  
+                                 
+                                    
+                                    
+                                <div class="col-lg-3 " >   
+                                    <div class="form-group">
+                                        <label for="codigo">C&oacute;digo</label>
+                                        <input class="form-control" name="codigo" id="codigo" value="<%=certificado.getCodigo() %>">
+                                    </div>
+                                </div>
+                                <!--<div class="col-lg-12 ">-->
+
+                                <div class="col-lg-3 " >   
+                                     <div class="form-group " >
+                                          <label for="precinto">Precinto</label>
+                                          <input class="form-control" name="precinto" id="precinto" value="<%= certificado.getPrecinto() %>">
+                                      </div>                                        
+                                 </div>
+<!--                                     <div class="col-lg-3 " >
+                                         
+                                    </div>-->
+                                <!--</div>-->
+                               <!--<div class="form-group col-lg-12 " >-->
+                                   <div class="col-lg-3 " >
+                                        <div class="form-group " >
+                                             <label for="id_resultado">Resultado</label>
+                                             <select class="form-control" name="id_resultado" id="id_resultado" >
+                                                  <% 
+                                                    for(Option o:OptionsCfg.getEstadoCertificados()){                                                            
+                                                        String selected = (certificado.getId_resultado() == o.getId())?"selected":"";
+                                                    %>
+                                                    <option value="<%= o.getId() %>" <%= selected %> > <%= o.getDescripcion() %></option>
+                                                    <% }%>                                                
+                                             </select>
+                                        </div>
+                                   </div>
+                                    <div class="col-lg-3 " >   
+                                     <div class="form-group " >
+                                         <div class="checkbox">
+                                            <label for="externo">
+                                            <% String checked = (certificado.getExterno(true))?"checked":"";%>
+                                            <input class="" name="externo" id="externo" type="checkbox" value="1" <%= checked %>>
+                                            Externo </label>
+                                          </div>
+                                      </div>
+                                    </div>
+                                  <div class="col-lg-12 " >   
+                                     <div class="form-group " >                                         
+                                            <label for="nombre_proveedor">Nombre proveedor </label>
+                                            <input class="form-control" name="nombre_proveedor" id="nombre_proveedor" type="text" value="<%= certificado.getNombre_proveedor() %>" >
+                                      </div>
+                                    </div>           
+                                      
+                                  
+
+                               <!--</div>-->
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-6 " >
+                            <div class="col-lg-12" >   
+                                    <% String display= "";
+                                        if (!certificado.getArchivo().equals("")) { 
+                                             display = "style='display: none'"; 
+                                    %>
+                                        <div class="form-group">                            
+                                            <a href="<%=PathCfg.DOWNLOAD%>?type=certificado&id=<%=certificado.getId()%>" class="btn btn-success"><span> </span> Archivo asociado: <b><%= certificado.getArchivo() %></b></a>                                         
+                                            <span class="btn btn-default" id="cambiarArchivo" name="cambiarArchivo">Cambiar</span>
+                                        </div>
+                                    <% }  %>
+                                    
+                                    <div class="form-group" <%=display %> id="selectFile">
+                                        <label  for="archivo">Seleccionar archivo</label>
+                                        <input class="form-control" type="file" size="60" id="archivo" name="archivo">                                        
+                                    </div>
+                                
+                                </div>  
+                                
+                                <div class="col-lg-12 " >   
+                                    <div class="form-group " >
+                                         <label for="observaciones">Observaciones</label>
+                                         <textarea class="form-control" name="observaciones" id="observaciones"><%= certificado.getObservaciones()%></textarea>
+                                     </div>                                        
+                                </div>
+                            <div class="col-lg-12" id="interno">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+            <td><label for="desmontaje">Desmontaje</label></td>
+                <td><input type="checkbox" name="desmontaje" id="desmontaje" <% if (certificado.getDesmontaje()!=0) {%> checked <% } %></td>
+            </tr>
+            <tr>
+                <td><label for="limpieza">Limpieza</label></td>
+                <td><input type="checkbox" name="limpieza" id="limpieza" <% if (certificado.getLimpieza()!=0) {%> checked <% } %></td>
+            </tr>
+                    <tr>
+                <td><label for="inspeccion_visual">inspecci&oacute;n visual</label></td>
+                <td><input type="checkbox" name="inspeccion_visual" id="inspeccion_visual" <% if (certificado.getInspeccion_visual()!=0) {%> checked <% } %></td>
+            </tr>
+                    <tr>
+                <td><label for="ultrasonido">Ultrasonido</label></td>
+                <td><input type="checkbox" name="ultrasonido" id="ultrasonido" <% if (certificado.getUltrasonido()!=0) {%> checked <% } %></td>
+            </tr>
+
+            <tr>
+                <td><label for="calibres">Calibres</label></td>
+                <td><input type="checkbox" name="calibres" id="calibres" <% if (certificado.getCalibres()!=0) {%> checked <% } %></td>
+            </tr>
+
+            <tr>
+                <td><label for="particulas_magentizables">Particulas magentizables</label></td>
+                <td><input type="checkbox" name="particulas_magentizables" id="particulas_magentizables" <% if (certificado.getParticulas_magentizables()!=0) {%> checked <% } %></td>
+            </tr>
+            <tr>
+            <td><label for="prueba_presion">Prueba de presi&oacute;n</label></td>
+            <td><input type="checkbox" name="prueba_presion" id="prueba_presion" <% if (certificado.getPrueba_presion()!=0) {%> checked <% } %></label></td>
+        </tr>
+                <tr>
+            <td><label for="pintado">Pintado</label></td>
+            <td><input type="checkbox" name="pintado" id="pintado" <% if (certificado.getPintado()!=0) {%> checked <% } %></label></td>
+        </tr>
+
+                <tr>
+            <td><label for="anillo_segmento">Reemplazo anillo reten de segmento</label></td>
+            <td><input type="checkbox" name="anillo_segmento" id="anillo_segmento" <% if (certificado.getAnillo_segmento()!=0) {%> checked <% } %></label></td>
+        </tr>
+
+
+        <tr>
+            <td><label for="segmentos">Reemplazo segmentos</label></td>
+            <td><input type="checkbox" name="segmentos" id="segmentos" <% if (certificado.getSegmentos()!=0) {%> checked <% } %></label></td>
+        </tr>
+                <tr>
+            <td><label for="tuerca">Reemplazo tuerca</label></td>
+            <td><input type="checkbox" name="tuerca" id="tuerca" <% if (certificado.getTuerca()!=0) {%> checked <% } %></label></td>
+        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                               
+                        </div>
+                        <!-- /.col-lg-6 (nested) -->
+                            <!-- /.row (nested) -->
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Guardar</button>
+                                <a type="reset" class="btn btn-default" href="<%=PathCfg.CERTIFICADO%>?id_activo=<%= activo.getId() %>">Cancelar</a>
+                            </div>
+                        </div>
+                          <!-- ./row -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+                </form>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="js/bootbox.min.js"></script>
+    <script src="bower_components/jquery-mask/jquery.mask.min.js"></script>    
+    
+<!--    <script src="bower_components/jquery-form/jquery.form.min.js"></script>    -->
+
+    <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>    
+    <script src="bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.min.js"></script>        
+    
+    <!-- Custom Theme JavaScript -->        
+    
+    <script src="dist/js/sb-admin-2.js"></script>
+    <script src="js/moment-with-locales.min.js"></script>
+    <script src="js/invesoft.js"></script>
+    
+    <script>       
+        $(document).ready(function(){            
+            
+            $('#btnSubmit').click(submitForm);
+            $('#cambiarArchivo').click(function(){
+                $('#selectFile').slideDown();                
+            });   
+            
+            $('#externo').change(function(){
+               if ($('#externo').prop('checked')){ 
+                   $('#interno').slideUp()
+               }else $('#interno').slideDown()
+            });
+            $('#externo').trigger('change');
+        });
+        function validar(){
+            var $fecha = $('#fecha');
+            var $fecha_vigencia = $('#fecha_vigencia');
+            var $fecha_efectiva = $('#fecha_efectiva');
+            
+            if($fecha===undefined || $fecha.val()==="" || !validarFecha($fecha.val())){
+                bootbox.alert("Debe ingresar la fecha del certificado");
+                $fecha.parent().addClass("has-error");
+                return false;
+            } else $fecha.parent().removeClass("has-error");
+            
+            if($fecha_vigencia===undefined || $fecha_vigencia.val()==="" || !validarFecha($fecha_vigencia.val())){
+                bootbox.alert("Debe ingresar la fecha de vigencia del certificado");
+                $fecha_vigencia.parent().addClass("has-error");
+                return false;
+            } else $fecha_vigencia.parent().removeClass("has-error");
+            
+            if($fecha_efectiva===undefined || $fecha_efectiva.val()==="" || !validarFecha($fecha_efectiva.val())){
+                bootbox.alert("Debe ingresar la fecha efectiva del certificado");
+                $fecha_efectiva.parent().addClass("has-error");
+                return false;
+            } else $fecha_efectiva.parent().removeClass("has-error");
+            
+            return true;
+        }
+                   
+    </script>
+    <!-- Modal -->
+
+   
+<%@include file="tpl_footer.jsp"%>    
+</body>
+
+</html>
