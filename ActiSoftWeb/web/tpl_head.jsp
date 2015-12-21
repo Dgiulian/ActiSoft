@@ -1,10 +1,6 @@
-  <%@page import="utils.PathCfg"%>
-<%
-        Cliente cliente = (Cliente) request.getAttribute("cliente");
-        if(cliente==null) cliente = new Cliente();
-        
-    %>
-    <meta charset="utf-8">
+
+    <%@page import="utils.PathCfg"%>
+<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -15,7 +11,7 @@
 
     
     <title><%= PathCfg.PAGE_TITLE %></title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <!--<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">-->
     <!-- Bootstrap Core CSS -->
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -41,3 +37,16 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     
+<style>
+.navbar-brand>img{
+    display:inline;
+    margin: 0px 5px 5px 5px;   
+        /*margin-right: 5px;*/   
+    padding-top: 2px;
+}
+
+.navbar-brand{
+    padding: 0;
+    line-height: 50px;    
+}
+</style>

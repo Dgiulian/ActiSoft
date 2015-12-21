@@ -12,9 +12,9 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<%= request.getContextPath() %>">
+                <a class="navbar-brand" href="<%= request.getContextPath() %>" style="text-transform: uppercase;">
 <!--                    <img src="images/logo.jpg" width="40" height="40" /> -->
-                     <%= PathCfg.PAGE_TITLE %>  
+                     <img src="images/logo.png" with="45" height="45"><%= PathCfg.PAGE_TITLE %>  
                     </a>
             </div>
             <!-- /.navbar-header -->

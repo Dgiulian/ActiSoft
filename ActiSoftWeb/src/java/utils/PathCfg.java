@@ -14,6 +14,8 @@ public class PathCfg {
     public static final String LOGOUT = "Logout";
     public static final String FORBIDDEN = "Forbidden";
     
+    public static final Integer PARAMETRO_ENTORNO = 6;
+    
     public static final String ACTIVO ="Activo";
     public static final String ACTIVO_LIST = ACTIVO + "List";
     public static final String ACTIVO_EDIT = ACTIVO + "Edit";

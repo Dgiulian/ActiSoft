@@ -40,7 +40,7 @@ public class Activo {
     public Float precio = 0f;
     public Integer id_divisa = 0;
     public Float   stock = 0f;
-    public Integer aplica_stock = 0;
+    public Integer aplica_stock = 1;
     public Integer aplica_compra = 1;
     public Integer bloqueado = 0;
     

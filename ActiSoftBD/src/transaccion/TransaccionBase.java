@@ -141,8 +141,9 @@ public abstract class TransaccionBase<E> {
             Logger.getLogger(this.clase.getCanonicalName()).log(Level.SEVERE, null, ex);
         }
         //System.out.println(this.clase.getPackage().toString() + );
-        String tabla = this.clase.getCanonicalName().replace("bd.", "").toLowerCase();
-        
+        //String tabla = this.clase.getCanonicalName().replace("bd.", "").toLowerCase();
+         String tabla = this.clase.getCanonicalName().replace(this.clase.getPackage().getName()+".", "").toLowerCase();
+      
         
         String query = "select * from " + tabla  + " " + where + " " + order;
         System.out.println(query);

@@ -1,9 +1,14 @@
+<%@page import="transaccion.TParametro"%>
+<%@page import="bd.Parametro"%>
+<%@page import="utils.PathCfg"%>
 <%@page import="java.util.ArrayList"%>
 <%
     ArrayList<String> errores = (ArrayList) request.getAttribute("errores");
-    String ref =  request.getParameter("ref");    
+    String ref =  request.getParameter("ref");
+    Parametro entorno = new TParametro().getById(PathCfg.PARAMETRO_ENTORNO);
+    if (entorno==null) entorno = new Parametro();
 %>
-<%@page import="utils.PathCfg"%>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,7 +21,7 @@
     <meta name="author" content="">
 
     <title><%= PathCfg.PAGE_TITLE %></title>
-     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
     <!-- Bootstrap Core CSS -->
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -45,7 +50,7 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Ingreso al sistema</h3>
+                        <h3 class="panel-title">Ingreso al sistema <% if (entorno.getValor().equalsIgnoreCase("desarrollo"))  { %> <small><%=entorno.getValor()%></small> <% }%> </h3>
                     </div>
                     <div class="panel-body">
                         <% if (errores != null) {%>

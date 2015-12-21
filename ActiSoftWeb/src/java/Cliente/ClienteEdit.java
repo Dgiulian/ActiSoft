@@ -25,21 +25,6 @@ import utils.TFecha;
  */
 public class ClienteEdit extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP
-     * <code>GET</code> and
-     * <code>POST</code> methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-    }
-
     
     /**
      * Handles the HTTP
@@ -94,8 +79,7 @@ public class ClienteEdit extends HttpServlet {
                 cliente = tCliente.getById(id);
                 if (cliente==null) 
                     throw new BaseException("Error", "No se ha encontrado el cliente");            
-                }
-            catch(NumberFormatException ex){
+                } catch(NumberFormatException ex){
                 throw new BaseException("Error", "No se ha encontrado el cliente");                
                 
             }

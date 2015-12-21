@@ -146,7 +146,8 @@ public class TransaccionRS {
                     ResultSetMetaData rsm = (ResultSetMetaData) rs.getMetaData();
                     // The column count starts from 1
                     for (int i = 1; i <= rsm.getColumnCount(); i++) {
-                        String name = rsm.getColumnName(i);
+                        String name = rsm.getColumnLabel(i);
+//                        String name = rsm.getColumnName(i);                        
                         int tipo = rsm.getColumnType(i);
                         Object valor = null;
                         tipobd = "";
@@ -320,7 +321,7 @@ public class TransaccionRS {
 
         String clase = objeto.getClass().getSimpleName();
         String tabla = clase.toLowerCase();
-        Field[] atributos = objeto.getClass().getDeclaredFields();
+        Field[] atributos = objeto.getClass().getFields(); //DeclaredFields();
         StringBuffer query = new StringBuffer();
         query.append("insert into " + tabla + " (");
         for (int i = 0; i <= atributos.length - 1; i++) {

@@ -6,12 +6,16 @@
 <%@page import="bd.Rubro"%>
 <%@page import="java.util.List"%>
 <%@page import="transaccion.TRubro"%>
+  <%@page import="utils.PathCfg"%>
+<%
+    Cliente cliente = (Cliente) request.getAttribute("cliente");
+    if(cliente==null) cliente = new Cliente();
+%>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <%@include  file="tpl_head.jsp" %>
-
 </head>
 
 <body>

@@ -1,0 +1,29 @@
+# Created by http://www.gitignore.io
+
+### ActiSoftBD  ###
+ActiSoftBD/nbproject/private/
+ActiSoftBD/nbproject/
+ActiSoftBD/build/
+ActiSoftBD/nbbuild/
+ActiSoftBD/dist/
+ActiSoftBD/nbdist/
+ActiSoftBD/nbactions.xml
+ActiSoftBD/nb-configuration.xml
+
+
+### EventPassWeb2 ###
+ActiSoftWeb/nbproject/private/
+ActiSoftWeb/build/
+ActiSoftWeb/nbbuild/
+ActiSoftWeb/dist/
+ActiSoftWeb/nbdist/
+ActiSoftWeb/nbactions.xml
+ActiSoftWeb/nb-configuration.xml
+
+# Class Files #
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
