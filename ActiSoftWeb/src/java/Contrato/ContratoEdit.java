@@ -167,8 +167,9 @@ public class ContratoEdit extends HttpServlet {
            for(int i=0;i<arr_posicion.length;i++){
                if (arr_posicion[i].equals("")) continue;
                Float precio = Float.parseFloat(arr_precio[i]);
-               Float porcentaje = Float.parseFloat(arr_porcentaje[i]);
-               Integer id_unidad = Integer.parseInt(arr_unidad[i]);
+               Float porcentaje = Parser.parseFloat(arr_porcentaje[i]);
+               Integer id_unidad = Parser.parseInt(arr_unidad[i]);
+               Integer id_divisa = Parser.parseInt(arr_divisa[i]);
                String codigo = arr_codigo[i].trim();
                Subrubro subrubro = ts.getByCodigo(codigo);
                if (subrubro==null){
@@ -181,6 +182,7 @@ public class ContratoEdit extends HttpServlet {
                detalle.setId_activo(0);
                detalle.setPrecio(precio);
                detalle.setPosicion(Integer.parseInt(arr_posicion[i]));
+               detalle.setId_divisa(id_divisa);
                detalle.setId_subrubro(subrubro.getId());
                detalle.setId_rubro(subrubro.getId_rubro());
                detalle.setId_clase(subrubro.getId_clase());

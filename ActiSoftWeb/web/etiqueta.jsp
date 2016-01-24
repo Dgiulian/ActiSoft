@@ -160,7 +160,7 @@
            // $('.inCodigo').focusout(buscarActivo);
             $('#btnAgregar').click(function(){agregarActivo({})});
             $('#id_rubro').change(function(){
-                rubroChange("<%= PathCfg.SUBRUBRO_LIST%>",{id_rubro:$(this).val(),id_contrato:$('#id_contrato').val()})
+                rubroChange("<%= PathCfg.SUBRUBRO_LIST%>",{id_rubro:$(this).val(),id_contrato:$('#id_contrato').val(),id_estado:1})
             });
             $('#id_subrubro').change(function() {
                 $id_rubro = $('#id_rubro');

@@ -41,9 +41,6 @@ public class SubrubroList extends HttpServlet {
         String pagNro = request.getParameter("pagNro");
         String rubro_id = request.getParameter("id_rubro");
         
-        
-       
-        
         Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
         Integer id_rubro = (rubro_id!=null)?Integer.parseInt(rubro_id):0;
         try {

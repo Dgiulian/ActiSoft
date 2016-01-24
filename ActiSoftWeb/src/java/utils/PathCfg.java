@@ -108,7 +108,7 @@ public class PathCfg {
     public static final String USUARIO        = "Usuario";
     public static final String USUARIO_LIST   = USUARIO + "List";
     public static final String USUARIO_EDIT   = USUARIO + "Edit";
-    public static final String USUARIO_DEL    = USUARIO + "Del";    
+    public static final String USUARIO_DEL    = USUARIO + "Del";
     public static final String USUARIO_SEARCH = USUARIO + "Search";
     
     public static final String CORRECTIVO        = "Correctivo";
@@ -141,5 +141,9 @@ public class PathCfg {
     public static final String EXCEL   = "Excel";
     public static final String MAIL    = "Mail";
     
+    public static final String PARAMETRO = "Parametro";
+    public static final String PARAMETRO_LIST   = PARAMETRO + "List";
+    public static final String PARAMETRO_EDIT   = PARAMETRO + "Edit";
+    public static final String PARAMETRO_DEL    = PARAMETRO + "Del";    
 
 }

@@ -202,7 +202,10 @@ $(document).ready(function(){
     if($().datepicker) {
         $('.date-picker').datepicker({
             language: 'es'
-        });  
+        });
+        $('.date-picker').on('changeDate', function(ev){
+            $(this).datepicker('hide');
+        });
     }
     
      $('#btnHideData').click(function(){

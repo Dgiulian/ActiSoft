@@ -19,15 +19,19 @@ import java.util.logging.Logger;
  * @author Diego
  */
 public class TRemito_detalle_view extends TransaccionBase<Remito_detalle_view>{
+    public String orderBy = "";
     public List<Remito_detalle_view>getList(){
         return super.getList("select * from remito_detalle_view");
     }
     public Remito_detalle_view getById(Integer id){
-        String query = String.format("select * from remito_detalle_view where remito_detalle_view.id = %d",id);
+        String query = String.format("select * from remito_detalle_view where remito_detalle_view.id = %d ",id);
+        query += this.getOrderBy();        
         return super.getById(query);
     }
     public List<Remito_detalle_view> getByRemitoId(Integer id_remito){
-        String query = String.format("select * from remito_detalle_view where remito_detalle_view.id_remito = %d",id_remito);
+        String query = String.format("select * from remito_detalle_view where remito_detalle_view.id_remito = %d ",id_remito);
+        query += this.getOrderBy();
+//        System.out.println(query);
         return super.getList(query);
     }
     public boolean actualizar(Remito_detalle_view detalle){
@@ -53,5 +57,13 @@ public class TRemito_detalle_view extends TransaccionBase<Remito_detalle_view>{
         }
         conexion.desconectarse();
         return mapa;
+    }
+    
+    public TRemito_detalle_view setOrderBy(String orderBy){
+        this.orderBy = orderBy;
+        return this;
+    }
+    public String getOrderBy(){
+        return this.orderBy;
     }
 }

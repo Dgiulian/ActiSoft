@@ -91,9 +91,7 @@
     });
     function loadData(data){
          var $tabla = $('#tblCompra');
-
-
-        $.ajax({
+         $.ajax({
                url: '<%= PathCfg.COMPRA_LIST %>',
                data: data,
                method:"POST",
@@ -110,10 +108,10 @@
                         $tabla.DataTable({
                                 responsive: true,
                                 retrieve:true,
-                                paging:true,
-                                ordering:true,
-                                searching:false,
-                                lengthChange:false,
+                                paging: false,
+                                ordering: true,
+                                searching: false,
+                                lengthChange: false,
                                 bInfo:false,
                                 language: {
                                     url:'bower_components/datatables-plugins/i18n/Spanish.json',
@@ -138,12 +136,12 @@
            html +="<tr class=''>";
            d = data[i];
             html += wrapTag('td',convertirFecha(d.fecha),'');
-            var divisa = d.id_divisa==0?"Dolar":"Peso";
+            var divisa = d.id_divisa===0?"Dolar":"Peso";
             html += wrapTag('td',d.cantidad,'');
             html += wrapTag('td',divisa,'');
             html += wrapTag('td',d.precio_unit,'');
             html += wrapTag('td',d.precio_tot,'');
-            html += wrapTag('td',d.id_proveedor,'');
+            html += wrapTag('td',d.proveedor,'');
            var htmlEdit = "<a href='<%= PathCfg.COMPRA_EDIT%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
            var htmlDel = "<span href='' data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span>";
            html +=wrapTag('td',htmlEdit + htmlDel,'');

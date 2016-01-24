@@ -20,6 +20,7 @@ public class Activo {
     public String num_rfid      = "";
     public String desc_corta    = "";
     public String desc_larga    = "";
+    public String desc_opcional = "";
     public Integer stock_minimo = 0;
     public String anillo        = "";
     public Float peso           = 0f;
@@ -66,6 +67,8 @@ public Activo(){}
         this.num_rfid       = activo.getNum_rfid();
         this.desc_corta     = activo.getDesc_corta();
         this.desc_larga     = activo.getDesc_larga();
+        this.desc_opcional  = activo.getDesc_opcional();
+        
         this.stock_minimo   = activo.getStock_minimo();
         this.anillo         = activo.getAnillo();
         this.peso           = activo.getPeso();
@@ -125,6 +128,9 @@ public Activo(){}
     }
     public String getDesc_larga(){
         return desc_larga;
+    }
+    public String getDesc_opcional(){
+        return this.desc_opcional;
     }
     public Integer getStock_minimo(){
         return stock_minimo;
@@ -260,6 +266,10 @@ public Activo(){}
     }
     public Activo setDesc_larga (String desc_larga){
         this.desc_larga = desc_larga; 
+        return this;
+    }
+    public Activo setDesc_opcional(String desc_opcional){
+        this.desc_opcional = desc_opcional;
         return this;
     }
     public Activo setStock_minimo (Integer stock_minimo){

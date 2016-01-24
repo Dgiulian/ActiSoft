@@ -229,7 +229,16 @@
                                         </tr>
                                     </tfoot>-->
                                 </table>
-                                
+                                   
+
+                            </div>
+                                <div class="col-lg-12">
+                                   <div class="form-group">
+                                       <label for="observaciones">Observaciones</label>
+                                       <textarea name="observaciones" id="observaciones" class="form-control"></textarea>
+                                   </div>
+                               </div>
+                            <div class="col-lg-12">
                                 <button type="submit" class="btn btn-default" id="btnSubmit">Guardar</button>
                                 <a type="reset" class="btn btn-default" href="<%=PathCfg.REMITO%>">Cancelar</a>
                             </div>
@@ -256,6 +265,9 @@
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Metis Menu Plugin JavaScript -->
     <script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry&v=3.7&key=AIzaSyD-jKlyAoMh8GxoIyaDbuvhI1WVw8XSpGA"></script>
+    <script src="bower_components/mapplace/maplace-0.1.3.js"></script>
+    
     <script src="js/bootbox.min.js"></script>
     <script src="bower_components/jquery-mask/jquery.mask.min.js"></script>    
     <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>    
@@ -355,7 +367,7 @@
            // $('.inCodigo').focusout(buscarActivo);
             $('#btnAgregar').click(function(){agregarActivo({})});
             $('#id_rubro').change(function(){
-                rubroChange("<%= PathCfg.SUBRUBRO_LIST%>",{id_rubro:$(this).val(),id_contrato:$('#id_contrato').val()})
+                rubroChange("<%= PathCfg.SUBRUBRO_LIST%>",{id_rubro:$(this).val(),id_contrato:$('#id_contrato').val(),id_estado:1})
             });
             $('#id_subrubro').change(function() {
                 $id_rubro = $('#id_rubro');

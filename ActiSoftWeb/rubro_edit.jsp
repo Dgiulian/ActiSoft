@@ -73,11 +73,7 @@
                                             <input type="checkbox" name="aplica_certificado" id="aplica_certificado" <%= checked%>>
                                             <!--<p class="help-block"></p>-->
                                         </div>
-                                         <div class="form-group">
-                                            <% String checked_activo = rubro.getId_estado()!=0?"checked":"";%>
-                                            <label for="id_estado"> 
-                                                Activo <input type="checkbox" class="checkbox checkbox-inline" name="id_estado" id="id_estado" value='1' <%=checked_activo%>></label>
-                                        </div>
+
                                     </div>
                                     <div class="col-lg-6">                                        
                                     </div>

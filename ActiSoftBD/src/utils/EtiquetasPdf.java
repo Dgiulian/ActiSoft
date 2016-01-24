@@ -50,25 +50,28 @@ public class EtiquetasPdf extends BasePdf{
 
     @Override
     protected void addContent(Document document) {
-        try {
-            
-        PdfContentByte cb = docWriter.getDirectContent();
-        String IMAGE = "e:\\ActiSoft\\fonto_etiquetas.png";
-        
-        Parametro image_url = new TParametro().getById(OptionsCfg.PRETICKET_IMAGE);
-        if (image_url!=null) IMAGE = image_url.getValor();
-        
-        Image image = Image.getInstance(IMAGE);
-//            image.scaleAbsolute(PageSize.A4.rotate());
-        image.setAbsolutePosition(0, 0);            
-        image.setDpi(120, 120);
-        image.scaleAbsolute(document.getPageSize());
-        
         document.setMargins(10, 10, 10, 10);
         Rectangle pageSize = document.getPageSize();        
         document.newPage();
-        image.setAbsolutePosition(0, 0);
+
+            
+        PdfContentByte cb = docWriter.getDirectContent();
+        String IMAGE = "e:\\ActiSoft\\fonto_etiquetas.png";        
+        Parametro image_url = new TParametro().getByCodigo(OptionsCfg.ETIQUETA_IMAGE);
+        if (image_url!=null) IMAGE = image_url.getValor();
+       
+        
+       
+        Image image = getImage(IMAGE);
+        if (image!=null){
+//            image.scaleAbsolute(PageSize.A4.rotate());
+            image.setAbsolutePosition(0, 0);            
+            image.setDpi(120, 120);
+            image.scaleAbsolute(document.getPageSize());
+            image.setAbsolutePosition(0, 0);
 //        cb.addImage(image);
+        }
+       
         Float start = pageSize.getTop() - 50;  
         Float pageMid = pageSize.getWidth() / 3;
         Integer lineHeight = 14;
@@ -76,6 +79,7 @@ public class EtiquetasPdf extends BasePdf{
         Integer cant = 0;
         Float col = 25f;
         for(Activo a: lstActivos){
+            System.out.println(a.getCodigo());
             if(start<etiquetaSize.getHeight()) {
                 document.newPage();
                 start = pageSize.getTop() - 50;  
@@ -94,13 +98,6 @@ public class EtiquetasPdf extends BasePdf{
         }
         
        
-        } catch (BadElementException ex) {
-            Logger.getLogger(EtiquetasPdf.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(EtiquetasPdf.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(EtiquetasPdf.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     public void imprimirEtiqueta(Activo a,PdfContentByte cb,float x, float y){
         Rubro r = mapRubro.get(a.getId_rubro());

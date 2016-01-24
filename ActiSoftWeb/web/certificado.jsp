@@ -14,6 +14,14 @@
 
 <head>
      <%@include  file="tpl_head.jsp" %>
+      <style>
+         .activo-heading{
+                background-color: #f5f5f5;
+               line-height: 58px;
+               display: inline-block;
+               width: 100%;
+         }
+     </style>
 </head>
 
 <body>
@@ -23,6 +31,11 @@
         <%@include file="tpl_navbar.jsp" %>
 
         <div id="page-wrapper">
+             <div class="row">
+                 <div class="col-lg-12">
+                     <h3><span class="activo-heading">Activo: <%= activo.getCodigo() %> - <%= activo.getDesc_larga()%> </span></h3>
+                 </div>
+             </div>
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">Certificados <a href="<%= PathCfg.CERTIFICADO_EDIT %>?id_activo=<%= activo.getId() %>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a></h1>
@@ -43,7 +56,7 @@
                                         <tr>
                                             <!--<th>Id</th>-->
                                             <th>Fecha</th>
-                                            <th>Codigo</th>
+                                            <th>Certificado</th>
                                             <th>Precinto</th>
                                             <th>Resultado</th>
                                             <th>Externo</th>

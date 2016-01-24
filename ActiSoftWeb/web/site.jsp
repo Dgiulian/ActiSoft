@@ -40,14 +40,13 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="dataTable_wrapper">
-                                <table class="table table-striped table-bordered table-condensed" id="tblSite">
+                                <table class="table table-striped table-bordered table-condensed" id="tblParametro">
                                     <thead>
                                         <tr>
-                                            <!--<th>Id</th>-->
+                                            <th>Id</th>
                                             <th>Nombre</th>
-                                            <th>Area</th>
-                                            <th>Pozo</th>
-                                            <th>Equipo</th>                                            
+                                            <th>C&oacute;digo</th>
+                                            <th>Valor</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -93,7 +92,7 @@
         loadData({id_cliente:<%= cliente.getId()%>});
     });
     function loadData(data){
-        var $tabla = $('#tblSite');
+        var $tabla = $('#tblParametro');
         $.ajax({
                url: '<%= PathCfg.SITE_LIST %>',
                data: data,

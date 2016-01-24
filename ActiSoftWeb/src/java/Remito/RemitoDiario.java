@@ -103,6 +103,7 @@ public class RemitoDiario extends HttpServlet {
        
        String numero  = request.getParameter("numero");       
        String fecha = request.getParameter("fecha"); 
+       String observaciones = request.getParameter("observaciones"); 
        try{
            TRemito tr = new TRemito();
            TRemito_detalle trd = new TRemito_detalle();
@@ -134,6 +135,8 @@ public class RemitoDiario extends HttpServlet {
            diario.setFecha(TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));
            diario.setFecha_creacion(TFecha.ahora(TFecha.formatoBD));
            diario.setId_usuario(id_usuario);
+//           diario.setObservaciones(remito.getObservaciones() + " " + observaciones);
+           diario.setObservaciones( observaciones);
            
            Integer id_remito_diario = tr.alta(diario);
            if (id_remito_diario == 0) throw new BaseException("Error", "Ocurrió un error al crear el remito de devoluci&oacute;n");

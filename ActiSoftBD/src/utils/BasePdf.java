@@ -4,6 +4,7 @@
  */
 package utils;
 
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -61,7 +63,7 @@ public abstract class BasePdf {
             Document document = new Document();
             docWriter = PdfWriter.getInstance(document,new FileOutputStream(fileName));
             document.open();
-            initializeFonts();
+            initializeFonts();           
             addContent(document);
             document.close();
             todoOk = true;
@@ -78,17 +80,31 @@ public abstract class BasePdf {
    protected abstract void addContent(Document document);
   
   protected void initializeFonts(){
-    try {
-      bfBold = BaseFont.createFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-      bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED); 
-    } catch (DocumentException e) {
-          Logger.getLogger(ExportPdf.class.getName()).log(Level.SEVERE, null, e);
-    } catch (IOException e) {
-         Logger.getLogger(ExportPdf.class.getName()).log(Level.SEVERE, null, e);
-    }
+        try {
+          bfBold = BaseFont.createFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+          bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED); 
+        } catch (DocumentException e) {
+              Logger.getLogger(ExportPdf.class.getName()).log(Level.SEVERE, null, e);
+        } catch (IOException e) {
+             Logger.getLogger(ExportPdf.class.getName()).log(Level.SEVERE, null, e);
+        }
 
 
    }
+  public Image getImage(String image_path){
+      Image image = null;
+      try {
+            image = Image.getInstance(image_path);            
+        } catch (BadElementException ex) {
+            Logger.getLogger(EtiquetasPdf.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(EtiquetasPdf.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(EtiquetasPdf.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+          return image;
+      }
+  }
   public void imprimir(String filename){
         PrinterJob job = PrinterJob.getPrinterJob();
         PageFormat pf = job.defaultPage();

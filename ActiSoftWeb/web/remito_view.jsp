@@ -233,6 +233,12 @@
                                 <!--<button type="submit" class="btn btn-default">Guardar</button>-->
 <!--                            <button type="reset" class="btn btn-default">Reset Button</button>-->
                             </div>
+                            <div class="col-lg-12">
+                               <div class="form-group">
+                                   <label for="observaciones">Observaciones</label>
+                                   <textarea name="observaciones" id="observaciones" class="form-control" readonly=""><%=remito.getObservaciones()%></textarea>
+                               </div>
+                           </div>
                         </div>
                         </div>
                         <!-- /.panel-body -->

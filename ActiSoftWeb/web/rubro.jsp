@@ -50,8 +50,23 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="dataTable_wrapper">
+                                <div class="col-lg-12">
+                                     <div class="form-group">
+                                            
+                                            <label for="id_estado">
+                                                <input type="checkbox" class="checkbox checkbox-inline" name="id_estado" id="id_estado" value='1'> Mostrar eliminados</label>
+                                        </div>
+                                </div>
+                                
                                 <table class="table table-striped table-bordered table-condensed " id="tblRubro">
+                                    <colgroup>
+                                        <col style="width:10%;">
+                                        <col style="width:20%;">
+                                        <col style="">
+                                        <col style="width:7%;">   
+                                    </colgroup>
                                     <thead>
+                                        
                                         <tr>
                                             <!--<th>Id</th>-->
                                             <th>C&oacute;digo</th>                                            
@@ -99,13 +114,14 @@
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        loadData({});
-       
+        loadData({id_estado:1});
+       $('#id_estado').change(function(){
+           var id_estado = $('#id_estado').prop('checked')?0:1;
+           loadData({id_estado:id_estado});
+       });
     });
     function loadData(data){
          var $tabla = $('#tblRubro');
- 
-
         $.ajax({
                url: '<%= PathCfg.RUBRO_LIST %>',
                data: data,
@@ -123,16 +139,7 @@
                         $('.btn-del').click(borrarRubro);
                         $('.btn-del-sr').click(borrarSubrubro);
                         $('.btn-edit').click(editRubro);
-//                        $tabla.DataTable({
-//                                responsive: true,
-////                                paging:true,
-//                                ordering:true,
-////                                searching:false,
-//                                lengthChange:false,
-//                                language: {
-//                                    url:'bower_components/datatables-plugins/i18n/Spanish.json',
-//                                }
-//                        });
+
                    }
                }
            });
@@ -167,7 +174,8 @@
            var htmlEdit = "<a href='<%= PathCfg.RUBRO_EDIT%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
 //          var htmlEdit = "<span data-index='"+ d.id + "' class='btn btn-xs btn-circle btn-warning btn-edit'><span class='fa fa-edit fw'></span></span> ";
            var htmlDel = "<span data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span>";
-           html +=wrapTag('td',htmlEdit + htmlDel,'');
+           if(d.id_estado===0) htmlDel = "";
+            html +=wrapTag('td',htmlEdit + htmlDel,'');
            html +="</tr>";
        }
        return html;
@@ -205,6 +213,7 @@
         
         var htmlEdit = "<a href='<%= PathCfg.SUBRUBRO_EDIT%>?id_rubro="+ id_rubro + "&id="+ d.id +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
         var htmlDel = "<span href='' data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del-sr'><span class='fa fa-trash fw'></span></span>";
+        if(d.id_estado===0) htmlDel = "";
         html +=wrapTag('td',htmlEdit + htmlDel,'');
         html += '            </tr>'; 
     } 

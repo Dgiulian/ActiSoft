@@ -19,6 +19,7 @@ import utils.OptionsCfg;
  * @author Diego
  */
 public class TRemito extends TransaccionBase<Remito> {
+    public String orderBy = " remito.fecha desc ";
     public List<Remito>getList(){
         return super.getList("select * from remito");
     }
@@ -40,7 +41,11 @@ public class TRemito extends TransaccionBase<Remito> {
     @Override
     public String getOrderBy(){
         
-        return " order by remito.fecha desc";
+        return " order by " + this.orderBy;
+    }
+     public TRemito setOrderBy(String orderBy){
+        this.orderBy = orderBy;
+        return this;
     }
     public boolean esTransitorio(Remito r){
         String query = String.format("select count(*) from remito where remito.id_tipo_remito = 2 and remito.id_referencia = %d ",r.getId());
@@ -107,5 +112,10 @@ public class TRemito extends TransaccionBase<Remito> {
         }
         return false;
         
+    }
+    public boolean tieneDevolucion(Remito remito){
+        boolean tiene_devolucion = false;
+        String query = String.format("select * from remito where remito.id_tipo_remito=%d and remito.id_referencia=%d",OptionsCfg.REMITO_DEVOLUCION,remito.getId());       
+        return tiene_devolucion;
     }
 }

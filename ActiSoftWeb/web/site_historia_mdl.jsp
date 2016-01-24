@@ -47,7 +47,7 @@
   </div>
 </div>
 <script>
-    function loadDataActivoHistoria(data){    
+    function loadDataSiteHistoria(data){    
         var $tabla = $('#tblActivoHistoria');
         $.ajax({
                url: '<%= PathCfg.ACTIVO_HISTORIA_LIST %>',
@@ -61,12 +61,12 @@
                success: function(data) {
                    $('#selTodos').prop('checked',false);
                    if(data.Result === "OK") {
-                       $tabla.find('tbody').html(createTableActivoHistoria(data.Records));    
+                       $tabla.find('tbody').html(createTableSiteHistoria(data.Records));    
                    }
                }
         });
     }
-    function createTableActivoHistoria(data){
+    function createTableSiteHistoria(data){
         var html = "";
         for(var i = 0;i< data.length;i++){
            html +="<tr class=''>";

@@ -7,7 +7,7 @@
 %>
 <!DOCTYPE html>
 <html lang="en">
-    
+
 <head>
     <%@include  file="tpl_head.jsp" %>
 </head>
@@ -18,10 +18,10 @@
 
         <%@include file="tpl_navbar.jsp" %>
 
-        <div id="page-wrapper">            
+        <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    
+
                     <input type="hidden" name="id_usuario" id="id_usuario" value="<%= usuario.getId()%>">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -78,10 +78,10 @@
     <!-- DataTables JavaScript -->
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
-    
+
     <script src="bower_components/datatables-responsive/js/dataTables.responsive.js"></script>
-    
-    <script src="js/bootbox.min.js"></script>        
+
+    <script src="js/bootbox.min.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
     <script src="js/moment-with-locales.min.js"></script>
@@ -90,7 +90,7 @@
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        $id_usuario= $('#id_usuario');
+        var $id_usuario= $('#id_usuario');
         if ($id_usuario!==undefined && $id_usuario.val()!=="")
         loadData({id_usuario : $id_usuario.val()});
 
@@ -110,7 +110,7 @@
                    $tabla.find('tbody').html("");
                    if(data.Result === "OK") {
                        $tabla.find('tbody').html(createTable(data.Records));
-                                             
+
                        $tabla.DataTable({
                             responsive: true,
                             retrieve: true,
@@ -127,12 +127,12 @@
                }
            });
     }
-   
+
     function createTable(data){
         var html = "";
         for(var i = 0;i< data.length;i++){
            html +="<tr class=''>";
-           d = data[i];           
+           d = data[i];
 //            html += wrapTag('td',d.id,'');
             html += wrapTag('td',d.email,'');
             html += wrapTag('td',d.tipo,'');
@@ -144,7 +144,7 @@
        }
        return html;
     }
-   
+
         </script>
     </script>
 <%@include file="tpl_footer.jsp"%>

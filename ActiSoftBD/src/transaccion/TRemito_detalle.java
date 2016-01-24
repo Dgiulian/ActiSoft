@@ -29,4 +29,5 @@ public class TRemito_detalle extends TransaccionBase<Remito_detalle>{
         return super.actualizar(detalle, "id");
     }
     
+    
 }

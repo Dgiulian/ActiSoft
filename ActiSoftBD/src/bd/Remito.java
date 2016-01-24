@@ -27,6 +27,7 @@ public class Remito {
     
     public String archivo = "";
     public String archivo_url = "";
+    public String observaciones = "";
     
     public Remito(){}
     public Remito(Remito remito){
@@ -47,6 +48,7 @@ public class Remito {
         this.facturado      = remito.getFacturado();
         this.archivo = remito.getArchivo();
         this.archivo_url = remito.getArchivo_url();
+        this.observaciones = remito.getObservaciones();
     }
     public Integer getId(){
         return id;
@@ -98,6 +100,9 @@ public class Remito {
     }
     public String getArchivo_url(){
         return this.archivo_url;
+    }
+    public String getObservaciones(){
+        return this.observaciones;
     }
     
     public Remito setId(Integer id){
@@ -166,6 +171,10 @@ public class Remito {
     }
     public Remito setArchivo_url(String archivo_url){
         this.archivo_url = archivo_url;
+        return this;
+    }
+     public Remito setObservaciones(String observaciones){
+        this.observaciones = observaciones;
         return this;
     }
 }

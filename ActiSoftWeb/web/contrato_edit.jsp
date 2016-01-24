@@ -36,6 +36,9 @@
 
 <head>
      <%@include  file="tpl_head.jsp" %>  
+     <style>
+         /*.form-control{padding:0;}*/
+    </style>
 </head>
 
 <body>
@@ -315,6 +318,7 @@
         var $pos_item;
         var $tr;
         var arr_unidad = [];
+        var arr_divisa = ["U$s","$"];
         $(document).ready(function(){
             var i = 0;
             arr_unidad[i] = {id:0,desc:''};
@@ -367,20 +371,23 @@
         function selSubrubros(){
                 var $arr = $('input.chkSelSubrubro:checked');
                 for(var i = 0;i<$arr.length;i++){
-                    $codigo = $($arr[i]).data('codigo'); 
-                    $subrubro = $($arr[i]).data('descripcion'); 
+                    var $codigo = $($arr[i]).data('codigo'); 
+                    var $subrubro = $($arr[i]).data('descripcion'); 
                     
                    // console.log($tr);
                     var $pos = $tr.find('input[name="posicion"]');
                     var $desc = $tr.find('input[name="descripcion"]');               
+                    var $divisa = $tr.find('select[name="divisa"]');
+                    
                     var $precio = $tr.find('input[name="precio"]');
                     var $porcentaje = $tr.find('input[name="porcentaje"]');          
                     var $id_unidad = $tr.find('select[name="id_unidad"]');                    
                         
-                    console.log($pos.val(),$desc.val(),$precio.val(),$porcentaje.val(),$codigo,$subrubro);
+                    console.log($pos.val(),$desc.val(),$divisa.val(),$precio.val(),$porcentaje.val(),$codigo,$subrubro);
                     
                     var html = generarHtml({pos:$pos.val(),
                                  descripcion:$desc.val(),
+                                 divisa:$divisa.val(),
                                  precio:$precio.val(),
                                  porcentaje:$porcentaje.val(),
                                  codigo: $codigo,
@@ -537,20 +544,19 @@
                         
             var pos = (data.pos !== undefined )?data.pos:"";
             var descripcion = (data.descripcion!==undefined)?data.descripcion.replace('"','\"') :"";
+            
             var precio = (data.precio!== undefined)? data.precio:"0";
             var porcentaje  = (data.porcentaje!== undefined)? data.porcentaje:"100";
             var codigo = (data.codigo !==undefined)? data.codigo:"";           
             var subrubro = (data.subrubro!==undefined )?data.subrubro:"";
             var id_unidad = (data.id_unidad!==undefined )?data.id_unidad:0;
+            var divisa    = (data.divisa!==undefined )?data.divisa:0;
             
             var  html = '<tr >' +
                         '<td width="90px"><input class="form-control form-inline" type="number" name="posicion" min="0" value="'+pos+'"></td>' +                         
                         "<td><input class='form-control form-inline' name='descripcion' value='" + descripcion +"'></td>" +
                         '<td style="width:80px;">' +
-                            '<select class="form-control" name="divisa">' +
-                                '<option value="0" selected>U$s</option>' + 
-                                '<option value="1">$</option>' + 
-                            '</select>' + 
+                           htmlDivisa(divisa) +
                         '</td>' +
                         '<td style="width:75px"><input class="form-control " name="precio" value="'+ precio +'"></td>' + 
                         '<td style="width:75px">  ' +
@@ -582,13 +588,25 @@
 //            });
         }
         function htmlUnidad(id_unidad){
-            html = '<select class="form-control" name="id_unidad">';  
+            var html = '<select class="form-control" name="id_unidad">';  
             for(var i=0;i<arr_unidad.length;i++){
-                d = arr_unidad[i];
-                selected = d.id == id_unidad?"selected":"";
+                var d = arr_unidad[i];
+                var selected = d.id == id_unidad?"selected":"";
                 html += '<option value="' + d.id + '" ' + selected + '>' + d.desc + '</option>';
             }
             html += '</select>';
+            return html;
+        }
+        
+        function htmlDivisa(divisa){
+            
+            var html = '<select class="form-control" name="divisa">';
+            for(var i=0;i<arr_divisa.length;i++){
+                var d = arr_divisa[i];
+                var selected = i == divisa?"selected":"";
+                html += '<option value="' + i + '" ' + selected + '>' + d + '</option>';
+            }
+            html += '</select>';            
             return html;
         }
         

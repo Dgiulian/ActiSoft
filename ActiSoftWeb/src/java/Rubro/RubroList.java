@@ -42,8 +42,10 @@ public class RubroList extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String pagNro = request.getParameter("pagNro");
-        String rubro_id = request.getParameter("id_rubro");
+        
+        Integer page      = Parser.parseInt(request.getParameter("pagNro"));
+        Integer id_rubro  = Parser.parseInt(request.getParameter("id_rubro"));
+        Integer id_estado = Parser.parseInt(request.getParameter("id_estado"));
         
         
 //        mapRubros = new HashMap<Integer,Rubro>();        
@@ -51,7 +53,8 @@ public class RubroList extends HttpServlet {
             
         mapSubrubros = new HashMap<Integer,ArrayList<Subrubro>>();        
         HashMap<String,String> mapFiltroSR = new HashMap<String,String>();
-        mapFiltroSR.put("id_estado","1");
+        if(id_estado!=0)
+        mapFiltroSR.put("id_estado",id_estado.toString());
         for (Subrubro s : new TSubrubro().getListFiltro(mapFiltroSR)) {
             ArrayList<Subrubro> lst = mapSubrubros.get(s.getId_rubro());
             if (lst==null) {
@@ -61,18 +64,17 @@ public class RubroList extends HttpServlet {
             lst.add(s);
         }
         
-        Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
-        Integer id_rubro = Parser.parseInt(rubro_id);
+        
+        
         try {
             JsonRespuesta jr = new JsonRespuesta();           
             List<Rubro> lista;
             TRubro tr = new TRubro();
             HashMap<String,String> mapFiltro = new HashMap<String,String>();
-
+            
             if(id_rubro!=0) mapFiltro.put("id", id_rubro.toString());
-            
-            mapFiltro.put("id_estado", "1");
-            
+            if(id_estado!=0)
+                mapFiltro.put("id_estado",id_estado.toString());            
             lista = tr.getListFiltro(mapFiltro);
             
             List<RubroDet> listaDet = new ArrayList();

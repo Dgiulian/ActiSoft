@@ -24,6 +24,14 @@
 
 <head>
      <%@include  file="tpl_head.jsp" %>
+     <style>
+         .activo-heading{
+                background-color: #f5f5f5;
+               line-height: 58px;
+               display: inline-block;
+               width: 100%;
+         }
+     </style>
 </head>
 
 <body>
@@ -39,6 +47,12 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+                
+             <div class="row">
+                 <div class="col-lg-12">
+                     <h3><span class="activo-heading">Activo: <%= activo.getCodigo() %> - <%= activo.getDesc_larga()%> </span></h3>
+                 </div>
+             </div>
             <div class="row">
                  <%
                     String action = PathCfg.CERTIFICADO_EDIT;
@@ -81,7 +95,7 @@
                                     
                                 <div class="col-lg-3 " >   
                                     <div class="form-group">
-                                        <label for="codigo">C&oacute;digo</label>
+                                        <label for="codigo">Certificado</label>
                                         <input class="form-control" name="codigo" id="codigo" value="<%=certificado.getCodigo() %>">
                                     </div>
                                 </div>

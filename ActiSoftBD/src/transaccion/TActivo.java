@@ -14,18 +14,18 @@ import java.util.List;
  */
 public class TActivo extends TransaccionBase<Activo>{
     public List<Activo> getList() {
-        return super.getList("select * from activo where activo.bloqueado != 0");
+        return super.getList("select * from activo where activo.bloqueado = 0");
     }
     public List<Activo> getListByIdRubro(Integer id_rubro) {
-        return super.getList(String.format("select * from activo where activo.id_rubro = '%d'  and activo.bloqueado != 0",id_rubro));
+        return super.getList(String.format("select * from activo where activo.id_rubro = '%d'  and activo.bloqueado = 0",id_rubro));
     }
     public List<Activo> getListByIdSubrubro(Integer id_subrubro) {
-        return super.getList(String.format("select * from activo where activo.id_subrubro = '%d'  and activo.bloqueado != 0",id_subrubro));
+        return super.getList(String.format("select * from activo where activo.id_subrubro = '%d'  and activo.bloqueado = 0",id_subrubro));
     }
     
     public List<Activo>  getList(Integer page,Integer limit){
         Integer off = page * limit;        
-        String query = String.format("select * from activo  where activo.bloqueado != 0");
+        String query = String.format("select * from activo  where activo.bloqueado = 0");
         if (limit>0) {
             query += String.format(" limit %d offset %d ",limit,off);
         }
@@ -38,7 +38,7 @@ public class TActivo extends TransaccionBase<Activo>{
     }
     public Activo getByCodigo(String codigo){
         String query = String.format("select * from activo where lower(activo.codigo) = lower('%s')",codigo);
-        System.out.println(query);
+        //System.out.println(query);
         return super.getById(query);
     }
     public Activo getByCodigoNew(String codigo){

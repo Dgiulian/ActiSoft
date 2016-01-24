@@ -13,6 +13,7 @@ public class Rubro {
 //    Integer tipo;
     String codigo = "";
     String descripcion = "";
+    String desc_opcional = "";
     Integer aplica_certificado = 1;
     Integer aplica_compra = 1;
     Integer id_estado = 1;
@@ -24,6 +25,7 @@ public class Rubro {
 //        this.tipo = rubro.getTipo();
         this.codigo = rubro.getCodigo();
         this.descripcion = rubro.getDescripcion();
+        this.desc_opcional = rubro.getDesc_opcional();
         this.aplica_certificado = rubro.getAplica_certificado();
         this.aplica_compra = rubro.getAplica_compra();
          this.id_estado = rubro.getId_estado();
@@ -47,6 +49,9 @@ public class Rubro {
     }
     public String getDescripcion(){
         return this.descripcion;
+    }
+    public String getDesc_opcional(){
+        return this.desc_opcional;
     }
     public Integer getAplica_compra(){
         return this.aplica_compra;
@@ -72,6 +77,10 @@ public class Rubro {
     }
     public Rubro setDescripcion(String descripcion){
         this.descripcion = descripcion;
+        return this;
+    }
+    public Rubro setDesc_opcional(String desc_opcional){
+        this.desc_opcional = desc_opcional;
         return this;
     }
     public Rubro setAplica_certificado(Integer aplica_certificado){

@@ -83,7 +83,7 @@
                                             <th>Fecha</th>
                                             <th>Cliente</th>
                                             <th>Contrato</th>
-                                            <th>Facturado</th>
+                                            <th>Preticket</th>
                                             <th>Estado</th>
                                             <th></th>
                                         </tr>

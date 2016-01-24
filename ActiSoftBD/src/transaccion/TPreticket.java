@@ -37,8 +37,10 @@ public class TPreticket extends TransaccionBase<Preticket> {
         TRemito tr = new TRemito();        
         for(Preticket_detalle d:lstDetalle){
             Remito r =  tr.getByNumero(d.getRemito_cierre());
-            r.setFacturado(0);
-            tr.actualizar(r);
+            if (r!=null) {
+                r.setFacturado(0);
+                tr.actualizar(r);
+            }
             tpd.baja(d);
         }
         return this.baja(preticket);

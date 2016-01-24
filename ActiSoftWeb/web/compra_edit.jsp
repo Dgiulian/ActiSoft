@@ -1,3 +1,6 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="transaccion.TProveedor"%>
+<%@page import="bd.Proveedor"%>
 <%@page import="bd.Activo"%>
 <%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
 <%@page import="transaccion.TSubrubro"%>
@@ -19,6 +22,9 @@
         compra= new Compra();
     }    
     nuevo = compra.getId()==0;
+    List<Proveedor> lstProveedores = new TProveedor().getList();
+    if ( lstProveedores==null) lstProveedores = new ArrayList<Proveedor>();
+            
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -57,7 +63,7 @@
                             <h3 class="">Compra</h3>
                             <fieldset>
                                 <input type="hidden" name="id_activo" value="<%= compra.getId_activo()%>">
-                                <input type="hidden" name="id_proveedor" value="<%= compra.getId_proveedor()%>">
+                                <!--<input type="hidden" name="id_proveedor" value="<%= compra.getId_proveedor()%>">-->
                                 <% if (!nuevo) {%>
                                     <input type="hidden" name="id" value="<%= compra.getId()%>">                                    
                                 <% }%>
@@ -75,20 +81,20 @@
                                     </div>
                                 </div>
 
-                                   <div class="col-lg-2 " >
-                                        <div class="form-group " >
-                                             <label for="id_divisa">Divisa</label>
-                                             <select class="form-control" name="id_divisa" id="id_divisa" >
-                                                  <%
-                                                    for(int i=0;i<2;i++){
-                                                            String divisa = i==0?"Dolares":"Pesos";
-                                                            String selected = i== compra.getId_divisa()?"selected":"";
-                                                    %>
-                                                    <option value="<%= i%>" <%= selected %> > <%= divisa %></option>
-                                                    <% }%>                                                
-                                             </select>
-                                        </div>
-                                   </div>                                   
+                                <div class="col-lg-2 " >
+                                     <div class="form-group " >
+                                          <label for="id_divisa">Divisa</label>
+                                          <select class="form-control" name="id_divisa" id="id_divisa" >
+                                               <%
+                                                 for(int i=0;i<2;i++){
+                                                         String divisa = i==0?"Dolares":"Pesos";
+                                                         String selected = i== compra.getId_divisa()?"selected":"";
+                                                 %>
+                                                 <option value="<%= i%>" <%= selected %> > <%= divisa %></option>
+                                                 <% }%>                                                
+                                          </select>
+                                     </div>
+                                </div>                                   
                                 
                                 <div class="col-lg-2 " >   
                                      <div class="form-group " >
@@ -102,6 +108,17 @@
                                           <input class="form-control" name="precio_tot" id="precio_tot" value="<%= compra.getPrecio_unit() %>">
                                       </div>                                        
                                  </div>
+                                  <div class="col-lg-2 " >   
+                                     <div class="form-group " >
+                                          <label for="id_proveedor">Proveedor</label>
+                                          <select name="id_proveedor" id="id_proveedor" class="form-control">
+                                            <% for(Proveedor p: lstProveedores)  {
+                                            String checked = p.getId()==compra.getId_proveedor()?"checked":"";%>
+                                            <option value="<%=p.getId()%>" <%= checked %>><%= p.getNombre()%></option>
+                                            <%}%>
+                                          </select>
+                                      </div>                                        
+                                 </div>     
                                <!--</div>-->
                             </fieldset>
                         </div>

@@ -30,6 +30,7 @@ import transaccion.TRubro;
 import transaccion.TSubrubro;
 import utils.BaseException;
 import utils.OptionsCfg;
+import utils.Parser;
 import utils.PathCfg;
 
 
@@ -107,12 +108,14 @@ public class ActivoEdit extends HttpServlet {
         String longitud        = "";
         String codigo_aduana   = "";
         String desc_corta      = "";
+        String desc_opcional   = "";
         String precio          = "";
         String aplicaStock     = "";
         String aplicaCompra    = "";
         Integer id_rubro       = 0;
         Integer id_subrubro    = 0;
         Integer stock_minimo   = 0;
+        Float stock           = 0f;
     try{
         Integer id_usuario = 0;
         Integer id_tipo_usuario = 0;
@@ -162,29 +165,31 @@ public class ActivoEdit extends HttpServlet {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
                 String fieldName = item.getFieldName();
                 String fieldValue = item.getString();
-                if(fieldName.equalsIgnoreCase("id"))            idActivo          = fieldValue;
-                if(fieldName.equalsIgnoreCase("codigo"))        codigo          = fieldValue;
-                if(fieldName.equalsIgnoreCase("marca"))         marca           = fieldValue;
-                if(fieldName.equalsIgnoreCase("id_estado"))     str_estado      = fieldValue;
-                if(fieldName.equalsIgnoreCase("num_serie"))     num_serie       = fieldValue;
-                if(fieldName.equalsIgnoreCase("id_rubro"))      idRubro         = fieldValue;
-                if(fieldName.equalsIgnoreCase("id_subrubro"))   idSubrubro      = fieldValue;
-                if(fieldName.equalsIgnoreCase("stock_minimo"))  stockMinimo     = fieldValue;
-                if(fieldName.equalsIgnoreCase("num_rfid"))      num_rfid        = fieldValue;
-                if(fieldName.equalsIgnoreCase("observaciones")) observaciones   = fieldValue;
-                if(fieldName.equalsIgnoreCase("anillo"))        anillo          = fieldValue;
-                if(fieldName.equalsIgnoreCase("peso"))          str_peso        = fieldValue;
-                if(fieldName.equalsIgnoreCase("alto"))          str_alto        = fieldValue;
-                if(fieldName.equalsIgnoreCase("ancho"))         str_ancho       = fieldValue;
-                if(fieldName.equalsIgnoreCase("profundidad"))   str_profundidad = fieldValue;
-                if(fieldName.equalsIgnoreCase("medida"))        medida          = fieldValue;
-                if(fieldName.equalsIgnoreCase("conexion"))      conexion        = fieldValue;
-                if(fieldName.equalsIgnoreCase("longitud"))      longitud        = fieldValue;
-                if(fieldName.equalsIgnoreCase("codigo_aduana")) codigo_aduana   = fieldValue;
-                if(fieldName.equalsIgnoreCase("desc_corta"))    desc_corta      = fieldValue;
-                if(fieldName.equalsIgnoreCase("precio"))        precio          = fieldValue;
-                if(fieldName.equalsIgnoreCase("aplica_stock"))  aplicaStock     = fieldValue;
-                if(fieldName.equalsIgnoreCase("aplica_compra")) aplicaCompra    = fieldValue;
+                if(fieldName.equalsIgnoreCase("id"))             idActivo          = fieldValue;
+                if(fieldName.equalsIgnoreCase("codigo"))         codigo          = fieldValue;
+                if(fieldName.equalsIgnoreCase("marca"))          marca           = fieldValue;
+                if(fieldName.equalsIgnoreCase("id_estado"))      str_estado      = fieldValue;
+                if(fieldName.equalsIgnoreCase("num_serie"))      num_serie       = fieldValue;
+                if(fieldName.equalsIgnoreCase("id_rubro"))       idRubro         = fieldValue;
+                if(fieldName.equalsIgnoreCase("id_subrubro"))    idSubrubro      = fieldValue;
+                if(fieldName.equalsIgnoreCase("stock_minimo"))   stockMinimo     = fieldValue;
+                if(fieldName.equalsIgnoreCase("num_rfid"))       num_rfid        = fieldValue;
+                if(fieldName.equalsIgnoreCase("observaciones"))  observaciones   = fieldValue;
+                if(fieldName.equalsIgnoreCase("anillo"))         anillo          = fieldValue;
+                if(fieldName.equalsIgnoreCase("peso"))           str_peso        = fieldValue;
+                if(fieldName.equalsIgnoreCase("alto"))           str_alto        = fieldValue;
+                if(fieldName.equalsIgnoreCase("ancho"))          str_ancho       = fieldValue;
+                if(fieldName.equalsIgnoreCase("profundidad"))     str_profundidad = fieldValue;
+                if(fieldName.equalsIgnoreCase("medida"))         medida          = fieldValue;
+                if(fieldName.equalsIgnoreCase("conexion"))       conexion        = fieldValue;
+                if(fieldName.equalsIgnoreCase("longitud"))       longitud        = fieldValue;
+                if(fieldName.equalsIgnoreCase("codigo_aduana"))  codigo_aduana   = fieldValue;
+                if(fieldName.equalsIgnoreCase("desc_corta"))     desc_corta      = fieldValue;
+                if(fieldName.equalsIgnoreCase("desc_opcional"))  desc_opcional   = fieldValue;
+                if(fieldName.equalsIgnoreCase("precio"))         precio          = fieldValue;
+                if(fieldName.equalsIgnoreCase("aplica_stock"))   aplicaStock     = fieldValue;
+                if(fieldName.equalsIgnoreCase("aplica_compra"))  aplicaCompra    = fieldValue;
+                if(fieldName.equalsIgnoreCase("sock"))           stock           = Parser.parseFloat(fieldValue);
             } else {
                 // Process form file field (input type="file").
                 String fieldName = item.getFieldName();
@@ -227,6 +232,7 @@ public class ActivoEdit extends HttpServlet {
             id = 0;
             activo = new Activo();
             nuevo = true;
+            activo.setStock(1f);
         }
 //        String codigo          = request.getParameter("codigo");
 //        String marca           = request.getParameter("marca");
@@ -249,12 +255,11 @@ public class ActivoEdit extends HttpServlet {
 //        String desc_corta      = request.getParameter("desc_corta");
 //        String precio          = request.getParameter("precio");
 //        String aplicaStock     = request.getParameter("aplica_stock");
-        try{ 
-            id_rubro     = Integer.parseInt(idRubro);
-            id_subrubro  = Integer.parseInt(idSubrubro);
-            stock_minimo = Integer.parseInt(stockMinimo);
-        } catch (NumberFormatException ex){ }
-
+        
+            id_rubro     = Parser.parseInt(idRubro);
+            id_subrubro  = Parser.parseInt(idSubrubro);
+            stock_minimo = Parser.parseInt(stockMinimo);
+     
         
         if (str_estado!=null) activo.setId_estado(Integer.parseInt(str_estado));
         if(codigo==null || codigo.equals(""))
@@ -268,11 +273,16 @@ public class ActivoEdit extends HttpServlet {
         
         if(subrubro.getId_rubro()!= rubro.getId())
              throw new BaseException ("Error de subrubro","El rubro y el subrubro no se corresponden");
+        
+        if(activo.getId_estado()==OptionsCfg.ACTIVO_ESTADO_ALQUILADO)
+            throw new BaseException("Activo alquilado","El activo se encuentra en alquiler y no puede ser editado");
+        
         activo.setCodigo(codigo);
         activo.setMarca(marca);        
         activo.setId_rubro(id_rubro);
         activo.setId_subrubro(id_subrubro);
         activo.setDesc_corta(desc_corta);
+        activo.setDesc_opcional(desc_opcional);
         
         activo.setNum_serie(num_serie);
         activo.setStock_minimo(stock_minimo);
@@ -281,7 +291,7 @@ public class ActivoEdit extends HttpServlet {
         activo.setCodigo_aduana(codigo_aduana);
         activo.setAnillo(anillo);
         activo.setPrecio(Float.parseFloat(precio));
-        activo.setStock(1f);
+        
         Integer aplica_stock  = (aplicaStock !=null && !aplicaStock.equals(""))?1:0;
         Integer aplica_compra = (aplicaCompra!=null && !aplicaCompra.equals(""))?1:0;
         

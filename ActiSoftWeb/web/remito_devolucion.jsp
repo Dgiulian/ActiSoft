@@ -48,7 +48,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Remito de <%= StringEscapeUtils.escapeHtml4(tipoRemito) %></h1>
+                    <h1 class="page-header">Remito de <%= StringEscapeUtils.escapeHtml4(tipoRemito) %> del remito <%= remito.getNumero()%></h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -141,12 +141,20 @@
                                         </tr>
                                     </tfoot>-->
                                 </table>
-                                 <button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Guardar</button>
-                            
-                            <a type="reset" href="<%=PathCfg.REMITO%>" class="btn btn-default" >Cerrar</a>
+                               
                                 <!--<button type="submit" class="btn btn-default">Guardar</button>-->
 <!--                            <button type="reset" class="btn btn-default">Reset Button</button>-->
                             </div>
+                             <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="observaciones">Observaciones</label>
+                                    <textarea name="observaciones" id="observaciones" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Guardar</button>                            
+                                <a type="reset" href="<%=PathCfg.REMITO%>" class="btn btn-default" >Cerrar</a>
+                            </div>                                
                         </div>
                         </div>
                         <!-- /.panel-body -->

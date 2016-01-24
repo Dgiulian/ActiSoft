@@ -497,6 +497,38 @@
         <servlet-name>ActivoContratoSearch</servlet-name>
         <servlet-class>Activo.ActivoContratoSearch</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ParametroServlet</servlet-name>
+        <servlet-class>Parametro.ParametroServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ParametroList</servlet-name>
+        <servlet-class>Parametro.ParametroList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ParametroEdit</servlet-name>
+        <servlet-class>Parametro.ParametroEdit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ParametroDel</servlet-name>
+        <servlet-class>Parametro.ParametroDel</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Servicio</servlet-name>
+        <servlet-class>Servicio.ServicioServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServicioList</servlet-name>
+        <servlet-class>Servicio.ServicioList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServicioEdit</servlet-name>
+        <servlet-class>Servicio.ServicioEdit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServicioDel</servlet-name>
+        <servlet-class>Servicio.ServicioDel</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ActivoServlet</servlet-name>
         <url-pattern>/Activo</url-pattern>
@@ -864,6 +896,38 @@
     <servlet-mapping>
         <servlet-name>ActivoContratoSearch</servlet-name>
         <url-pattern>/ActivoContratoSearch</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ParametroServlet</servlet-name>
+        <url-pattern>/Parametro</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ParametroList</servlet-name>
+        <url-pattern>/ParametroList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ParametroEdit</servlet-name>
+        <url-pattern>/ParametroEdit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ParametroDel</servlet-name>
+        <url-pattern>/ParametroDel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Servicio</servlet-name>
+        <url-pattern>/Servicio</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServicioList</servlet-name>
+        <url-pattern>/ServicioList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServicioEdit</servlet-name>
+        <url-pattern>/ServicioEdit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServicioDel</servlet-name>
+        <url-pattern>/ServicioDel</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

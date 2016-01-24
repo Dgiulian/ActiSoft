@@ -28,5 +28,9 @@ public class TCertificado extends TransaccionBase<Certificado>{
         " and certificado.fecha_vigencia >= CURDATE()";
         return super.getById(String.format(query,id_activo));
     }
-    
+    public static void main(String[] args){
+        Certificado certificado = new TCertificado().getById(558);
+        System.out.println(certificado.getFecha_vigencia());
+        System.out.println(certificado.getFecha_efectiva());
+    }
 }

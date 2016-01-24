@@ -2,30 +2,21 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Compra;
+package Parametro;
 
-import bd.Compra;
-import bd.Proveedor;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import transaccion.TCompra;
-import transaccion.TProveedor;
-import utils.JsonRespuesta;
 
 /**
  *
  * @author Diego
  */
-public class CompraList extends HttpServlet {
-    HashMap<Integer, Proveedor> mapProveedores;
+public class ParametroEdit extends HttpServlet {
+
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -38,37 +29,19 @@ public class CompraList extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       response.setContentType("application/json;charset=UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String pagNro = request.getParameter("pagNro");
-        String idActivo = request.getParameter("id_activo");
-        
-        HashMap<String,String> mapFiltro = new HashMap<String,String>();
-        Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
-        Integer id_activo = (idActivo!=null)?Integer.parseInt(idActivo):0;
-        mapProveedores = new TProveedor().getMap();
         try {
-            JsonRespuesta jr = new JsonRespuesta();           
-            List<Compra> lista;
-            TCompra tc = new TCompra();
-            mapFiltro.put("id_activo",id_activo.toString());
-            
-            lista = tc.getListFiltro(mapFiltro);
-            ArrayList<CompraDet> listaDet = new ArrayList<CompraDet>();
-            for(Compra c: lista){
-                listaDet.add(new CompraDet(c));
-            }
-            if (lista != null) {
-                jr.setTotalRecordCount(listaDet.size());
-            } else {
-                jr.setTotalRecordCount(0);
-            }            
-            jr.setResult("OK");
-            jr.setRecords(listaDet);
-            
-            String jsonResult = new Gson().toJson(jr);
-
-            out.print(jsonResult);
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet ParametroEdit</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet ParametroEdit at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         } finally {            
             out.close();
         }
@@ -102,7 +75,7 @@ public class CompraList extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+         
     }
 
     /**
@@ -114,16 +87,4 @@ public class CompraList extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    private class CompraDet extends Compra{
-        String resultado = "";
-        String proveedor = "";
-        public CompraDet(Compra compra){
-            super(compra);
-            Proveedor p = mapProveedores.get(compra.getId_proveedor());
-            proveedor = p!=null?p.getNombre():compra.getId_proveedor().toString();
-                            //this.resultado = compra.getId_resultado().toString();
-            
-        }
-        
-    }
 }

@@ -27,11 +27,11 @@
                            <th>Cliente</th>
                            <th>Contrato</th>
                            <th>Fecha</th>
-                           <th>Punto Venta</th>
-                           <th>Numero</th>
+                           <th>Venta</th>
+                           <th>Remito</th>
                           <th>Cantidad</th>                            
-                          <th>Remito</th>                            
-                          <th>Venta</th>                            
+<!--                          <th>Remito</th>                            
+                          <th>Venta</th>                            -->
                         </tr>
                     </thead>
                     <tbody>
@@ -61,17 +61,17 @@
                success: function(data) {
                    $('#selTodos').prop('checked',false);
                    if(data.Result === "OK") {
-                       $tabla.find('tbody').html(createTableActivoHistoria(data.Records));    
+                       $tabla.find('tbody').html(createTableActivoHist(data.Records));    
                    }
                }
         });
     }
-    function createTableActivoHistoria(data){
+    function createTableActivoHist(data){
         var html = "";
         for(var i = 0;i< data.length;i++){
            html +="<tr class=''>";
-           d = data[i];
-           console.log(d);
+           var d = data[i];
+//           console.log("D",d);
            html += wrapTag('td',d.tipo_remito, '');
             html += wrapTag('td',d.estado, '');
             html += wrapTag('td',d.cliente, '');

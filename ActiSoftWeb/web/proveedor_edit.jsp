@@ -111,12 +111,12 @@
                                             <% String checked = (proveedor.getId_estado()!=0)?"checked":""; %>
                                             <input type="checkbox" name="id_estado" id="id_estado" <%= checked%> >
                                         </div>
+                                        <%if (!nuevo) {%>
                                         <div class="form-group">
-                                            <label>Fecha de alta</label>
-                                            <%if (!nuevo) {%>
-                                                <input type="text" name="fecha_alta" id="fecha_alta" class="form-control" disabled value="<%=TFecha.formatearFechaBdVista(proveedor.getFecha_alta())%>" >
-                                            <% } %>
+                                            <label>Fecha de alta</label>                                            
+                                                <input type="text" name="fecha_alta" id="fecha_alta" class="form-control" disabled value="<%=TFecha.formatearFechaBdVista(proveedor.getFecha_alta())%>" >                                            
                                         </div>
+                                        <% } %>
                                     </div> 
                                         
                                 </div>

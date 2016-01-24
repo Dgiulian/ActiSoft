@@ -51,14 +51,14 @@
         $('#mdlClienteHistoria').on('show.bs.modal',function(){
             var $id_cliente = $('#id');
             if ($id_cliente!==null && $id_cliente.val()!=="") {
-                loadDataActivoHistoria({id_cliente:$id_cliente.val()});
+                loadDataClienteHistoria({id_cliente:$id_cliente.val()});
             } else {
                 
             }        
         });
     });
     
-    function loadDataActivoHistoria(data){    
+    function loadDataClienteHistoria(data){    
         var $tabla = $('#tblActivoHistoria');
         $.ajax({
                url: '<%= PathCfg.ACTIVO_HISTORIA_LIST %>',
@@ -72,12 +72,12 @@
                success: function(data) {
                    $('#selTodos').prop('checked',false);
                    if(data.Result === "OK") {
-                       $tabla.find('tbody').html(createTableActivoHistoria(data.Records));    
+                       $tabla.find('tbody').html(createTableClienteHistoria(data.Records));    
                    }
                }
         });
     }
-    function createTableActivoHistoria(data){
+    function createTableClienteHistoria(data){
         var html = "";
         for(var i = 0;i< data.length;i++){
            html +="<tr class=''>";

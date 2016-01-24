@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
 <%@page import="transaccion.TSubrubro"%>
 <%@page import="bd.Subrubro"%>
@@ -8,8 +9,15 @@
 <%@page import="utils.OptionsCfg"%>
 <%@page import="utils.PathCfg"%>
 <%   
-    List<Rubro> lstRubros = new TRubro().getList();
-    List<Subrubro> lstSubrubros = new TSubrubro().getByRubroId(1);
+    HashMap<String,String> mapRubro = new HashMap<String,String>();
+    HashMap<String,String> mapSubrubro = new HashMap<String,String>();
+    
+    mapRubro.put("id_estado","1");
+    List<Rubro> lstRubros = new TRubro().getListFiltro(mapRubro);
+
+    mapSubrubro.put("id_estado","1");
+    mapSubrubro.put("id_rubro","1");
+    List<Subrubro> lstSubrubros = new TSubrubro().getListFiltro(mapSubrubro);
 %>
 <div id="mdlActivo" class="modal fade " role="dialog">
   <div class="modal-dialog">

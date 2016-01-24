@@ -20,7 +20,7 @@ public class TCliente extends TransaccionBase<Cliente>{
     }
     public Cliente getByNombre(String nombre){
         String query = String.format("select * from cliente where lower(nombre) = lower('%s')",nombre);
-        System.out.println(query);
+//        System.out.println(query);
         return this.getById(query);
     }
 //    public HashMap<Integer,Cliente> getMap(){

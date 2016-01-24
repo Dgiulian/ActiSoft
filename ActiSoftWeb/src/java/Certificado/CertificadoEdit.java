@@ -269,7 +269,7 @@ public class CertificadoEdit extends HttpServlet {
             certificado.setPrecinto(precinto);
             certificado.setId_resultado(Integer.parseInt(idResult));
             certificado.setObservaciones(observaciones);
-            boolean externo = strExterno!=null;
+            boolean externo = strExterno!=null && !strExterno.equals("");
             certificado.setExterno(externo);
             
             certificado.setDesmontaje(desmontaje);

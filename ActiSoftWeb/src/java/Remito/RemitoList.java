@@ -121,6 +121,7 @@ public class RemitoList extends HttpServlet {
      public String estado;
      public String cliente;
      public String contrato;
+     public boolean tiene_devolucion = false;
      
      public RemitoDet(Remito remito){
          super(remito);
@@ -144,6 +145,9 @@ public class RemitoList extends HttpServlet {
          Cliente cli = mapClientes.get(remito.getId_cliente());
          if(cli!=null)
              this.cliente = cli.getNombre();
+         if(remito.getId_tipo_remito()==OptionsCfg.REMITO_ENTREGA){
+             this.tiene_devolucion = new TRemito().tieneDevolucion(remito);
+         }
      }
  }
 

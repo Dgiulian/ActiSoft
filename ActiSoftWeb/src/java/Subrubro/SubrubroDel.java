@@ -4,14 +4,19 @@
  */
 package Subrubro;
 
+import bd.Activo;
 import bd.Subrubro;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import transaccion.TActivo;
 import transaccion.TSubrubro;
 import utils.BaseException;
 import utils.JsonRespuesta;
@@ -91,7 +96,10 @@ public class SubrubroDel extends HttpServlet {
            TSubrubro tr = new TSubrubro();
            subrubro = tr.getById(id);            
            if (subrubro==null) throw new BaseException("ERROR","No existe el registro");
-           subrubro.setId_estado(0);
+           Map<String,String> mapFiltro = new HashMap<String,String>();
+           List<Activo> lstActivo = new TActivo().getListByIdSubrubro(subrubro.getId());
+           if(lstActivo!=null && lstActivo.size()>0) throw new BaseException("ERROR","Existen activos de este subrubro. No se puede eliminar");
+           subrubro.setId_estado(0);           
            boolean baja = tr.actualizar(subrubro);
 //           boolean baja =tr.baja(rubro);
            if ( baja){

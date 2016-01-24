@@ -84,7 +84,9 @@ public class RubroEdit extends HttpServlet {
         Integer id_rubro = Parser.parseInt(request.getParameter("id"));
         String codigo = request.getParameter("codigo");
         String descripcion = request.getParameter("descripcion");
+        String desc_opcional = request.getParameter("desc_opcional");
         String aplicaCertificado = request.getParameter("aplica_certificado");
+        String id_estado = request.getParameter("id_estado");
         TRubro  tr = new TRubro();
         Rubro rubro = tr.getById(id_rubro);
         boolean nuevo = false;
@@ -95,17 +97,18 @@ public class RubroEdit extends HttpServlet {
         Integer aplica_certificado = aplicaCertificado!=null?1:0;
         rubro.setCodigo(codigo);
         rubro.setDescripcion(descripcion);
+        rubro.setDesc_opcional(desc_opcional);
         rubro.setAplica_certificado(aplica_certificado);
-        rubro.setId_estado(1);
+        rubro.setId_estado(id_estado!=null?1:0);
         
         if(nuevo){
             tr.alta(rubro);
         }else tr.actualizar(rubro);
-         HttpSession session = request.getSession();
-         Integer id_usuario = (Integer) session.getAttribute("id_usuario");
-         Integer id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
-         TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_RUBRO,OptionsCfg.ACCION_ALTA,rubro.getId());
-         response.sendRedirect(PathCfg.RUBRO);
+        HttpSession session = request.getSession();
+        Integer id_usuario = (Integer) session.getAttribute("id_usuario");
+        Integer id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
+        TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_RUBRO,OptionsCfg.ACCION_ALTA,rubro.getId());
+        response.sendRedirect(PathCfg.RUBRO);
     }
 
     /**

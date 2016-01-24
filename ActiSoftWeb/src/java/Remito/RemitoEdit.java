@@ -110,6 +110,7 @@ public class RemitoEdit extends HttpServlet {
         String ptoVta = request.getParameter("punto_venta");
         String numRemito = request.getParameter("numero");
         String fecha = request.getParameter("fecha");
+        String observaciones = request.getParameter("observaciones");
        
         ArrayList<Remito_detalle> lstDetalle = new ArrayList<Remito_detalle>();
         ArrayList<Activo> lstActivo = new ArrayList<Activo>();
@@ -143,14 +144,8 @@ public class RemitoEdit extends HttpServlet {
             if (cliente==null) throw new BaseException("Cliente inexistente","Seleccione el cliente del remito");
             
             String id_contrato  = request.getParameter("id_contrato");
-            Contrato contrato = null;
-            if(id_contrato==null || id_contrato.equals("")) {
-                throw new BaseException("Contrato inexistente","Debe seleccionar el contrato");
-            }
-            else {
-                contrato = new TContrato().getById(Parser.parseInt(id_contrato));
-            }
             
+            Contrato contrato = new TContrato().getById(Parser.parseInt(id_contrato));
             if(contrato==null) throw new BaseException("Contrato inexistente","Seleccione el contrato del remito");
             
             if(fecha==null||fecha.equals("")){
@@ -184,7 +179,7 @@ public class RemitoEdit extends HttpServlet {
             remito.setId_estado(OptionsCfg.REMITO_ESTADO_ABIERTO);
             remito.setId_contrato(contrato.getId());
             remito.setId_usuario(id_usuario);
-            
+            remito.setObservaciones(observaciones);
          // Verificamos que la longitud de los vectores sea la misa
          if(cantActivos.length   != codigoActivos.length || 
             cantActivos.length   != codigoPos.length   ||

@@ -89,6 +89,11 @@
                             bootbox.alert("No es un remito de entrega. Solo pueden realizarse devoluciones sobre remitos de entrega");
                             return;
                            }
+                           
+                           if(d.tiene_devolucion){
+                            bootbox.alert("Ya existe remito de devoluci&oacute;n para este remito.");
+                            return;
+                           }
                            loadDataRemitoDetalle({id_remito:d.id});
                        } 
                    }

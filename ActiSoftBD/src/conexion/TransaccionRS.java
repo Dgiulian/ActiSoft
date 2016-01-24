@@ -29,6 +29,7 @@ public class TransaccionRS {
         String clase = objeto.getClass().getSimpleName();
         String tabla = clase.toLowerCase();
         Field[] atributos = objeto.getClass().getDeclaredFields();
+        if (atributos.length == 0 ) atributos = objeto.getClass().getFields();
         String where = "";
         Object from = null;
         boolean band = false;
@@ -258,6 +259,7 @@ public class TransaccionRS {
         String clase = objeto.getClass().getSimpleName();
         String tabla = clase.toLowerCase();
         Field[] atributos = objeto.getClass().getDeclaredFields();
+        if (atributos.length == 0 ) atributos = objeto.getClass().getFields();
         StringBuffer query = new StringBuffer();
         query.append("insert into " + tabla + " (");
         for (int i = 0; i <= atributos.length - 1; i++) {
@@ -322,6 +324,7 @@ public class TransaccionRS {
         String clase = objeto.getClass().getSimpleName();
         String tabla = clase.toLowerCase();
         Field[] atributos = objeto.getClass().getFields(); //DeclaredFields();
+        if (atributos.length == 0 ) atributos = objeto.getClass().getDeclaredFields();
         StringBuffer query = new StringBuffer();
         query.append("insert into " + tabla + " (");
         for (int i = 0; i <= atributos.length - 1; i++) {
@@ -387,6 +390,7 @@ public class TransaccionRS {
         String clase = objeto.getClass().getSimpleName();
         String tabla = clase.toLowerCase();
         Field[] atributos = objeto.getClass().getDeclaredFields();
+        if (atributos.length == 0 ) atributos = objeto.getClass().getFields();
         StringBuffer query = new StringBuffer();
         query.append("delete from  " + tabla + " where ");
         if (atributos.length > 0) {
@@ -448,6 +452,7 @@ public class TransaccionRS {
         String clase = objeto.getClass().getSimpleName();
         String tabla = clase.toLowerCase();
         Field[] atributos = objeto.getClass().getDeclaredFields();
+        if (atributos.length == 0 ) atributos = objeto.getClass().getFields();
         StringBuffer query = new StringBuffer();
         query.append("update " + tabla + " set ");
         /*for (int i = 0; i <= atributos.length - 1; i++) {

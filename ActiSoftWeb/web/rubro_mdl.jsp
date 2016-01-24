@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@page import="bd.Rubro"%>
 <%@page import="java.util.List"%>
 <%@page import="utils.OptionsCfg"%>
@@ -5,7 +6,11 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="transaccion.TRubro"%>
 <%   
-    List<Rubro> lstRubros = new TRubro().getList();
+    HashMap<String,String> mapRubro = new HashMap<String,String>();
+    HashMap<String,String> mapSubrubro = new HashMap<String,String>();
+    
+    mapRubro.put("id_estado","1");
+    List<Rubro> lstRubros = new TRubro().getListFiltro(mapRubro);    
 %>
 <div id="mdlSubrubro" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -62,7 +67,7 @@
 <script>
     function selRubroChange(){
         $value= $(this).val();   
-        loadDataSubrubro({id_rubro:$value});
+        loadDataSubrubro({id_rubro:$value,id_estado:1});
     }
     function loadDataSubrubro(data){    
         var $tabla = $('#tblSubrubro');    

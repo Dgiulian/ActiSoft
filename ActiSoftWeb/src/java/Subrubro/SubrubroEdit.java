@@ -43,16 +43,18 @@ public class SubrubroEdit extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try{
-        Integer id_rubro = Parser.parseInt(request.getParameter("id_rubro"));
-        Rubro rubro = new TRubro().getById(id_rubro);
-        if(rubro==null) throw new BaseException("ERROR","No se encontro&oacute; el rubro");
-        
-        Integer id_subrubro = Parser.parseInt(request.getParameter("id"));
-        Subrubro  subrubro = new TSubrubro().getById(id_subrubro);
-       
-        if(subrubro!=null) request.setAttribute("subrubro", subrubro);
-        if(rubro!=null) request.setAttribute("rubro", rubro);
-        request.getRequestDispatcher("subrubro_edit.jsp").forward(request, response);
+            Integer id_rubro = Parser.parseInt(request.getParameter("id_rubro"));
+            Rubro rubro = new TRubro().getById(id_rubro);
+            
+            if(rubro==null) throw new BaseException("ERROR","No se encontro&oacute; el rubro");
+
+            Integer id_subrubro = Parser.parseInt(request.getParameter("id"));
+            Subrubro  subrubro = new TSubrubro().getById(id_subrubro);
+
+            if(subrubro!=null) request.setAttribute("subrubro", subrubro);
+            if(rubro!=null) request.setAttribute("rubro", rubro);
+            
+            request.getRequestDispatcher("subrubro_edit.jsp").forward(request, response);
         }   catch(BaseException ex){
             request.setAttribute("titulo",ex.getResult());
             request.setAttribute("mensaje", ex.getMessage());
@@ -76,6 +78,9 @@ public class SubrubroEdit extends HttpServlet {
         Integer id_subrubro = Parser.parseInt(request.getParameter("id"));
         String codigo = request.getParameter("codigo");
         String descripcion = request.getParameter("descripcion");        
+        String desc_opcional = request.getParameter("desc_opcional");
+        String id_estado = request.getParameter("id_estado");
+        
         TSubrubro  tr = new TSubrubro();
         Subrubro subrubro = tr.getById(id_subrubro);
         try{
@@ -85,11 +90,13 @@ public class SubrubroEdit extends HttpServlet {
                subrubro = new Subrubro();
                nuevo = true;
                subrubro.setId_rubro(id_rubro);
+               
             }
             if(nuevo && tr.getByCodigo(codigo)!=null) throw new BaseException("ERROR","Ya existe un subrubro con ese c&oacute;digo");
             subrubro.setCodigo(codigo);
             subrubro.setDescripcion(descripcion);        
-            subrubro.setId_estado(1);        
+            subrubro.setDesc_opcional(desc_opcional);        
+            subrubro.setId_estado(id_estado!=null?1:0);
             if(nuevo){
                 id_subrubro = tr.alta(subrubro);
                 subrubro.setId_rubro(id_subrubro);

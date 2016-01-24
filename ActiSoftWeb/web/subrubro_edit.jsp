@@ -61,13 +61,21 @@
                                    <div class="col-lg-6" >
                                         <div class="form-group">
                                             <label for="codigo">C&oacute;digo</label>
-                                            <input class="form-control" name="codigo" id="codigo"  value="<%=subrubro.getCodigo()%>">
+                                            <input class="form-control" name="codigo" id="codigo"  value='<%=subrubro.getCodigo()%>'>
                                         </div>
                                         <div class="form-group">
                                             <label for="descripcion">Descripci&oacute;n</label>
-                                            <input class="form-control" name="descripcion" id="descripcion" value="<%=subrubro.getDescripcion()%>">
+                                            <input class="form-control" name="descripcion" id="descripcion" value='<%=StringEscapeUtils.escapeHtml4(subrubro.getDescripcion())%>'>
                                         </div>
-
+                                         <div class="form-group">
+                                            <label for="descripcion">Descripci&oacute;n Opcional</label>
+                                            <input class="form-control" name="desc_opcional" id="desc_opcional" value='<%=StringEscapeUtils.escapeHtml4(subrubro.getDesc_opcional())%>'>
+                                        </div>
+                                        <div class="form-group">
+                                            <% String checked = subrubro.getId_estado()!=0?"checked":"";%>
+                                            <label for="id_estado">
+                                                Activo <input type="checkbox" class="checkbox checkbox-inline" name="id_estado" id="id_estado" value='1' <%=checked%>> </label>
+                                        </div>
                                     </div>
                                     <div class="col-lg-6">                                        
                                     </div>

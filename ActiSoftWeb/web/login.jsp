@@ -56,7 +56,7 @@
                         <% if (errores != null) {%>
                             <% for (String error : errores) {%>
                             <div class="alert alert-error">
-                                <button data-dismiss="alert" class="close" type="button">×</button>
+                                <button data-dismiss="alert" class="close" type="button">&times;</button>
                                 <strong>ERROR! </strong><%= error%>
                             </div>
                             <% }%>

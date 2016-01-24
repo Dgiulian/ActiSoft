@@ -12,7 +12,8 @@ public class Subrubro {
     public Integer id  = 0;
     public Integer id_rubro = 0;
     public String codigo =  "";
-    public String descripcion = "";    
+    public String descripcion = "";
+    public String desc_opcional = "";
     public Integer id_clase = 0;
     public Integer id_estado = 0;
 
@@ -22,6 +23,7 @@ public class Subrubro {
         this.id_rubro = subrubro.getId_rubro();
         this.codigo = subrubro.getCodigo();
         this.descripcion = subrubro.getDescripcion();
+        this.desc_opcional = subrubro.getDesc_opcional();
         this.id_clase = subrubro.getId_clase();
         this.id_estado = subrubro.getId_estado();
     }
@@ -38,7 +40,9 @@ public class Subrubro {
     public String getDescripcion(){
         return this.descripcion;
     }
-    
+    public String getDesc_opcional(){
+        return this.desc_opcional;
+    }
     public Integer getId_clase() {
         return this.id_clase;
     }
@@ -61,7 +65,10 @@ public class Subrubro {
         this.descripcion = descripcion;
         return this;
     }
-	
+    public Subrubro setDesc_opcional(String desc_opcional){
+        this.desc_opcional = desc_opcional;
+        return this;
+    }
 
     public Subrubro setId_clase(Integer id_clase) {
             this.id_clase = id_clase;

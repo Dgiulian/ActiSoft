@@ -29,6 +29,12 @@
                            </div>
                        </div>
                     </div>
+                     <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="observaciones">Observaciones</label>
+                            <textarea name="observaciones" id="observaciones" class="form-control" ></textarea>
+                        </div>
+                    </div>
                 </form>
             </div>
       </div>
@@ -50,16 +56,17 @@ $(document).ready(function() {
    $('#mdlRemitoDiario').on('shown.bs.modal',function(){
        $('#fecha_diario').val("");
        $('#numero_diario').val(""); 
+       $('#observaciones').val(""); 
    });
    $('#btnRemitoDiario').click(function(){
        var fecha  = $('#fecha_diario').val();
        var numero = $('#numero_diario').val();      
+       var observaciones = $('#observaciones').val();      
        var id = $('#id').val();      
-      console.log(fecha,numero);
       $('#mdlRemitoDiario').modal('hide');
       $.ajax({
             url:'<%= PathCfg.REMITO_DIARIO%>',
-            data: {id:id,numero:numero,fecha:fecha},
+            data: {id:id,numero:numero,fecha:fecha,observaciones:observaciones},
             method:'POST',
             dataType:'json',
             success:function(data){

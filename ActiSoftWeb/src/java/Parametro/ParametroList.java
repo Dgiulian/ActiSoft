@@ -2,30 +2,30 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Contrato;
+package Parametro;
 
-import bd.Contrato;
-import bd.Contrato_detalle;
-import bd.Contrato_detalle_view;
+import bd.Cliente;
+import bd.Parametro;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import transaccion.TContrato;
-import transaccion.TContrato_detalle;
-import transaccion.TContrato_detalle_view;
+import transaccion.TCliente;
+import transaccion.TParametro;
 import utils.BaseException;
 import utils.JsonRespuesta;
+import utils.Parser;
 
 /**
  *
  * @author Diego
  */
-public class ContratoSearch extends HttpServlet {
+public class ParametroList extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -39,38 +39,31 @@ public class ContratoSearch extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
-
+        String pagNro = request.getParameter("pagNro");
+        
+        HashMap<String,String> mapFiltro = new HashMap<String,String>();
+        Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
+        
         JsonRespuesta jr = new JsonRespuesta();
         try {
-            if(request.getParameter("id")==null &&
-               request.getParameter("numero")==null ) throw new BaseException("ERROR","No se definió ningún parámetro de busqueda");
-            
-            Contrato contrato = null;
-            if(request.getParameter("id")!=null){
-                Integer id = Integer.parseInt(request.getParameter("id"));
-                contrato = new TContrato().getById(id);
-            }else if(request.getParameter("numero")!=null) {
-                String numero = request.getParameter("numero");
-                contrato = new TContrato().getByNumero(numero);
-            }
-            
-            if (contrato != null) {
-                jr.setTotalRecordCount(1);
+            List<Parametro> lista;
+            TParametro tr = new TParametro();
+            lista = tr.getListFiltro(mapFiltro);            
+            if (lista != null) {
+                jr.setTotalRecordCount(lista.size());
             } else {
                 jr.setTotalRecordCount(0);
-            }            
+            }
             jr.setResult("OK");
-            jr.setRecord(new ContratoDet(contrato));
-            
-        } catch (BaseException ex){
+            jr.setRecords(lista);            
+        } /* catch(BaseException ex){
             jr.setResult(ex.getResult());
-            jr.setMessage(ex.getMessage());
-        } catch(NumberFormatException ex){
-            jr.setResult("ERROR");
-            jr.setMessage("Error al parsear los parametros");
-        } finally {       
+            jr.setMessage(ex.getMessage());            
+        } */
+        finally {
             String jsonResult = new Gson().toJson(jr);
             out.print(jsonResult);
             out.close();
@@ -117,12 +110,4 @@ public class ContratoSearch extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    private class ContratoDet extends Contrato{
-        public List<Contrato_detalle_view> detalle;
-        public ContratoDet(Contrato contrato){
-            super(contrato);
-            detalle = new TContrato_detalle_view().getByContratoId(contrato.getId());
-        }
-    }
-    
 }

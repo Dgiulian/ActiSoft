@@ -12,8 +12,8 @@ public class Certificado {
     public Integer id = 0;
     public Integer id_activo = 0;
     public String  fecha = "";
-    private String fecha_vigencia = "";
-    private String fecha_efectiva  = "";
+    public String fecha_vigencia = "";
+    public String fecha_efectiva  = "";
     public String  codigo = "";
     public String  precinto = "";
     public Integer id_resultado = 0;
@@ -21,7 +21,7 @@ public class Certificado {
     public String  observaciones = "";
     public String  archivo = "";
     public String  archivo_url = "";
-    private String nombre_proveedor = "";
+    public String  nombre_proveedor = "";
     public Integer desmontaje = 0;
     public Integer limpieza = 0;
     public Integer inspeccion_visual = 0;

@@ -1,4 +1,5 @@
 
+<%@page import="java.util.HashMap"%>
 <%@page import="transaccion.TParametro"%>
 <%@page import="bd.Parametro"%>
 <%@page import="utils.OptionsCfg.Option"%>
@@ -14,16 +15,23 @@
 <%@page import="bd.Activo"%>
 <%@page import="org.apache.commons.lang3.StringEscapeUtils" %>
 <%
-    
     Activo activo = (Activo) request.getAttribute("activo");
     boolean nuevo = (activo ==null);
     if (nuevo) activo = new Activo();
     Rubro rubro = new TRubro().getById(activo.getId_rubro());
     if(rubro==null) rubro = new Rubro();
     
-    List<Rubro> lstRubro = new TRubro().getList();
+    //List<Rubro> lstRubro = new TRubro().getList();
+    //List<Subrubro> lstSubrubro = new TSubrubro().getByRubroId(activo.getId_rubro());
+    HashMap<String,String> mapRubro = new HashMap<String,String>();
+    HashMap<String,String> mapSubrubro = new HashMap<String,String>();
     
-    List<Subrubro> lstSubrubro = new TSubrubro().getByRubroId(activo.getId_rubro());
+    mapRubro.put("id_estado","1");
+    List<Rubro> lstRubro = new TRubro().getListFiltro(mapRubro);
+
+    mapSubrubro.put("id_estado","1");
+    mapSubrubro.put("id_rubro","1");
+    List<Subrubro> lstSubrubro = new TSubrubro().getListFiltro(mapSubrubro);
     
     ArrayList<Option> lstEstados = OptionsCfg.getEstadoActivo();    
 %>
@@ -95,26 +103,30 @@
                                             <div class="col-lg-6" >
                                                 <div class="form-group">
                                                     <label for="codigo" >C&oacute;digo</label>
-                                                    <input name="codigo" id="codigo" class="form-control uppercase" value="<%= activo.getCodigo()%>">
+                                                    <input name="codigo" id="codigo" class="form-control uppercase" value='<%= activo.getCodigo()%>'>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6" >
                                                 <div class="form-group">
                                                     <label for="codigo" >C&oacute;digo New</label>
-                                                    <input name="codigo" id="codigo" class="form-control" value="<%= activo.getCodigoNew()%>" disabled>
+                                                    <input name="codigo" id="codigo" class="form-control" value='<%= activo.getCodigoNew()%>' disabled>
                                                 </div>
                                             </div>
                                         </div>
 
 <!--                                       <div class="form-group">
                                            <label for="desc_corta">Descripci&oacute;n</label>
-                                           <input name="desc_corta" id="desc_corta" class="form-control" value="<%= StringEscapeUtils.escapeHtml4(activo.getDesc_corta())%>">
+                                           <input name="desc_corta" id="desc_corta" class="form-control" value='<%= StringEscapeUtils.escapeHtml4(activo.getDesc_corta())%>'>
                                        </div>-->
                                        
                                        <div class="form-group">
                                            <label for="desc_larga">Descripci&oacute;n </label>
-                                           <input name="desc_larga" id="desc_larga" disabled class="form-control" value="<%= StringEscapeUtils.escapeHtml4(activo.getDesc_larga())%>">
+                                           <input name="desc_larga" id="desc_larga" disabled class="form-control" value='<%= StringEscapeUtils.escapeHtml4(activo.getDesc_larga())%>'>
                                        </div>
+                                        <div class="form-group">
+                                            <label for="descripcion">Descripci&oacute;n Opcional</label>
+                                            <input class="form-control" name="desc_opcional" id="desc_opcional" value='<%=StringEscapeUtils.escapeHtml4(activo.getDesc_opcional())%>'>
+                                        </div>
                                         <div class="form-group">
                                             <label for="id_rubro">Rubro</label>
                                             <select name="id_rubro" id="id_rubro" class="form-control">
@@ -122,7 +134,7 @@
                                                 <% for(Rubro r:lstRubro){ 
                                                     String selected = (r.getId() == activo.getId_rubro())?"selected":"";
                                                 %>
-                                                    <option value="<%= r.getId()%>" <%= selected  %>>
+                                                    <option value='<%= r.getId()%>' <%= selected  %>>
                                                         <%= r.getCodigo() + " - " +  StringEscapeUtils.escapeHtml4(r.getDescripcion())%>
                                                     </option>
                                                 <% } %>
@@ -135,7 +147,7 @@
                                                 <% for(Subrubro s:lstSubrubro){
                                                     String selected = (s.getId() == activo.getId_subrubro())?"selected":"";
                                                     %>                                                
-                                                    <option value="<%= s.getId()%>"  <%= selected %>>
+                                                    <option value='<%= s.getId()%>'  <%= selected %>>
                                                         <%= s.getCodigo() + " - " + StringEscapeUtils.escapeHtml4(s.getDescripcion())%>
                                                     </option>
                                                 <% } %>
@@ -146,20 +158,20 @@
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label for="marca">Marca</label>
-                                            <input name="marca" id="marca" class="form-control" value="<%= StringEscapeUtils.escapeHtml4(activo.getMarca())%>">
+                                            <input name="marca" id="marca" class="form-control" value='<%= StringEscapeUtils.escapeHtml4(activo.getMarca())%>'>
                                         </div>
                                     <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="aplica_stock">Aplica Stock</label>
                                                 <% String checked = (activo.getAplica_stock() ==1)?"checked":""; %>
-                                                <input type="checkbox" name="aplica_stock" id="aplica_stock" value="<%=activo.getAplica_stock() %>" <%= checked %> >
+                                                <input type="checkbox" name="aplica_stock" id="aplica_stock" value='<%=activo.getAplica_stock() %>' <%= checked %> >
                                             </div>
                                     </div>
                                     <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label for="aplica_stock">Aplica Compra</label>
                                                 <% String chkCompra = (activo.getAplica_compra() ==1)?"checked":""; %>
-                                                <input type="checkbox" name="aplica_compra" id="aplica_compra" value="<%=activo.getAplica_compra() %>" <%= chkCompra %> >
+                                                <input type="checkbox" name="aplica_compra" id="aplica_compra" value='<%=activo.getAplica_compra() %>' <%= chkCompra %> >
                                             </div>
                                     </div>
                                         
@@ -167,13 +179,13 @@
                                     <div class="col-lg-6">
                                              <div class="form-group">
                                                 <label for="desc_larga">Divisa</label>
-                                                <select  class="form-control" name="divisa" id="divisa"  value="<%=activo.getId_divisa()%>">
+                                                <select  class="form-control" name="divisa" id="divisa"  value='<%=activo.getId_divisa()%>'>
                                                     <%
                                                         for(int i=0;i<2;i++){
                                                             String divisa = i==0?"Dolares":"Pesos";
                                                             String selected = i== activo.getId_divisa()?"selected":"";
                                                     %>
-                                                    <option value="<%= i%>" <%= selected %> > <%= divisa %></option>
+                                                    <option value='<%= i%>' <%= selected %> > <%= divisa %></option>
                                                     <% }%>
                                                 </select>
                                              </div>
@@ -181,20 +193,20 @@
                                         <div class="col-lg-6">
                                              <div class="form-group">
                                                 <label for="precio">Precio</label>
-                                                <input name="precio" id="precio" class="form-control" value="<%=activo.getPrecio()%>">
+                                                <input name="precio" id="precio" class="form-control" value='<%=activo.getPrecio()%>'>
                                              </div>
                                          </div>
                                          <div class="col-lg-5">
                                         <div class="form-group">
                                             <label for="id_estado">Estado</label>
-                                            <input type="hidden" name="id_estado" id="id_estado" value="<%=activo.getId_estado()%>">
+                                            <input type="hidden" name="id_estado" id="id_estado" value='<%=activo.getId_estado()%>'>
                                             <select name="id_estado" id="id_estado" class="form-control" disabled>
                                                 <option value="0"></option>
                                                 <% for(Option o:lstEstados){ 
                                                     String selected = o.getId() == activo.getId_estado()?"selected":"";
                                                 %>
                                                     
-                                                    <option value="<%= o.getId() %>" <%= selected  %>>
+                                                    <option value='<%= o.getId() %>' <%= selected  %>>
                                                         <%= StringEscapeUtils.escapeHtml4(o.getDescripcion())%>
                                                     </option>
                                                 <% } %>
@@ -210,19 +222,19 @@
                                     <fieldset >
                                         <div class="form-group">
                                             <label for="anillo">Anillos</label>
-                                            <input name="anillo" id="anillo" class="form-control"  value="<%= activo.getAnillo()%>">
+                                            <input name="anillo" id="anillo" class="form-control"  value='<%= activo.getAnillo()%>'>
                                         </div>
                                         <div class="form-group">
                                             <label for="medida">Medida</label>
-                                            <input name="medida" id="medida" class="form-control"  value="<%= activo.getMedida()%>">
+                                            <input name="medida" id="medida" class="form-control"  value='<%= activo.getMedida()%>'>
                                         </div>
                                         <div class="form-group">
                                             <label for="conexion">Conexion</label>
-                                            <input name="conexion" id="conexion" class="form-control" value="<%= activo.getConexion()%>">
+                                            <input name="conexion" id="conexion" class="form-control" value='<%= activo.getConexion()%>'>
                                         </div>
                                         <div class="form-group">
                                             <label for="longitud">Longitud</label>
-                                            <input name="longitud" id="longitud" class="form-control"  value="<%= activo.getLongitud()%>">
+                                            <input name="longitud" id="longitud" class="form-control"  value='<%= activo.getLongitud()%>'>
                                         </div>
                                         
                                     </fieldset>
@@ -232,23 +244,23 @@
                                      <div class="col-lg-6" >
                                      <div class="form-group">
                                             <label for="num_serie" id="num_serie">N&uacute;mero de serie</label>
-                                            <input name="num_serie" class="form-control" value="<%= activo.getNum_serie()%>">
+                                            <input name="num_serie" class="form-control" value='<%= activo.getNum_serie()%>'>
                                     </div>
                                      <div class="form-group">
                                            <label for="stock_minimo">Stock minimo</label>
-                                           <input name="stock_minimo" id="stock_minimo" class="form-control" value="<%= activo.getStock_minimo()%>">
+                                           <input name="stock_minimo" id="stock_minimo" class="form-control" value='<%= activo.getStock_minimo()%>'>
                                        </div>
                                      </div>
                                     <div class="col-lg-6 " >
                                            <div class="form-group">
                                             <label for="num_rfid">RFID</label>
-                                            <input name="num_rfid" id="num_rfid" class="form-control"  value="<%= activo.getNum_rfid()%>">
+                                            <input name="num_rfid" id="num_rfid" class="form-control"  value='<%= activo.getNum_rfid()%>'>
                                            </div>
                                        </div>
                                     <div class="col-lg-6 " >
                                        <div class="form-group">
                                            <label for="codigo_aduana">C&oacute;digo Aduana</label>
-                                        <input name="codigo_aduana" id="codigo_aduana" class="form-control"  value="<%= activo.getCodigo_aduana()%>">
+                                        <input name="codigo_aduana" id="codigo_aduana" class="form-control"  value='<%= activo.getCodigo_aduana()%>'>
                                        </div>
                                    </div>
                                 </div>
@@ -256,19 +268,19 @@
                                 <div class="col-lg-6 tab-pane" id="tab4">
                                     <div class="form-group">
                                         <label for="alto">Alto</label>
-                                        <input name="alto" id="alto" class="form-control"  value="<%= activo.getAlto()%>">
+                                        <input name="alto" id="alto" class="form-control"  value='<%= activo.getAlto()%>'>
                                     </div>
                                     <div class="form-group">
                                         <label for="ancho">Ancho</label>
-                                        <input name="ancho" id="ancho" class="form-control"  value="<%= activo.getAncho()%>">
+                                        <input name="ancho" id="ancho" class="form-control"  value='<%= activo.getAncho()%>'>
                                     </div>
                                     <div class="form-group">
                                         <label for="profundidad">Profundidad</label>
-                                        <input name="profundidad" id="profundidad" class="form-control"  value="<%= activo.getProfundidad()%>">
+                                        <input name="profundidad" id="profundidad" class="form-control"  value='<%= activo.getProfundidad()%>'>
                                     </div>
                                     <div class="form-group">
                                         <label for="peso">Peso</label>
-                                        <input name="profundidad" id="peso" class="form-control"  value="<%= activo.getPeso()%>">
+                                        <input name="profundidad" id="peso" class="form-control"  value='<%= activo.getPeso()%>'>
                                     </div>
                                     
                                 </div>
@@ -289,9 +301,9 @@
                                              display1 = "style='display: none'";     
                                         %>                                  
                                         <div class="form-group">                            
-                                            <!--<a href="<%=PathCfg.DOWNLOAD%>?type=activo&id=<%=activo.getId()%>" class="btn btn-success"><span> </span> Archivo asociado: <b><%= activo.getArchivo_1() %></b></a>-->
-                                            <a href="<%=activo.getArchivo_2_url()%>" target="_blank">
-                                            <img src="<%=activo.getArchivo_1_url()%>" width="250" height="250" >
+                                            <!--<a href='<%=PathCfg.DOWNLOAD%>?type=activo&id=<%=activo.getId()%>' class="btn btn-success"><span> </span> Archivo asociado: <b><%= activo.getArchivo_1() %></b></a>-->
+                                            <a href='<%=activo.getArchivo_2_url()%>' target="_blank">
+                                            <img src='<%=activo.getArchivo_1_url()%>' width="250" height="250" >
                                             </a>
                                              <span class="btn btn-default cambiarArchivo" data-target="selectFile1">Cambiar</span>
                                         </div>
@@ -305,9 +317,9 @@
                                         %>                                  
                                         <div class="form-group">
                                             
-                                            <!--<a href="<%=PathCfg.DOWNLOAD%>?type=activo&id=<%=activo.getId()%>" class="btn btn-success"><span> </span> Archivo asociado: <b><%= activo.getArchivo_2() %></b></a>-->                                         
-                                            <a href="<%=activo.getArchivo_2_url()%>" target="_blank">
-                                            <img src="<%=activo.getArchivo_2_url()%>" width="250" height="250" >
+                                            <!--<a href='<%=PathCfg.DOWNLOAD%>?type=activo&id=<%=activo.getId()%>' class="btn btn-success"><span> </span> Archivo asociado: <b><%= activo.getArchivo_2() %></b></a>-->                                         
+                                            <a href='<%=activo.getArchivo_2_url()%>' target="_blank">
+                                            <img src='<%=activo.getArchivo_2_url()%>' width="250" height="250" >
                                             </a>
                                             <span class="btn btn-default cambiarArchivo" data-target="selectFile2">Cambiar</span>
                                         </div>
@@ -320,9 +332,9 @@
                                              display3 = "style='display: none'";     
                                         %>                                  
                                         <div class="form-group">                            
-                                            <!--<a href="<%=PathCfg.DOWNLOAD%>?type=activo&id=<%=activo.getId()%>" class="btn btn-success"><span> </span> Archivo asociado: <b><%= activo.getArchivo_3() %></b></a>-->                                         
-                                            <a href="<%=activo.getArchivo_3_url()%>" target="_blank">
-                                                <img src="<%=activo.getArchivo_3_url()%>" width="250" height="250" >
+                                            <!--<a href='<%=PathCfg.DOWNLOAD%>?type=activo&id=<%=activo.getId()%>' class="btn btn-success"><span> </span> Archivo asociado: <b><%= activo.getArchivo_3() %></b></a>-->                                         
+                                            <a href='<%=activo.getArchivo_3_url()%>' target="_blank">
+                                                <img src='<%=activo.getArchivo_3_url()%>' width="250" height="250" >
                                             </a>
                                              <span class="btn btn-default cambiarArchivo" data-target="selectFile3">Cambiar</span>
                                             
@@ -344,8 +356,12 @@
                             </div>
                             <!-- /.row (nested) -->
                             <div class="col-lg-12">
-                                <button type="submit" class="btn btn-default">Guardar</button>
-                                <a type="reset" class="btn btn-default" href="<%=PathCfg.ACTIVO%>">Cancelar</a>
+                                <% if(activo.getId_estado()!=OptionsCfg.ACTIVO_ESTADO_ALQUILADO) {%>
+                                    <button type="submit" class="btn btn-default">Guardar</button>
+                                <%} else { %>
+                                <h4>El activo se encuentra alquilado y no puede ser editado </h4>
+                                <% } %>
+                                <a type="reset" class="btn btn-default" href='<%=PathCfg.ACTIVO%>'>Cancelar</a>
                             </div>
                             </form>
                         </div>
@@ -394,7 +410,7 @@
     function selRubroChange(){
         $value= $(this).val();   
         if ($value==0) {$('#id_subrubro').html("");return;}
-        loadDataSubrubro({id_rubro:$value});
+        loadDataSubrubro({id_rubro:$value,id_estado:1});
     }
     function loadDataSubrubro(data){    
         $.ajax({
