@@ -1,6 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Esta versión de remito de devolución considera que lo que está en pantalla
+ * son los items a devolver.
+ * Se crea un remito de devolución y se cierran todos los remitos.
+ * Si es una devolución transitoria, se crea un remito de entrega con los items
+ * que no estan en pantalla.
  */
 package Remito;
 
@@ -10,8 +13,11 @@ import bd.Remito_detalle;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -49,15 +55,15 @@ public class RemitoDevolucion extends HttpServlet {
             throws ServletException, IOException {
         try {
             Remito remito = null;
-            
+
              if(request.getParameter("id")==null) throw new BaseException( "Error","Debe seleccionar un remito");
              try{
                  Integer id = Integer.parseInt(request.getParameter("id"));
-                 remito = new TRemito().getById(id);                     
+                 remito = new TRemito().getById(id);
              } catch (NumberFormatException ex){
                  throw new BaseException( "Error","No se ha encontrado el remito");
-             }                        
-             if (remito==null) throw new BaseException("Error", "No se ha encontrado el remito");             
+             }
+             if (remito==null) throw new BaseException("Error", "No se ha encontrado el remito");
              request.setAttribute("remito", remito);
              List<Remito_detalle> detalle = new TRemito_detalle().getByRemitoId(remito.getId());
              request.setAttribute("detalle", detalle);
@@ -67,7 +73,7 @@ public class RemitoDevolucion extends HttpServlet {
             request.setAttribute("mensaje",ex.getMessage());
             request.getRequestDispatcher("message.jsp").forward(request, response);
         }
-        
+
     }
 
     /**
@@ -86,41 +92,48 @@ public class RemitoDevolucion extends HttpServlet {
        HttpSession session = request.getSession();
        Integer id_usuario = (Integer) session.getAttribute("id_usuario");
        Integer id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
+       String numRemitoEnt  = request.getParameter("numero_entrega");
+       String numRemitoDev  = request.getParameter("numero_devolucion");
+       String tipoEntrega = request.getParameter("tipoEntrega");
+       String fecha = request.getParameter("fecha");
+       String fecha_entrega = request.getParameter("fecha_entrega");
+       String observaciones = request.getParameter("observaciones");
+       String obs_ent = "Los remitos de entrega que intervienen son: ";
        try{
            TRemito tr = new TRemito();
-           if(request.getParameter("id")==null)  throw new BaseException("Remito inexistente","Debe seleccionar el remito a devolver");
+           TRemito_detalle trd = new TRemito_detalle();
+           TActivo ta = new TActivo();
+           HashMap<Integer,Remito> mapRemitos = new HashMap<Integer,Remito>();
+           HashMap<Integer,Remito_detalle> mapDetalle = new HashMap<Integer,Remito_detalle>();
+           HashMap<Integer,Activo> mapActivo = new HashMap<Integer,Activo>();
+           List<Remito_detalle> lstEntrega = new ArrayList<Remito_detalle>();
            
+           if(request.getParameter("id")==null)  throw new BaseException("Remito inexistente","Debe seleccionar el remito a devolver");
            Integer id = Parser.parseInt(request.getParameter("id"));
-           remito = tr.getById(id);            
-           if (remito==null)  
+           remito = tr.getById(id);
+           if (remito==null)
                throw new BaseException("ERROR","No se ha encontrado el remito");
            if(remito.getId_estado()!= OptionsCfg.REMITO_ESTADO_ABIERTO)
                 throw new BaseException("Remito no abierto","El remito no est&aacute; abierto. No se puede crear un remito de devoluci&oacute;n");
            
-           String numRemitoEnt  = request.getParameter("numero_entrega");
-           String numRemitoDev  = request.getParameter("numero_devolucion");
-           String tipoEntrega = request.getParameter("tipoEntrega");
-           String fecha = request.getParameter("fecha");
-           boolean parcial = tipoEntrega!=null && Integer.parseInt(tipoEntrega) ==1;
-           
+           boolean transitorio = tipoEntrega!=null && Integer.parseInt(tipoEntrega) ==1;
+           String[] lstNumero = request.getParameterValues("detalle");
+
            if(numRemitoDev ==null || numRemitoDev.equals(""))
                throw new BaseException("ERROR","Debe ingresar el n&uacute;mero de remito de devoluci&oacute;n");
-           
+
            if(fecha ==null || fecha.equals(""))
                throw new BaseException("ERROR","Debe ingresar la fecha del remito de devoluci&oacute;n");
-           
-           Integer numeroDev = Integer.parseInt(numRemitoDev);
+
+           Integer numeroDev = Parser.parseInt(numRemitoDev);
            Integer numeroEnt = 0;
-           if(parcial) {
+           if(transitorio) {
                if(numRemitoEnt ==null || numRemitoEnt.equals(""))
                throw new BaseException("ERROR","Debe ingresar el n&uacute;mero del nuevo remito de entrega");
-               numeroEnt = Integer.parseInt(numRemitoEnt);           
+               numeroEnt = Parser.parseInt(numRemitoEnt);
            }
            
-           TRemito_detalle trd = new TRemito_detalle();
-           TActivo ta = new TActivo();
-           List<Remito_detalle> lstDetalle = trd.getByRemitoId(remito.getId());
-           
+           //Creo el remito de devolución como una copia del remito original
            Remito dev = new Remito(remito);
            dev.setId(0);
            dev.setNumero(numeroDev);
@@ -130,86 +143,92 @@ public class RemitoDevolucion extends HttpServlet {
            dev.setFecha(TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));
            dev.setFecha_creacion(TFecha.ahora(TFecha.formatoBD));
            dev.setId_usuario(id_usuario);
+           dev.setObservaciones(observaciones);
            Integer id_remito_dev = tr.alta(dev);
            if (id_remito_dev == 0) throw new BaseException("Error", "Ocurrió un error al crear el remito de devoluci&oacute;n");
            dev.setId(id_remito_dev);
-           HashMap<Integer,Remito_detalle> mapDetalle = new HashMap<Integer,Remito_detalle>();
-           HashMap<Integer,Activo> mapActivo = new HashMap<Integer,Activo>();
+           TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_REMITO,OptionsCfg.ACCION_ALTA,dev.getId());
            
-           for(Remito_detalle rd:lstDetalle){
-                mapDetalle.put(rd.getId(),rd);
-                Remito_detalle det_dev = new Remito_detalle(rd);
-                det_dev.setId_remito(dev.getId());
-                det_dev.setId(0);
-                
-                Activo act_dev = ta.getById(det_dev.getId_activo());
-                if(act_dev!=null){
-                    if (act_dev.getAplica_stock() == 1) {
-                        act_dev.setStock(act_dev.getStock() + det_dev.getCantidad());                     
-                    }
-                    
-                    if(act_dev.getId_estado()== OptionsCfg.ACTIVO_ESTADO_ALQUILADO)
-                        act_dev.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE); 
-                    ta.actualizar(act_dev);
-                    mapActivo.put(act_dev.getId(),act_dev);
-                }
-                trd.alta(det_dev);                
-            }
-           
-           
-            remito.setId_estado(OptionsCfg.REMITO_ESTADO_CERRADO);
-            tr.actualizar(remito);
-            if(parcial) {
-             /* Creamos el nuevo remito de entrega */
-            
-            Remito ent = new Remito(remito);
-            ent.setId(0);
-            ent.setNumero(numeroEnt);
-            ent.setId_referencia(dev.getId());
-            ent.setId_tipo_remito(OptionsCfg.REMITO_ENTREGA);
-            ent.setId_estado(OptionsCfg.REMITO_ESTADO_ABIERTO);
-            ent.setId_referencia(dev.getId());
-            ent.setFecha(TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));
-            ent.setFecha_creacion(TFecha.ahora(TFecha.formatoBD));
-            ent.setId_usuario(id_usuario);
-            int id_remito_ent = tr.alta(ent);
-            if (id_remito_ent == 0) throw new BaseException("Error", "Ocurrió un error al crear el remito de entrega");
-            ent.setId(id_remito_ent);
-            String[] lstNumero = request.getParameterValues("detalle");
-                for(int i=0;i<lstNumero.length;i++){
-                   Integer id_rem_det = Integer.parseInt(lstNumero[i]);
-                   Remito_detalle det_dev = mapDetalle.get(id_rem_det);
-                   Remito_detalle det_ent = new Remito_detalle(det_dev);
-                   det_ent.setId(0);
+           for(int i=0;i<lstNumero.length;i++){
+                  //Creo el detalle del remito de devolución y actualizo el activo
+                   Integer id_rem_det = Parser.parseInt(lstNumero[i]);
+                   Remito_detalle rd = trd.getById(id_rem_det);  // Recupero el detalle
+                   if(rd==null) continue;
                    
+                   lstEntrega.add(new Remito_detalle(rd));
+                   
+                   if(mapRemitos.get(rd.getId_remito())==null) {
+                       Remito remitoById = tr.getById(rd.getId_remito()); 
+                       if (remitoById==null) continue;
+                       mapRemitos.put(remitoById.getId(), remitoById); // Guardo el remito original para después cerrarlo
+                       remitoById.setId_estado(OptionsCfg.REMITO_ESTADO_CERRADO);
+                       obs_ent += String.format("%d - ",remitoById.getNumero());
+                       //remitoById.setId_referencia(dev.getId());
+                       tr.actualizar(remitoById);
+                       for(Remito_detalle det:trd.getByRemitoId(remitoById.getId())){ //Cierro todo el remito
+                             Remito_detalle det_dev = new Remito_detalle(det);
+                             det_dev.setId_remito(dev.getId());
+                             det_dev.setId(0);
+                             det_dev.setId_referencia(0);
+                             det.setId_referencia(dev.getId()); // Actualizo al referencia                            
+                             Activo act_dev = ta.getById(det_dev.getId_activo());
+                             if(act_dev!=null){
+                                 if (act_dev.getAplica_stock() == 1) {
+                                     act_dev.setStock(act_dev.getStock() + det_dev.getCantidad());
+                                 }
+                                 if(act_dev.getId_estado()== OptionsCfg.ACTIVO_ESTADO_ALQUILADO)
+                                     act_dev.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                                 ta.actualizar(act_dev);
+                                 mapActivo.put(act_dev.getId(),act_dev);
+                             }
+                             trd.alta(det_dev);      // Creo el detalle de la devolucion             
+                             trd.actualizar(det); // Actualizo los items del remito de entrega
+                       }
+                }
+           }
+          
+           if(transitorio) {
+                /* Creamos el nuevo remito de entrega como una copia del otro*/
+               Remito ent = new Remito(remito);
+               ent.setId(0);
+               ent.setNumero(numeroEnt);               
+               ent.setId_tipo_remito(OptionsCfg.REMITO_ENTREGA);
+               ent.setId_estado(OptionsCfg.REMITO_ESTADO_ABIERTO);
+               ent.setId_referencia(dev.getId());
+               ent.setFecha(TFecha.formatearFecha(fecha_entrega!=null?fecha_entrega:fecha, TFecha.formatoVista, TFecha.formatoBD));
+               ent.setFecha_creacion(TFecha.ahora(TFecha.formatoBD));
+               ent.setId_usuario(id_usuario);
+               ent.setObservaciones(obs_ent);
+               
+               int id_remito_ent = tr.alta(ent);
+               if (id_remito_ent == 0) throw new BaseException("Error", "Ocurrió un error al crear el remito de entrega");
+               ent.setId(id_remito_ent);
+               
+               for (Remito_detalle det_ent:lstEntrega){
+                   //Creamos el detalle del remito de entrega con el detalle de los que figuran en pantalla
+                   det_ent.setId(0);
                    det_ent.setId_remito(ent.getId());
                    Activo act_ent = mapActivo.get(det_ent.getId_activo());
                    if(act_ent!=null){
                     if (act_ent.getAplica_stock() == 1) {
-                       act_ent.setStock(act_ent.getStock() - det_dev.getCantidad());
+                       act_ent.setStock(act_ent.getStock() - det_ent.getCantidad());
                        if (act_ent.getStock()<=0)
                            act_ent.setId_estado(OptionsCfg.ACTIVO_ESTADO_ALQUILADO);
                        ta.actualizar(act_ent);
-                    }                   
+                    }
                    }
                    trd.alta(det_ent);
                 }
                 TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_REMITO,OptionsCfg.ACCION_ALTA,ent.getId());
             }
-            
-            
-            TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_REMITO,OptionsCfg.ACCION_ALTA,remito.getId());
-
             response.sendRedirect("Remito");
-            
+
        } catch(BaseException ex){
             request.setAttribute("titulo", ex.getResult());
             request.setAttribute("mensaje",ex.getMessage());
             request.getRequestDispatcher("message.jsp").forward(request, response);
-            return;
-               
        } finally{
-           
+
        }
     }
 

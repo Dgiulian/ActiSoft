@@ -6,6 +6,7 @@
     boolean nuevo = false;
     if (rubro==null) {
         rubro = new Rubro();
+        rubro.setId_estado(1);
         nuevo = true;
     }      
 %>

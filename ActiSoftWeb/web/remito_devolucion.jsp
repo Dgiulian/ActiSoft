@@ -94,22 +94,27 @@
                                             </div>   
                                             <div class="radio">
                                                 <label>
-                                                    <input type="radio" name="tipoEntrega" id="rdParcial" value="1" ="">Transitorio
+                                                    <input type="radio" name="tipoEntrega" id="rdParcial" value="1">Transitorio
                                                 </label>
                                             </div>
                                         </div>
                             </div>
-                                <div class="col-lg-3">
+                             <div class="col-lg-2">
                                  <div class="form-group">
                                       <label class="" for="numero_entrega">N&uacute;mero de remito de entrega</label>
                                       <input class="form-control" type="text" name="numero_entrega" id="numero_entrega" disabled>
                                   </div>
                               </div>
-
+                              <div class="col-lg-2">
+                                 <div class="form-group">
+                                      <label class="" for="fecha_entrega">Fecha del remito de entrega</label>
+                                      <input class="form-control date-picker" type="text" name="fecha_entrega" id="fecha_entrega" disabled>
+                                  </div>
+                              </div>
                         </div>
                           <div class="row">
                             <div class="col-lg-12">
-                                <h3>Activos <span class="btn btn-primary" data-toggle="modal" data-target="#mdlRemito">Agregar</span></h3>
+                                <h3>Activos <span class="btn btn-primary" data-toggle="modal" data-target="#mdlRemito" id="btnAgregar">Agregar</span></h3>
                                 <table class="table table-bordered table-condensed table-responsive table-striped" id="tblRemito">
                                     <thead>
                                         <tr>
@@ -131,7 +136,7 @@
                                             <td><%= rm.getPosicion() %></td>
                                             <td><%= StringEscapeUtils.escapeHtml4(activo.getDesc_larga())%></td>
                                             <td><%= rm.getCantidad()%></td>
-                                            <td><span class="btn btn-xs btn-circle btn-danger btnDelActivo" > <span class="fa fa-minus fw"></span></span></td>
+                                            <td><span class="btn btn-xs btn-circle btn-danger btnDelActivo" style="display:none"> <span class="fa fa-minus fw"></span></span></td>
                                         </tr>
                                         <% } %>
                                     </tbody>
@@ -201,12 +206,30 @@
             $('#btnSubmit').click(submitForm);      
             $('#rdTotal').change(radioChange);
             $('#rdParcial').change(radioChange);
+            $('#btnAgregar').hide();
         });
         function radioChange(){
-            $('#rdTotal').change(radioChange);
-            $('#rdParcial').change(radioChange);
+//            $('#rdTotal').change(radioChange);
+//            $('#rdParcial').change(radioChange);
             var parcial = $('#rdParcial').prop('checked');
             $('#numero_entrega').prop('disabled',!parcial);
+            $('#fecha_entrega').prop('disabled',!parcial);
+            if(parcial) {
+                $('#btnAgregar').show();                
+                $('.btnDelActivo').show();
+//                $('tr').find('td:last').show()
+//                $('.btnDelActivo').removeClass('hidden');
+            }
+            else {
+                $('#btnAgregar').hide();
+                $('.btnDelActivo').hide();
+
+//                $('tr').find('td:last').hide()
+//                $('.btnDelActivo').addClass('hidden');
+            }
+            
+            
+            
         }
         function validar(){
             var $num_dev = $('#numero_devolucion');
@@ -227,7 +250,12 @@
                 $num_ent.parent().addClass("has-error");
                 return false;
              } else $num_ent.parent().removeClass("has-error");
-              
+             if($num_ent.val()==$num_dev.val()) {
+                 bootbox.alert("El n&uacute;mero de entrega no puede ser el mismo que el de devoluci&oacute;n");
+                $num_ent.parent().addClass("has-error");
+                $num_dev.parent().addClass("has-error");
+                return false;
+             }
             if ($fecha === null || $fecha.val() === "" || !validarFecha($fecha.val())) {
                 bootbox.alert("Ingrese la fecha del remito");
                 $fecha.parent().addClass("has-error");
@@ -257,7 +285,9 @@
                     $('#tblRemito').find('tbody').html(html);
                 else $('#tblRemito').find('tbody tr:last').after(html);
             }            
-            $('.btnDelActivo').click(deleteActivo);           
+            $('.btnDelActivo').click(deleteActivo);       
+            //Cuando se agregan items al remito, no se puede volver a poner en entrega definitiva
+            $('input[name=tipoEntrega]').prop('readonly',true);
         }
         function generarHtml(data){
            var codigo = (data.codigo !==undefined)? data.codigo:"";           

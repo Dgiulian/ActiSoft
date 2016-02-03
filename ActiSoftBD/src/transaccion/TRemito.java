@@ -91,14 +91,22 @@ public class TRemito extends TransaccionBase<Remito> {
             ta.actualizar(activo);                   
             td.baja(d);
         }
+        if(remito.getId_tipo_remito()==OptionsCfg.REMITO_DEVOLUCION){
+            // Si es un remito de devolución, se tiene que volver a atrás el estado del remito de entrega
+            Remito entrega = this.getById(remito.getId_referencia());
+            if(entrega!=null){
+                entrega.setId_estado(OptionsCfg.REMITO_ESTADO_ABIERTO);
+                this.actualizar(entrega);
+            }
+        }
         return this.baja(remito);        
     }
     public boolean existeReferencia(Remito remito){
-        String query = "select count(*) from remito where remito.id_tipo_remito = 2 and remito.id_referencia = %d ";
+        if (remito.getId()==0) return false;
         
-
+        String query = String.format("select count(*) from remito where  remito.id_referencia = %d ",remito.getId());
         conexion.conectarse();
-        ResultSet rs = conexion.ejecutarSQLSelect(String.format(query,remito.getId()));
+        ResultSet rs = conexion.ejecutarSQLSelect(query);
         try {
             int cant = 0;
             while(rs!=null && rs.next()){

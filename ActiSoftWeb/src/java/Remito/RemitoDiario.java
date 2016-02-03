@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -114,7 +115,7 @@ public class RemitoDiario extends HttpServlet {
            Integer id = Parser.parseInt(request.getParameter("id"));
            remito = tr.getById(id);            
            if (remito==null)  
-               throw new BaseException("ERROR","No se ha encontrado el remito");
+               throw new BaseException("ERROR","No se encontro el remito");
            if(remito.getId_estado()!= OptionsCfg.REMITO_ESTADO_ABIERTO)
                 throw new BaseException("ERROR","El remito no est&aacute; abierto. No se puede crear un remito de devoluci&oacute;n");
            if(Parser.parseInt(numero)==0) throw new BaseException("ERROR","Indique un n&uacute;mero de remito");
@@ -123,7 +124,13 @@ public class RemitoDiario extends HttpServlet {
                  throw new BaseException("ERROR","Ya existe un remito con ese n&uacute;mero");
            //TODO -  Buscar si existe un remito Diario para ese mismo remito en la misma fecha
            
-           
+           Map<String,String> mapFiltro = new HashMap();
+           mapFiltro.put("id",remito.getId().toString());
+           mapFiltro.put("fecha",TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));
+           //mapFiltro.put("id_tipo_remito",OptionsCfg.REMITO_DIARIO.toString());
+           if(tr.getListFiltro(mapFiltro).size()>0){
+               throw new BaseException("ERROR","Ya existe un remito diario para esa fecha");
+           }
            List<Remito_detalle> lstDetalle = trd.getByRemitoId(remito.getId());
            
            Remito diario = new Remito(remito);

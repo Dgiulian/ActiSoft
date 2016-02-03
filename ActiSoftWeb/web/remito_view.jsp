@@ -88,7 +88,7 @@
                               <fieldset disabled>
                                <div class="col-lg-3 " >
                                     <div class="form-group-sm">
-                                       <label for="cliente_cuit">N&uacute;mero contrato</label>                                       
+                                       <label for="contrato">N&uacute;mero contrato</label>                                       
                                        <input class="form-control" name="contrato" id="contrato" value="<%= contrato.getNumero() %>">                                        
                                    </div>
                                </div>
@@ -136,7 +136,7 @@
                       <div class="row" id="data">
                           
                         <div class="col-lg-6 " >
-                             <h3 class="">Cliente</h3>                             
+                             <h3 class="">Cliente </h3>                             
                              <fieldset disabled>                                 
                                  <div class="form-group">
                                     <label for="cliente_nombre">Nombre</label>

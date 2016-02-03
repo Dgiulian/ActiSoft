@@ -192,13 +192,14 @@
     
     html += '<table class="table table-bordered table-condensed">';
     html +=  '<colgroup>';
-    html +=  '    <col span="1" style="width: 90%;">';
+    html +=  '    <col span="1" style="width: 10%;">';
+    html +=  '    <col span="1" style="width: 80%;">';
     html +=  '    <col span="1" style="width: 10%;">';
     html +=  ' </colgroup>';
     html += '        <thead>';
     html += '            <tr>';
 //    html += '                <th>Id</th>' ;
-//    html += '                <th>C&oacute;digo</th>';  
+    html += '                <th>C&oacute;digo</th>';  
     html += '                <th>Descripci&oacute;n </th>';  
     html += '                <th><a href="<%= PathCfg.SUBRUBRO_EDIT%>?id_rubro=' + id_rubro + '" class="btn btn-sm btn-primary pull-right"><span class="fa fa-file-o fa-fw"> </span> Nuevo</a></th>';  
     html += '            </tr>';  
@@ -208,7 +209,7 @@
         var d = data[i];
         html += '            <tr>';  
 //        html += '                <td>'+ d.id +'</td>'; 
-//        html += '                <td>'+ d.codigo +'</td>';  
+        html += '                <td>'+ d.codigo +'</td>';  
         html += '                <td>'+ d.descripcion +'</td>';  
         
         var htmlEdit = "<a href='<%= PathCfg.SUBRUBRO_EDIT%>?id_rubro="+ id_rubro + "&id="+ d.id +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";

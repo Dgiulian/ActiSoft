@@ -320,13 +320,14 @@
         bootbox.confirm("Esta seguro que desea eliminar el registro?",function(result){
              if(result) {
                  $.ajax({
-                 url: '<%= PathCfg.REMITO_DEL %>', //DATAENTRY_DEL
+                 url: '<%= PathCfg.REMITO_DEL %>',
                  data: {id:id },
                  method:"POST",
                  dataType: "json",
                  success: function(data) {            
                      if(data.Result === "OK") {
-                         $tr.remove();
+                         cargarDatos();
+                         //$tr.remove();
                      } else if (data.Message) bootbox.alert(data.Message);
                  }
              });

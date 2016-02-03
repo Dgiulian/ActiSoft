@@ -15,7 +15,7 @@ public class Subrubro {
     public String descripcion = "";
     public String desc_opcional = "";
     public Integer id_clase = 0;
-    public Integer id_estado = 0;
+    public Integer id_estado = 1;
 
     public Subrubro(){}
     public Subrubro(Subrubro subrubro){

@@ -290,7 +290,7 @@
                             <!-- /.row (nested) -->
                             <div class="col-lg-12">
                                 <button type="submit" class="btn btn-default">Guardar</button>
-                                <a type="reset" class="btn btn-default" href="<%=PathCfg.CLIENTE%>">Cancelar</a>
+                                <a type="reset" class="btn btn-default" href="<%=PathCfg.PROVEEDOR%>">Cancelar</a>
                             </div>
                         </div>
                         <!-- /.panel-body -->

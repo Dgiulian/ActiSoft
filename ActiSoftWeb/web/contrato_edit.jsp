@@ -16,6 +16,7 @@
 <%@page import="transaccion.TProvincia"%>
 <%@page import="java.util.List"%>
 <%@page import="bd.Cliente"%>
+<%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <% 
     Contrato contrato = (Contrato) request.getAttribute("contrato");
     boolean nuevo = false;
@@ -35,6 +36,7 @@
 <html lang="en">
 
 <head>
+    
      <%@include  file="tpl_head.jsp" %>  
      <style>
          /*.form-control{padding:0;}*/
@@ -153,7 +155,7 @@
                                            String selected = o.getId()==cliente.getId_iva()?"selected":""; 
                                            %>
                                            <option value="<%=o.getId()%>" <%= selected%>>
-                                               <%= o.getDescripcion()%>
+                                               <%= StringEscapeUtils.escapeHtml4(o.getDescripcion())%>
                                            </option>
                                            <%  } %>
                                            %>
@@ -208,7 +210,7 @@
                                                     <input class="form-control form-inline" type="number" name="posicion" min="0" value="<%= detalle.getPosicion() %>">
                                                 </td>
                                                 <td>
-                                                    <input class="form-control form-inline" name="descripcion" value="<%= detalle.getDescripcion() %>">
+                                                    <input class="form-control form-inline" name="descripcion" value="<%= StringEscapeUtils.escapeHtml4(detalle.getDescripcion()) %>">
                                                 </td>
                                                 <td style="width:110px;" >
                                                     <select class="form-control" name="divisa">
@@ -502,8 +504,8 @@
                      return false;
                  }
                  var todoOk = true;
-                 /* Validamos que el código de subrubro no se repita. 
-                  * Si se repite para distinas posiciones solicitamos confirmación al usuario.
+                 /* Validamos que el cÃ³digo de subrubro no se repita. 
+                  * Si se repite para distinas posiciones solicitamos confirmaciÃ³n al usuario.
                   * Si se repote para la misma posicion, no permitimos la carga.
                   * */
                  for(j=0;j<arrCodigos.length;j++){

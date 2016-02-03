@@ -359,7 +359,7 @@
                                 <% if(activo.getId_estado()!=OptionsCfg.ACTIVO_ESTADO_ALQUILADO) {%>
                                     <button type="submit" class="btn btn-default">Guardar</button>
                                 <%} else { %>
-                                <h4>El activo se encuentra alquilado y no puede ser editado </h4>
+                                <h4>El activo se encuentra utilizado y no puede ser modificado</h4>
                                 <% } %>
                                 <a type="reset" class="btn btn-default" href='<%=PathCfg.ACTIVO%>'>Cancelar</a>
                             </div>

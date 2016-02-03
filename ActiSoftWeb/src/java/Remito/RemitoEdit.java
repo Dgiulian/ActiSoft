@@ -132,7 +132,7 @@ public class RemitoEdit extends HttpServlet {
                 nuevo = true;
             }
                        
-            if(tr.existeReferencia(remito)) throw new BaseException("ERROR","Existe un remito de referencia para este remito. No se puede editar");
+            if(!nuevo && tr.existeReferencia(remito)) throw new BaseException("ERROR","Existe un remito de referencia para este remito. No se puede editar");
             
             if(strCliente ==null || strCliente.equals("")) {
                 throw new BaseException("Cliente inexistente","Debe seleccionar el cliente del remito");

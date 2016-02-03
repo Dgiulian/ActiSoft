@@ -27,7 +27,7 @@
                       <span class="input-group-addon" id="btnBuscar" ><span class="fa fa-search fa-fw"></span></span>
                   </span>
               </div>
-            </div>
+            </div>              
         </div>
           <hr>
           <div class="dataTable_wrapper">

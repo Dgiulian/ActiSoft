@@ -7,6 +7,7 @@
     boolean nuevo = false;
     if (subrubro==null) {
         subrubro = new Subrubro();
+        subrubro.setId_estado(1);
         nuevo = true;
     }      
 %>

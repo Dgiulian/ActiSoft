@@ -28,7 +28,7 @@ public class AjustaRemito {
     String line = "";
         final String DELIMITER = ";";
       public static void main(String[] args){
-          String fileName = "c:\\inetpub\\ftproot\\ActiSoft\\Desa\\Inventario200116.csv";           
+          String fileName = "e:\\Downloads\\Inventario200116.csv";           
           
           new AjustaRemito(fileName);
       }
@@ -55,6 +55,10 @@ public class AjustaRemito {
                         cant_mal +=1;
                         continue;
                     }
+                     activo.setStock(1f);
+                            activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                            new TActivo().actualizar(activo);
+                            
                     filtro.put("id_activo",activo.getId().toString());
                     List<Remito_detalle> listaDetalle = td.getListFiltro(filtro);
                     if (listaDetalle==null ||  listaDetalle.size() != 1){
@@ -63,7 +67,7 @@ public class AjustaRemito {
                     }
                     
                     for(Remito_detalle d:listaDetalle){
-                    boolean baja = td.baja(d);
+                        boolean baja = td.baja(d);
                         if(baja){
                             activo.setStock(1f);
                             activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);

@@ -62,7 +62,6 @@ public class RemitoDel extends HttpServlet {
            boolean baja = new TRemito().eliminar(remito);
            if ( baja){               
                jr.setResult("OK");
-
                TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_REMITO,OptionsCfg.ACCION_BAJA,remito.getId());
            } else throw new BaseException("ERROR","Ocurrio un error al eliminar el registro");                     
         } catch (BaseException ex) {
