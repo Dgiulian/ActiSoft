@@ -21,6 +21,7 @@ public class OptionsCfg {
     public static final Integer ACTIVO_ESTADO_INSPECCION = 5;
     public static final Integer ACTIVO_ESTADO_PRESTADO = 6;
     public static final Integer ACTIVO_ESTADO_NO_DISPONIBLE = 7;
+    public static final Integer ACTIVO_ESTADO_NO_APTO = 8;
     
     
     public static final Integer REMITO_ENTREGA = 1;
@@ -53,8 +54,9 @@ public class OptionsCfg {
     
     public static final Integer UNIDAD_DIAS = 1;
     public static final Integer UNIDAD_HORAS = 2;
-    public static final Integer UNIDAD_MTS = 3;
+    public static final Integer UNIDAD_MTS = 3;    
     public static final Integer UNIDAD_UNIDAD = 4;
+    public static final Integer UNIDAD_KMS = 5;
     
     public static final Integer PROVEEDOR_MAYORISTA = 1;
     public static final Integer PROVEEDOR_TRANSPORTISTA = 2;
@@ -130,6 +132,7 @@ public class OptionsCfg {
         lista.add(new Option(ACTIVO_ESTADO_INSPECCION,String.format("%03d",ACTIVO_ESTADO_INSPECCION),"Inspección"));
         lista.add(new Option(ACTIVO_ESTADO_PRESTADO,String.format("%03d",ACTIVO_ESTADO_PRESTADO),"Prestado"));
         lista.add(new Option(ACTIVO_ESTADO_NO_DISPONIBLE,String.format("%03d",ACTIVO_ESTADO_NO_DISPONIBLE),"Prestado"));
+        lista.add(new Option(ACTIVO_ESTADO_NO_APTO,String.format("%03d",ACTIVO_ESTADO_NO_APTO),"No Apto"));
         
 //        lista.add(new Option(6,"003","Cabeza fractura 001"));        
         return lista;
@@ -153,6 +156,7 @@ public class OptionsCfg {
         lista.add(new Option(UNIDAD_DIAS,String.format("%03d",UNIDAD_DIAS),"Dias"));
         lista.add(new Option(UNIDAD_HORAS,String.format("%03d",UNIDAD_HORAS),"Horas"));
         lista.add(new Option(UNIDAD_MTS,String.format("%03d",UNIDAD_MTS),"Mts"));
+        lista.add(new Option(UNIDAD_KMS,String.format("%03d",UNIDAD_KMS),"Kms"));
 //        lista.add(new Option(UNIDAD_UNIDAD,String.format("%03d",UNIDAD_UNIDAD),"Unidad"));
         return lista;
     }

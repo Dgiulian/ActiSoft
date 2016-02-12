@@ -119,6 +119,8 @@
     <!-- DataTables JavaScript -->
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="bower_components/datatables-plugins/sorting/date-uk.js"></script>
+    
     <script src="js/bootbox.min.js"></script>        
     
     <script src="bower_components/jquery-mask/jquery.mask.min.js"></script>
@@ -199,7 +201,10 @@
                                 searching: false,
                                 lengthChange: false,
                                 bInfo: false,
-                                 order: [[ 2, "desc" ]],
+                                order: [ 2, "desc" ],
+                                columnDefs: [                                   
+                                    { type: 'date-uk', targets: 2 },
+                               ],
                                 language: {
                                     url:'bower_components/datatables-plugins/i18n/Spanish.json',
                                 }

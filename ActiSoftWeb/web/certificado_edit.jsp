@@ -15,7 +15,8 @@
     Activo activo = (Activo) request.getAttribute("activo");
     boolean nuevo = false;
     if (certificado==null) {
-        certificado= new Certificado();        
+        certificado= new Certificado();    
+        certificado.setId_resultado(OptionsCfg.CERTIFICADO_NO_APTO);
     }    
     nuevo = certificado.getId()==0;
 %>

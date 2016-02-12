@@ -79,6 +79,8 @@
     <!-- DataTables JavaScript -->
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="bower_components/datatables-plugins/sorting/date-uk.js"></script>
+    
     <script src="js/bootbox.min.js"></script>        
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
@@ -87,9 +89,9 @@
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        loadData({id_activo:<%= activo.getId()%>});
+        loadDataCompra({id_activo:<%= activo.getId()%>});
     });
-    function loadData(data){
+    function loadDataCompra(data){
          var $tabla = $('#tblCompra');
          $.ajax({
                url: '<%= PathCfg.COMPRA_LIST %>',
@@ -102,7 +104,7 @@
                },
                success: function(data) {
                    if(data.Result === "OK") {
-                       $tabla.find('tbody').html(createTable(data.Records));
+                       $tabla.find('tbody').html(createTableCompra(data.Records));
 
                         $('.btn-del').click(borrarCompra);
                         $tabla.DataTable({
@@ -121,16 +123,8 @@
                }
            });
     }
-    function borrarCompra(){
-        var id = $(this).data('index');
-        var $tr = $(this).parent().parent();
-        deleteData('<%= PathCfg.COMPRA_DEL %>',{id:id},function(result) {     
-                if(result.Result === "OK") {
-                    $tr.remove();
-                } else if (result.Message) bootbox.alert(result.Message);
-        });
-    }
-    function createTable(data){
+    
+    function createTableCompra(data){
         var html = "";
         for(var i = 0;i< data.length;i++){
            html +="<tr class=''>";
@@ -149,7 +143,15 @@
        }
        return html;
     }
-
+    function borrarCompra(){
+        var id = $(this).data('index');
+        var $tr = $(this).parent().parent();
+        deleteData('<%= PathCfg.COMPRA_DEL %>',{id:id},function(result) {     
+                if(result.Result === "OK") {
+                    $tr.remove();
+                } else if (result.Message) bootbox.alert(result.Message);
+        });
+    }
      </script>
 <%@include file="tpl_footer.jsp"%>
 </body>

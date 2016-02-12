@@ -82,17 +82,15 @@ public class CertificadoEdit extends HttpServlet {
         }
         certificado = new TCertificado().getById(id_certif);
         if(certificado==null) {
-            certificado = new Certificado();            
+            certificado = new Certificado();
+            certificado.setId_resultado(OptionsCfg.CERTIFICADO_NO_APTO);
             nuevo = true;
         }
         try{
             Integer id_activo;
             if(nuevo){                
-                try{
-                    id_activo = Integer.parseInt(idActivo);                
-                } catch (NumberFormatException ex){
-                    id_activo = 0;
-                }
+               id_activo = Integer.parseInt(idActivo);                
+               
             } else id_activo = certificado.getId_activo();
             
             Activo activo = new TActivo().getById(id_activo);
@@ -302,13 +300,20 @@ public class CertificadoEdit extends HttpServlet {
                 certificado.setId(id_certif);
             } else todoOk = tc.actualizar(certificado);
             if(!todoOk) throw new BaseException ("Error","Ocurri&oacute; un error al guardar el certificado");
-            Integer id_usuario = 0;
+            Integer id_usuario      = 0;
             Integer id_tipo_usuario = 0;
             HttpSession session = request.getSession();
             id_usuario = (Integer) session.getAttribute("id_usuario");
             id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
-            TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_CERTIFICADO,nuevo?OptionsCfg.ACCION_ALTA:OptionsCfg.ACCION_MODIFICAR,certificado.getId());
             
+            
+            if(certificado.getId_resultado()==OptionsCfg.CERTIFICADO_NO_APTO){
+                activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_NO_APTO);
+                new TActivo().actualizar(activo);
+                TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_CERTIFICADO,OptionsCfg.ACCION_MODIFICAR,activo.getId());
+            }
+            
+            TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_CERTIFICADO,nuevo?OptionsCfg.ACCION_ALTA:OptionsCfg.ACCION_MODIFICAR,certificado.getId());
             response.sendRedirect(PathCfg.CERTIFICADO + "?id_activo=" + certificado.getId_activo());
             
         } catch (FileUploadException e) {

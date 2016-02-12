@@ -123,7 +123,11 @@ public class RemitoDiario extends HttpServlet {
            if(tr.getByNumero(Parser.parseInt(numero))!=null) 
                  throw new BaseException("ERROR","Ya existe un remito con ese n&uacute;mero");
            //TODO -  Buscar si existe un remito Diario para ese mismo remito en la misma fecha
-           
+          
+           if(remito.getFecha().startsWith(TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD))){
+               throw new BaseException("ERROR","El remito diario no puede tener la misma fecha que el remito de entrega");
+           }
+               
            Map<String,String> mapFiltro = new HashMap();
            mapFiltro.put("id",remito.getId().toString());
            mapFiltro.put("fecha",TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));

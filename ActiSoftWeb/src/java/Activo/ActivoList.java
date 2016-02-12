@@ -5,6 +5,7 @@
 package Activo;
 
 import bd.Activo;
+import bd.Compra;
 import bd.Subrubro;
 import bd.Rubro;
 import com.google.gson.Gson;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TActivo;
+import transaccion.TCompra;
 import transaccion.TSubrubro;
 import transaccion.TRubro;
 import utils.JsonRespuesta;
@@ -45,7 +47,7 @@ public class ActivoList extends HttpServlet {
      HashMap<Integer,Rubro> mapRubros;
      HashMap<Integer,Subrubro> mapSubrubros;
      HashMap<Integer,Option> mapEstados;
-     
+     TCompra tc ;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
@@ -54,7 +56,7 @@ public class ActivoList extends HttpServlet {
         String idRubro = request.getParameter("id_rubro");
         String idSubrubro = request.getParameter("id_subrubro");
         String codigo = request.getParameter("codigo");
-        
+        tc = new TCompra();
         mapRubros = new TRubro().getMap();
         
         mapSubrubros = new TSubrubro().getMap();
@@ -123,6 +125,8 @@ public class ActivoList extends HttpServlet {
      String cod_subrubro = "";
      String subrubro = "";
      String estado = "";
+     String fecha_alta = "";
+     
      public ActivoDet(Activo activo){
          super(activo);
          // Por default devolvemos el Id
@@ -137,9 +141,13 @@ public class ActivoList extends HttpServlet {
          }
          Subrubro s = mapSubrubros.get(activo.getId_subrubro());       
          if (s!=null) {this.subrubro = s.getDescripcion(); this.cod_subrubro = s.getCodigo();};             
+      
          Option o = mapEstados.get(activo.getId_estado());
          if(o!=null)
              this.estado = o.getDescripcion();
+         
+         Compra compra = tc.getPrimerCompra(activo.getId());
+         if(compra!=null) this.fecha_alta = compra.getFecha();         
      }
  }
    

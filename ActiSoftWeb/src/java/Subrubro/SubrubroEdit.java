@@ -52,7 +52,8 @@ public class SubrubroEdit extends HttpServlet {
             Subrubro  subrubro = new TSubrubro().getById(id_subrubro);
 
             if(subrubro!=null) request.setAttribute("subrubro", subrubro);
-            if(rubro!=null) request.setAttribute("rubro", rubro);
+            if (rubro!=null) request.setAttribute("rubro", rubro);
+            
             
             request.getRequestDispatcher("subrubro_edit.jsp").forward(request, response);
         }   catch(BaseException ex){
@@ -81,29 +82,41 @@ public class SubrubroEdit extends HttpServlet {
         String desc_opcional = request.getParameter("desc_opcional");
         String id_estado = request.getParameter("id_estado");
         
-        TSubrubro  tr = new TSubrubro();
-        Subrubro subrubro = tr.getById(id_subrubro);
+        TSubrubro  ts = new TSubrubro();
+        TRubro tr = new TRubro();
+        
+        Subrubro subrubro = ts.getById(id_subrubro);
+        Rubro rubro;
+        HttpSession session = request.getSession();
+        Integer id_usuario = (Integer) session.getAttribute("id_usuario");
+        Integer id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
         try{
             boolean nuevo = false;
             
             if(subrubro==null){
                subrubro = new Subrubro();
                nuevo = true;
-               subrubro.setId_rubro(id_rubro);
-               
-            }
-            if(nuevo && tr.getByCodigo(codigo)!=null) throw new BaseException("ERROR","Ya existe un subrubro con ese c&oacute;digo");
+               subrubro.setId_rubro(id_rubro);               
+            }            
+            if(nuevo && ts.getByCodigo(codigo)!=null) throw new BaseException("ERROR","Ya existe un subrubro con ese c&oacute;digo");
+            
             subrubro.setCodigo(codigo);
             subrubro.setDescripcion(descripcion);        
             subrubro.setDesc_opcional(desc_opcional);        
             subrubro.setId_estado(id_estado!=null?1:0);
+            
             if(nuevo){
-                id_subrubro = tr.alta(subrubro);
-                subrubro.setId_rubro(id_subrubro);
-            }else tr.actualizar(subrubro);
-             HttpSession session = request.getSession();
-             Integer id_usuario = (Integer) session.getAttribute("id_usuario");
-             Integer id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
+                id_subrubro = ts.alta(subrubro);
+                subrubro.setId(id_subrubro);
+            }else ts.actualizar(subrubro);
+             rubro = tr.getById(subrubro.getId_rubro());
+             if(rubro!=null){
+                 if (rubro.getId_estado()==0 && subrubro.getId_estado()!=0){
+                     rubro.setId_estado(1);
+                     tr.actualizar(rubro);
+                     TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_RUBRO,OptionsCfg.ACCION_MODIFICAR,rubro.getId());
+                 }
+             }
              TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_SUBRUBRO,OptionsCfg.ACCION_ALTA,subrubro.getId());
              response.sendRedirect(PathCfg.RUBRO);
         } catch(BaseException ex){

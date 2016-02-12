@@ -138,6 +138,8 @@
     <!-- DataTables JavaScript -->
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="bower_components/datatables-plugins/sorting/date-uk.js"></script>
+    
     <script src="js/bootbox.min.js"></script>        
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
@@ -151,12 +153,6 @@
        $('#id_rubro').change(function(){rubroChange("<%= PathCfg.SUBRUBRO_LIST%>",{id_rubro:$(this).val(),id_estado:1})});
        $('#id_subrubro').change(subrubroChange);
        
-       $('#mdlActivoHistoria').on('show.bs.modal',function(e){
-          $invoker = $(e.relatedTarget);
-          id_activo = $invoker.data('index');
-          console.log($invoker);
-          loadDataActivoHistoria({id_activo:id_activo});
-       });
        
        $('#btnBuscar').click(buscar);
        
@@ -227,6 +223,7 @@
            d = data[i];
 //           html +=wrapTag('td',d.id,'');
            html +=wrapTag('td',d.codigo,'');
+           
 //           html +=wrapTag('td',d.familia,'');
 //           html +=wrapTag('td',d.cod_rubro,'');
 //           html +=wrapTag('td',d.rubro,'');
@@ -237,7 +234,7 @@
 //           html +=wrapTag('td',d.conexion,'');
 //           html +=wrapTag('td',d.longitud,'');
 //           html +=wrapTag('td',d.num_serie,'');
-           var htmlEstado = '<a href="#" data-toggle="modal" data-target="#mdlActivoHistoria" data-index="'+ d.id + '" >' + d.estado + '</a>';
+           var htmlEstado = '<a href="#" data-toggle="modal" data-target="#mdlActivoHistoria" data-index="'+ d.id + '" data-fecha_alta=' +  d.fecha_alta + '>' + d.estado + ' </a>';
            html +=wrapTag('td',htmlEstado,'');
            html += wrapTag('td',d.stock,'');
            

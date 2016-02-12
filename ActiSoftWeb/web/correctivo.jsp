@@ -80,6 +80,8 @@
     <!-- DataTables JavaScript -->
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="bower_components/datatables-plugins/sorting/date-uk.js"></script>
+    
     <script src="js/bootbox.min.js"></script>        
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
@@ -88,12 +90,10 @@
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        loadData({id_activo:<%= activo.getId()%>});
+        loadDataCorrectivo({id_activo:<%= activo.getId()%>});
     });
-    function loadData(data){
+    function loadDataCorrectivo(data){
          var $tabla = $('#tblCorrectivo');
-
-
         $.ajax({
                url: '<%= PathCfg.CORRECTIVO_LIST %>',
                data: data,
@@ -105,35 +105,16 @@
                },
                success: function(data) {
                    if(data.Result === "OK") {
-                       $tabla.find('tbody').html(createTable(data.Records));
-//                     $('#btnExcel').attr('href','Excel?type=GRC&pageNro='+page);
+                       $tabla.find('tbody').html(createTableCorrectivo(data.Records));
                       
-                        $('.btn-del').click(borrarCorrectivo);
-//                        $tabla.DataTable({
-//                                responsive: true,
-//                                paging:true,
-//                                ordering:false,
-//                                searching:false,
-//                                lengthChange:false,                                
-//                                bInfo:false,
-//                                language: {
-//                                    url:'bower_components/datatables-plugins/i18n/Spanish.json',
-//                                }
-//                        });
+//                        $('.btn-del').click(borrarCorrectivo);
+
                    }
                }
            });
     }
-    function borrarCorrectivo(){
-        var id = $(this).data('index');
-        var $tr = $(this).parent().parent();
-        deleteData('<%= PathCfg.CORRECTIVO_DEL %>',{id:id},function(result) {     
-                if(result.Result === "OK") {
-                    $tr.remove();
-                } else if (result.Message) bootbox.alert(result.Message);
-        });
-    }
-    function createTable(data){
+    
+    function createTableCorrectivo(data){
         var html = "";
         for(var i = 0;i< data.length;i++){
            html +="<tr class=''>";
@@ -148,7 +129,15 @@
        }
        return html;
     }
-
+function borrarCorrectivo(){
+        var id = $(this).data('index');
+        var $tr = $(this).parent().parent();
+        deleteData('<%= PathCfg.CORRECTIVO_DEL %>',{id:id},function(result) {     
+                if(result.Result === "OK") {
+                    $tr.remove();
+                } else if (result.Message) bootbox.alert(result.Message);
+        });
+    }
      </script>
 <%@include file="tpl_footer.jsp"%>
 </body>

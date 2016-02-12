@@ -40,10 +40,10 @@ public class TRemito extends TransaccionBase<Remito> {
     
     @Override
     public String getOrderBy(){
-        
-        return " order by " + this.orderBy;
+        if (this.orderBy.equals("")) return "";
+        else return " order by " + this.orderBy;
     }
-     public TRemito setOrderBy(String orderBy){
+    public TRemito setOrderBy(String orderBy){
         this.orderBy = orderBy;
         return this;
     }

@@ -95,6 +95,8 @@
     <!-- DataTables JavaScript -->
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="bower_components/datatables-plugins/sorting/date-uk.js"></script>
+    
     <script src="js/bootbox.min.js"></script>        
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
@@ -103,9 +105,9 @@
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        loadData({id_activo:<%= activo.getId()%>});
+        loadDataCertificado({id_activo:<%= activo.getId()%>});
     });
-    function loadData(data){
+    function loadDataCertificado(data){
          var $tabla = $('#tblCertificado');
 
 
@@ -120,7 +122,7 @@
                },
                success: function(data) {
                    if(data.Result === "OK") {
-                       $tabla.find('tbody').html(createTable(data.Records));
+                       $tabla.find('tbody').html(createTableCertificado(data.Records));
 //                     $('#btnExcel').attr('href','Excel?type=GRC&pageNro='+page);
                       
                         $('.btn-del').click(borrarCertificado);
@@ -139,16 +141,8 @@
                }
            });
     }
-    function borrarCertificado(){
-        var id = $(this).data('index');
-        var $tr = $(this).parent().parent();
-        deleteData('<%= PathCfg.CERTIFICADO_DEL %>',{id:id},function(result) {     
-                if(result.Result === "OK") {
-                    $tr.remove();
-                } else if (result.Message) bootbox.alert(result.Message);
-        });
-    }
-    function createTable(data){
+
+    function createTableCertificado(data){
         var html = "";
         for(var i = 0;i< data.length;i++){
            html +="<tr class=''>";
@@ -167,7 +161,15 @@
        }
        return html;
     }
-
+    function borrarCertificado(){
+        var id = $(this).data('index');
+        var $tr = $(this).parent().parent();
+        deleteData('<%= PathCfg.CERTIFICADO_DEL %>',{id:id},function(result) {     
+                if(result.Result === "OK") {
+                    $tr.remove();
+                } else if (result.Message) bootbox.alert(result.Message);
+        });
+    }
      </script>
 <%@include file="tpl_footer.jsp"%>
 </body>
