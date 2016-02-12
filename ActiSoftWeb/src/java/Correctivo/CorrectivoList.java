@@ -20,13 +20,16 @@ import transaccion.TCorrectivo;
 import utils.BaseException;
 import utils.JsonRespuesta;
 import utils.OptionsCfg;
+import utils.OptionsCfg.Option;
 
 /**
  *
  * @author Diego
  */
 public class CorrectivoList extends HttpServlet {
-
+    HashMap<Integer, OptionsCfg.Option> mapActividades;
+    HashMap<Integer, OptionsCfg.Option> mapResultados;
+    
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -43,9 +46,9 @@ public class CorrectivoList extends HttpServlet {
         PrintWriter out = response.getWriter();
         String pagNro = request.getParameter("pagNro");
         String idActivo = request.getParameter("id_activo");
+        mapActividades = OptionsCfg.getMap(OptionsCfg.getTipoActividades());
+        mapResultados = OptionsCfg.getMap(OptionsCfg.getEstadoCertificados());
         
-        
-       
         HashMap<String,String> mapFiltro = new HashMap<String,String>();
         Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
         Integer id_activo = (idActivo!=null)?Integer.parseInt(idActivo):0;
@@ -124,7 +127,12 @@ public class CorrectivoList extends HttpServlet {
         String actividad = "";
         String resultado = "";
         public CorrectivoDet(Correctivo correctivo){
-            super(correctivo);            
+            super(correctivo);  
+            Option optAct = mapActividades.get(correctivo.getId_actividad());
+            actividad = optAct!=null?optAct.getDescripcion():correctivo.getId_actividad().toString();
+            
+            Option optRes = mapResultados.get(correctivo.getId_resultado());
+            resultado = optRes!=null?optRes.getDescripcion():correctivo.getId_resultado().toString();
         }
         
     }

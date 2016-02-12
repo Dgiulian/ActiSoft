@@ -344,8 +344,8 @@
            html +="<tr class=''>";
            d = data[i];
             html += wrapTag('td',convertirFecha(d.fecha),'');
-            html += wrapTag('td',d.id_actividad,'');            
-            html += wrapTag('td',d.id_resultado,'');            
+            html += wrapTag('td',d.actividad,'');            
+            html += wrapTag('td',d.resultado,'');            
            var htmlEdit = "<a href='<%= PathCfg.CORRECTIVO_EDIT%>?id="+ d.id +"&id_activo="+ d.id_activo +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
 //           var htmlDel = "<span href='' data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span>";
            html +=wrapTag('td',htmlEdit,'');

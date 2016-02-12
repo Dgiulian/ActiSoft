@@ -129,9 +129,12 @@ public class RemitoDiario extends HttpServlet {
            }
                
            Map<String,String> mapFiltro = new HashMap();
-           mapFiltro.put("id",remito.getId().toString());
+           mapFiltro.put("id_referencia",remito.getId().toString());
            mapFiltro.put("fecha",TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));
            //mapFiltro.put("id_tipo_remito",OptionsCfg.REMITO_DIARIO.toString());
+           //Hay un problema con la fecha, porque el remito tiene fecha y hora. Y cuando controla
+           // solo toma la fecha, por lo tanto no encuentra que ya exista
+           
            if(tr.getListFiltro(mapFiltro).size()>0){
                throw new BaseException("ERROR","Ya existe un remito diario para esa fecha");
            }
