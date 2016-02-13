@@ -33,15 +33,15 @@
     HashMap<Integer,Rubro>    mapRubros = new TRubro().getMap();
     HashMap<Integer,Subrubro> mapSubrubros = new TSubrubro().getMap();
     
-    HashMap<String,String> mapRubro = new HashMap<String,String>();
-    HashMap<String,String> mapSubrubro = new HashMap<String,String>();
+    HashMap<String,String> filtroRubro = new HashMap<String,String>();
+    HashMap<String,String> filtroSubrubro = new HashMap<String,String>();
     
-    mapRubro.put("id_estado","1");
-    List<Rubro> lstRubro = new TRubro().getListFiltro(mapRubro);
+    filtroRubro.put("id_estado","1");
+    List<Rubro> lstRubro = new TRubro().getListFiltro(filtroRubro);
 
-    mapSubrubro.put("id_estado","1");
-    mapSubrubro.put("id_rubro",kit.getId_rubro().toString());
-    List<Subrubro> lstSubrubro = new TSubrubro().getListFiltro(mapSubrubro);
+    filtroSubrubro.put("id_estado","1");
+    filtroSubrubro.put("id_rubro",kit.getId_rubro().toString());
+    List<Subrubro> lstSubrubro = new TSubrubro().getListFiltro(filtroSubrubro);
     
 %>
 <!DOCTYPE html>
