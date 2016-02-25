@@ -9,7 +9,7 @@ package bd;
  * @author Diego
  */
 public class Rubro {
-    Integer id ;
+    Integer id = 0 ;
 //    Integer tipo;
     String codigo = "";
     String descripcion = "";

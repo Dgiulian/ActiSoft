@@ -30,7 +30,7 @@
     List<Rubro> lstRubro = new TRubro().getListFiltro(mapRubro);
 
     mapSubrubro.put("id_estado","1");
-    mapSubrubro.put("id_rubro","1");
+    mapSubrubro.put("id_rubro",rubro.getId().toString());
     List<Subrubro> lstSubrubro = new TSubrubro().getListFiltro(mapSubrubro);
     
     ArrayList<Option> lstEstados = OptionsCfg.getEstadoActivo();    
@@ -145,7 +145,7 @@
                                             <select name="id_subrubro" id="id_subrubro" class="form-control" >
                                                  <option value="0">Seleccione el subrubro</option>
                                                 <% for(Subrubro s:lstSubrubro){
-                                                    String selected = (s.getId() == activo.getId_subrubro())?"selected":"";
+                                                    String selected = (s.getId().equals(activo.getId_subrubro()))?"selected":"";
                                                     %>                                                
                                                     <option value='<%= s.getId()%>'  <%= selected %>>
                                                         <%= s.getCodigo() + " - " + StringEscapeUtils.escapeHtml4(s.getDescripcion())%>
