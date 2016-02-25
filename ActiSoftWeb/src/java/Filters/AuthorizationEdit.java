@@ -113,6 +113,7 @@ public class AuthorizationEdit implements Filter {
         Throwable problem = null;
         try {
              HttpSession session = req.getSession();
+             if (session.isNew()) res.sendRedirect(PathCfg.LOGIN);;
              String email = (String) session.getAttribute("email");
              Integer id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
              if(email==null|| email.equals(""))  res.sendRedirect(PathCfg.FORBIDDEN);
