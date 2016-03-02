@@ -2,10 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Activo;
+package Kit;
 
-import bd.Activo;
-import bd.Activo_contrato_view;
+import Kit.*;
+import bd.Kit;
+import bd.Kit_contrato_view;
 import bd.Rubro;
 import bd.Subrubro;
 import com.google.gson.Gson;
@@ -16,8 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import transaccion.TActivo;
-import transaccion.TActivo_contrato_view;
+import transaccion.TKit;
+import transaccion.TKit_contrato_view;
 import transaccion.TRubro;
 import transaccion.TSubrubro;
 import utils.BaseException;
@@ -29,7 +30,7 @@ import utils.Parser;
  *
  * @author Diego
  */
-public class ActivoContratoSearch extends HttpServlet {
+public class KitContratoSearch extends HttpServlet {
     HashMap<Integer,Rubro> mapRubros;
     HashMap<Integer,Subrubro> mapSubrubros;
     /**
@@ -55,17 +56,17 @@ public class ActivoContratoSearch extends HttpServlet {
         
         mapSubrubros = new TSubrubro().getMap();
         
-        Activo_contrato_view activo = null;
+        Kit_contrato_view activo = null;
         JsonRespuesta jr = new JsonRespuesta();           
         try {            
             if(!codigo.equals("")){
-                activo = new TActivo_contrato_view().getByCodigo(id_contrato,codigo);
+                activo = new TKit_contrato_view().getByCodigo(id_contrato,codigo);
             } else {
                 throw new BaseException("ERROR","No se definió ningún parámetro de busqueda");
             }
             
 //            if(activo.getId_estado()!=OptionsCfg.ACTIVO_DISPONIBLE){
-//                throw new BaseException("Error","Activo no disponible");
+//                throw new BaseException("Error","Kit no disponible");
 //            }
             
             if (activo != null) {
@@ -84,12 +85,12 @@ public class ActivoContratoSearch extends HttpServlet {
             out.close();
         }
     }
- private class ActivoDet extends Activo{
+ private class KitDet extends Kit{
      String rubro = "";
      String cod_subrubro = "";
      String subrubro = "";
      
-     public ActivoDet(Activo activo){
+     public KitDet(Kit activo){
          super(activo);
          this.rubro = activo.getId_rubro().toString();
          this.subrubro = activo.getId_subrubro().toString();

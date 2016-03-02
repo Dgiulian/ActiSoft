@@ -22,6 +22,8 @@ public class OptionsCfg {
     public static final Integer ACTIVO_ESTADO_PRESTADO = 6;
     public static final Integer ACTIVO_ESTADO_NO_DISPONIBLE = 7;
     public static final Integer ACTIVO_ESTADO_NO_APTO = 8;
+    public static final Integer ACTIVO_ESTADO_KIT = 9;
+    
     
     
     public static final Integer REMITO_ENTREGA = 1;
@@ -88,16 +90,21 @@ public class OptionsCfg {
     
     public static final Integer ACTIVIDAD_ENTREGA       = 1;
     public static final Integer ACTIVIDAD_DEVOLUCIÓN    = 2;
-    public static final Integer ACTIVIDAD_CHECK_IN         = 3;
-    public static final Integer ACTIVIDAD_CHECK_OUT         = 4;
+    public static final Integer ACTIVIDAD_CHECK_IN      = 3;
+    public static final Integer ACTIVIDAD_CHECK_OUT     = 4;
     public static final Integer ACTIVIDAD_CERTIFICADO   = 5;
     public static final Integer ACTIVIDAD_CERTIFICACIÓN = 6;
     public static final Integer ACTIVIDAD_ENTRADA       = 7;
     public static final Integer ACTIVIDAD_SALIDA        = 8;
     public static final Integer ACTIVIDAD_PRETICKET     = 9;
-    public static Integer ACCION_ALTA = 1;
-    public static Integer ACCION_BAJA = 2;
+    
+    public static Integer ACCION_ALTA      = 1;
+    public static Integer ACCION_BAJA      = 2;
     public static Integer ACCION_MODIFICAR = 3;
+    
+    public static final Integer KIT_ESTADO_DISPONIBLE = 1;
+    public static final Integer KIT_ESTADO_ALQUILADO = 2;
+    public static final Integer KIT_ESTADO_BAJA = 2;
     
     public static ArrayList<Option> getTipoRemitos(){
         ArrayList<Option> lista = new ArrayList();
@@ -133,6 +140,7 @@ public class OptionsCfg {
         lista.add(new Option(ACTIVO_ESTADO_PRESTADO,String.format("%03d",ACTIVO_ESTADO_PRESTADO),"Prestado"));
         lista.add(new Option(ACTIVO_ESTADO_NO_DISPONIBLE,String.format("%03d",ACTIVO_ESTADO_NO_DISPONIBLE),"Prestado"));
         lista.add(new Option(ACTIVO_ESTADO_NO_APTO,String.format("%03d",ACTIVO_ESTADO_NO_APTO),"No Apto"));
+        lista.add(new Option(ACTIVO_ESTADO_KIT,String.format("%03d",ACTIVO_ESTADO_KIT),"Kit"));
         
 //        lista.add(new Option(6,"003","Cabeza fractura 001"));        
         return lista;
@@ -232,6 +240,14 @@ public static ArrayList<Option> getTipoActividades(){
         mapa.put(ACCION_MODIFICAR,new Option(ACCION_MODIFICAR,String.format("%3d",ACCION_MODIFICAR),"Modificar"));
         return mapa;
     }
+    public static ArrayList<Option> getEstadoKit(){
+        ArrayList<Option> lista = new ArrayList();
+        lista.add(new Option(KIT_ESTADO_DISPONIBLE,String.format("%03d",KIT_ESTADO_DISPONIBLE),"Disponible"));
+        lista.add(new Option(KIT_ESTADO_ALQUILADO,String.format("%03d",KIT_ESTADO_ALQUILADO),"Alquilado"));
+        lista.add(new Option(KIT_ESTADO_BAJA,String.format("%03d",KIT_ESTADO_BAJA),"Baja"));
+//        lista.add(new Option(6,"003","Cabeza fractura 001"));        
+        return lista;
+   }
    public static HashMap<Integer,Option> getMap(List<Option> lista){
         HashMap<Integer,Option> mapa = new HashMap<>();
         for(Option o:lista){

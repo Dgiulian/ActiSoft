@@ -29,7 +29,7 @@
     <div class="modal-content modal-lg">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Busqueda de activo para el contrato</h4>
+        <h4 class="modal-title">Busqueda de activo para el remito</h4>
       </div>
       <div class="modal-body">
           <div class="row">
@@ -57,24 +57,56 @@
                     </div>
                 </div>
           </div>
-          <div class="dataTable_wrapper">
-                <table class="table table-striped table-bordered table-hover" id="tblActivo">
-                    <thead>
-                        <tr>
-                            <th>Posici&oacute;n</th>
-                            <th>C&oacute;digo</th>                                
-                            <!--<th>Rubro</th>-->
-                            <!--<th>Subrubro</th>-->
-                            <th>Descripci&oacute;n</th>
-                            <th>Stock</th>
-                            <th><input class="checkbox" type="checkbox" value="0" id="selTodos"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                    <tfoot></tfoot>
-                </table>
-            </div>
+           <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                    <li class="active"><a href="#tabAct" data-toggle="tab">Activos</a></li>
+                    <li><a href="#tabKit" data-toggle="tab">Kits</a></li>                    
+            </ul>  
+            <div  class="tab-content">
+               <div class="tab-pane active" id="tabAct">
+                    <div class="dataTable_wrapper">
+                          <table class="table table-striped table-bordered table-hover" id="tblActivo">
+                              <thead>
+                                  <tr>
+                                      <th>Posici&oacute;n</th>
+                                      <th>C&oacute;digo</th>                                
+                                      <!--<th>Rubro</th>-->
+                                      <!--<th>Subrubro</th>-->
+                                      <th>Descripci&oacute;n</th>
+                                      <th>Stock</th>
+                                      <th><input class="checkbox" type="checkbox" value="0" id="selTodos"></th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
+                              <tfoot></tfoot>
+                          </table>
+                      </div>
+               </div> <!--tab1 -->
+               <div class="tab-pane " id="tabKit">
+                   <div class="dataTable_wrapper">
+                       <table class="table table-striped table-bordered table-hover" id="tblKit">
+                              <thead>
+                                  <tr>
+                                      <th>Posici&oacute;n</th>
+                                      <th>C&oacute;digo</th>                                                                      
+                                      <th>Descripci&oacute;n</th>
+                                      <!--<th>Stock</th>-->
+                                      <th><input class="checkbox" type="checkbox" value="0" id="selTodos"></th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                  </tr>
+                              </tbody>
+                              <tfoot></tfoot>
+                        </table>
+                   </div>
+               </div><!-- tab2 -->
+            </div><!--tab-content-->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" id="btnSelActivos">Seleccionar</button>
@@ -85,7 +117,7 @@
   </div>
 </div>
 <script>
-    function loadDataActivo(data){    
+    function loadDataActivo(data){
         
         var $tabla = $('#tblActivo');  
         $tabla.find('tbody').html("")
@@ -114,7 +146,8 @@
                                 $('#mdlActivo').modal('hide');
 
                             });
-                    } else {                        
+                    } else {
+                        $tabla.find('tbody').html("");
                         $tabla.find('tfoot').html("<tr><th colspan='5'><center>No se encontr&oacute; ning&uacute;n activo</center></th></tr>");
                     }
                    }
@@ -131,7 +164,6 @@
 //           html += wrapTag('td',d.id_subrubro,'');
            html +=wrapTag('td',d.codigo,'');
            html +=wrapTag('td',d.desc_larga,'');
-           var divisa = d.divisa == 0?"$":"U$s";           
            html +=wrapTag('td',d.stock,'');
            if (d.id_estado === <%= OptionsCfg.ACTIVO_ESTADO_DISPONIBLE %>){
                var htmlSelect = "<input type='checkbox' class='chkSelActivo' data-pos='" + d.c_posicion + "' data-index='"+ d.id +"' data-codigo='"+d.codigo+"' data-descripcion='" + d.desc_larga + "'" ;
@@ -144,4 +176,64 @@
        return html;
     }
    
+   
+   function loadDataKit(data){
+        
+        var $tabla = $('#tblKit');  
+        $tabla.find('tbody').html("")
+        $tabla.find('tfoot').html("");
+        $.ajax({
+               url: '<%= PathCfg.KIT_CONTRATO_LIST %>',
+               data: data,
+               method:"POST",
+               dataType: "json",
+               beforeSend:function(){
+                    var cant_cols = $tabla.find('thead th').length;
+                    $tabla.find('tbody').html("<tr><td colspan='" + cant_cols + "'><center><img src='images/ajax-loader.gif'/></center></td></tr>");
+               },
+               success: function(data) {
+                   $('#selTodos').prop('checked',false);
+                   if(data.Result === "OK") {
+                      if(data.TotalRecordCount>0) {                            
+                            $tabla.find('tbody').html(createTableKitContrato(data.Records));    
+
+                            $('.btnSelActivo').click(function(){
+                                var id = $(this).data('index');
+                                var codigo = $(this).data('codigo');
+                                if($invoker !==undefined){
+                                    $invoker.parent().find('input').val(codigo);
+                                }                           
+                                $('#mdlActivo').modal('hide');
+
+                            });
+                    } else {                        
+                        $tabla.find('tbody').html("");
+                        $tabla.find('tfoot').html("<tr><th colspan='5'><center>No se encontr&oacute; ning&uacute;n Kit</center></th></tr>");
+                    }
+                   }
+               }
+        });
+    }
+   function createTableKitContrato(data){
+        var html = "";
+        for(var i = 0;i< data.length;i++){
+           html +="<tr class=''>";
+           d = data[i];
+           html += wrapTag('td',d.c_posicion,'');
+//           html += wrapTag('td',d.id_rubro,'');
+//           html += wrapTag('td',d.id_subrubro,'');
+           html +=wrapTag('td',d.codigo,'');
+           html +=wrapTag('td',d.nombre,'');           
+//           html +=wrapTag('td',d.stock,'');
+           console.log(d.id_estado,<%= OptionsCfg.KIT_ESTADO_DISPONIBLE %>);
+           if (d.id_estado === <%= OptionsCfg.KIT_ESTADO_DISPONIBLE %>){
+               var htmlSelect = "<input type='checkbox' class='chkSelActivo' data-pos='" + d.c_posicion + "' data-index='"+ d.id +"' data-codigo='"+d.codigo+"' data-descripcion='" + d.nombre + "'" ;
+//            var htmlSelect = "<span data-index='"+ d.id +"' data-codigo='"+d.codigo+"' class='btn btn-xs btn-circle  btn-warning btnSelActivo'><span class='fa fa-plus fw'></span></span> ";
+        }  else htmlSelect = "";
+            html +=wrapTag('td',htmlSelect ,'');
+
+           html +="</tr>";
+       }
+       return html;
+    }
      </script>

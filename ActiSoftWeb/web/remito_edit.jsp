@@ -299,6 +299,7 @@
             $('#mdlActivo').on('show.bs.modal', function (e) {
                  $id_contrato = $('#id_contrato') ;
                  if ($id_contrato===null || $id_contrato.val()===""){
+                      $('#mdlActivo').modal('hide');
                      bootbox.alert("Ingrese el n&uacute;mero de contrato");
                      return;
                 }
@@ -325,11 +326,13 @@
                      bootbox.alert("Ingrese el n&uacute;mero de contrato");
                      return;
                 }
-                loadDataActivo({ id_rubro: $id_rubro.val(),
+                var data = { id_rubro: $id_rubro.val(),
                               id_subrubro: $id_subrubro.val(),
                               id_contrato: $id_contrato.val(),
-                });
-                
+                };
+                        
+                loadDataActivo(data);
+                loadDataKit(data);
                 
                 
 
@@ -370,13 +373,14 @@
                 rubroChange("<%= PathCfg.SUBRUBRO_LIST%>",{id_rubro:$(this).val(),id_contrato:$('#id_contrato').val(),id_estado:1})
             });
             $('#id_subrubro').change(function() {
-                $id_rubro = $('#id_rubro');
-                $id_contrato = $('#id_contrato');
-                
-                loadDataActivo({id_subrubro:$(this).val(),
-                                id_rubro:$id_rubro.val(),
-                                id_contrato: $id_contrato.val(),
-                });
+                var $id_rubro = $('#id_rubro');
+                var $id_contrato = $('#id_contrato');
+                var data = {id_subrubro:$(this).val(),
+                            id_rubro:$id_rubro.val(),
+                            id_contrato: $id_contrato.val(),
+                };
+                loadDataActivo(data);
+                loadDataKit(data);
             });
             
             $('#contrato').change(function(){
@@ -509,16 +513,17 @@
                         var data = arguments[0];
                         if(data && data.Result!=='OK') {
                             mostrar = true;
-                            
                             mensajes += "<li>" + data.Message + "</li>";
                         }
                     }
                     mensajes += "</ul>";
                     mensajes += "<span>Desea crear el remito de todas formas?</span>";
-                    bootbox.confirm(mensajes,function(result){
-                        if(result) $('form').submit();
-                        else return;
-                    });
+                    if(mostrar){
+                        bootbox.confirm(mensajes,function(result){
+                            if(result) $('form').submit();
+                            else return;
+                        });
+                    } else $('form').submit();
             });
         }
         
@@ -542,7 +547,10 @@
            
            var html = generarHtml(data);
             
-            $('#tblRemito tbody').append(html);
+                        $('#tblRemito tbody').append(html);
+
+//                        $('#tblRemito').find('tbody').append(html);
+
             var elem = $('#tblRemito tbody tr:last').find('.inCodigo');
             //elem.focusout(buscarActivo);
             

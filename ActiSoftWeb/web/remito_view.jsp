@@ -1,3 +1,5 @@
+<%@page import="transaccion.TKit"%>
+<%@page import="bd.Kit"%>
 <%@page import="transaccion.TSite"%>
 <%@page import="bd.Site"%>
 <%@page import="utils.TFecha"%>
@@ -211,16 +213,29 @@
                                     </thead>
                                     <tbody class="table-content">
                                         <% TActivo ta = new TActivo();
-                                            for(Remito_detalle rm: detalle){ 
+                                           TKit tk = new TKit();
+                                           for(Remito_detalle rm: detalle){ 
+                                                if(rm.getId_activo()!=0){
                                                 Activo activo = ta.getById(rm.getId_activo());
+                                                if (activo==null) continue;
                                         %>
-                                        
                                         <tr>
                                             <td><%= activo.getCodigo()%></td>
                                             <td><%= rm.getPosicion() %></td>
                                             <td><%= StringEscapeUtils.escapeHtml4(activo.getDesc_larga())%></td>
                                             <td><%= rm.getCantidad()%></td>
                                         </tr>
+                                        <% } else {
+                                          Kit kit = tk.getById(rm.getId_kit());
+                                        %>
+                                            <tr>
+                                                <td><%= kit.getCodigo()%></td>
+                                                <td><%= rm.getPosicion() %></td>
+                                                <td><%= StringEscapeUtils.escapeHtml4(kit.getNombre())%></td>
+                                                <td><%= rm.getCantidad()%></td>
+                                            </tr>     
+                                        <% } %>
+                                        
                                         <% } %>
                                     </tbody>
                                     <tfoot>

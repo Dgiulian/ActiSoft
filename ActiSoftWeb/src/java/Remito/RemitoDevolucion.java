@@ -8,6 +8,7 @@
 package Remito;
 
 import bd.Activo;
+import bd.Kit;
 import bd.Remito;
 import bd.Remito_detalle;
 import com.google.gson.Gson;
@@ -15,11 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import transaccion.TActivo;
 import transaccion.TAuditoria;
+import transaccion.TKit;
 import transaccion.TRemito;
 import transaccion.TRemito_detalle;
 import utils.BaseException;
@@ -103,9 +101,11 @@ public class RemitoDevolucion extends HttpServlet {
            TRemito tr = new TRemito();
            TRemito_detalle trd = new TRemito_detalle();
            TActivo ta = new TActivo();
+           TKit tk    = new TKit();
            HashMap<Integer,Remito> mapRemitos = new HashMap<Integer,Remito>();
            HashMap<Integer,Remito_detalle> mapDetalle = new HashMap<Integer,Remito_detalle>();
            HashMap<Integer,Activo> mapActivo = new HashMap<Integer,Activo>();
+           HashMap<Integer,Kit> mapKit = new HashMap<Integer,Kit>();
            List<Remito_detalle> lstEntrega = new ArrayList<Remito_detalle>();
            
            if(request.getParameter("id")==null)  throw new BaseException("Remito inexistente","Debe seleccionar el remito a devolver");
@@ -170,16 +170,25 @@ public class RemitoDevolucion extends HttpServlet {
                              det_dev.setId_remito(dev.getId());
                              det_dev.setId(0);
                              det_dev.setId_referencia(0);
-                             det.setId_referencia(dev.getId()); // Actualizo al referencia                            
-                             Activo act_dev = ta.getById(det_dev.getId_activo());
-                             if(act_dev!=null){
-                                 if (act_dev.getAplica_stock() == 1) {
-                                     act_dev.setStock(act_dev.getStock() + det_dev.getCantidad());
+                             det.setId_referencia(dev.getId()); // Actualizo al referencia
+                             if(det_dev.getId_activo()!=0) {
+                                Activo act_dev = ta.getById(det_dev.getId_activo());
+                                if(act_dev!=null){
+                                    if (act_dev.getAplica_stock() == 1) {
+                                        act_dev.setStock(act_dev.getStock() + det_dev.getCantidad());
+                                    }
+                                    if(act_dev.getId_estado()== OptionsCfg.ACTIVO_ESTADO_ALQUILADO)
+                                        act_dev.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                                    ta.actualizar(act_dev);
+                                    mapActivo.put(act_dev.getId(),act_dev);
+                                }
+                             } else {
+                                 Kit kit_dev = tk.getById(det_dev.getId_kit());
+                                 if(kit_dev!=null){
+                                    kit_dev.setId_estado(OptionsCfg.KIT_ESTADO_DISPONIBLE);
+                                    tk.actualizar(kit_dev);
+                                    mapKit.put(kit_dev.getId(),kit_dev);
                                  }
-                                 if(act_dev.getId_estado()== OptionsCfg.ACTIVO_ESTADO_ALQUILADO)
-                                     act_dev.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
-                                 ta.actualizar(act_dev);
-                                 mapActivo.put(act_dev.getId(),act_dev);
                              }
                              trd.alta(det_dev);      // Creo el detalle de la devolucion             
                              trd.actualizar(det); // Actualizo los items del remito de entrega
@@ -208,13 +217,21 @@ public class RemitoDevolucion extends HttpServlet {
                    //Creamos el detalle del remito de entrega con el detalle de los que figuran en pantalla
                    det_ent.setId(0);
                    det_ent.setId_remito(ent.getId());
-                   Activo act_ent = mapActivo.get(det_ent.getId_activo());
-                   if(act_ent!=null){
-                    if (act_ent.getAplica_stock() == 1) {
-                       act_ent.setStock(act_ent.getStock() - det_ent.getCantidad());
-                       if (act_ent.getStock()<=0)
-                           act_ent.setId_estado(OptionsCfg.ACTIVO_ESTADO_ALQUILADO);
-                       ta.actualizar(act_ent);
+                   if(det_ent.getId_activo()!=0) {
+                    Activo act_ent = mapActivo.get(det_ent.getId_activo());
+                    if(act_ent!=null){
+                     if (act_ent.getAplica_stock() == 1) {
+                        act_ent.setStock(act_ent.getStock() - det_ent.getCantidad());
+                        if (act_ent.getStock()<=0)
+                            act_ent.setId_estado(OptionsCfg.ACTIVO_ESTADO_ALQUILADO);
+                        ta.actualizar(act_ent);
+                     }
+                    }else {
+                      Kit kit_ent = mapKit.get(det_ent.getId_kit());
+                      if(kit_ent!=null){
+                          kit_ent.setId_estado(OptionsCfg.KIT_ESTADO_ALQUILADO);
+                          tk.actualizar(kit_ent);
+                      }
                     }
                    }
                    trd.alta(det_ent);

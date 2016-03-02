@@ -4,6 +4,7 @@
  */
 package Kit;
 
+import bd.Activo;
 import bd.Kit;
 import bd.Kit_detalle;
 import com.google.gson.Gson;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import transaccion.TActivo;
 import transaccion.TAuditoria;
 import transaccion.TKit;
 import transaccion.TKit_detalle;
@@ -80,11 +82,22 @@ public class KitDel extends HttpServlet {
            Kit kit = new TKit().getById(id);            
            if (kit==null) throw new BaseException("ERROR","No existe el registro");
            
+           if(kit.getId_estado()==OptionsCfg.KIT_ESTADO_ALQUILADO){
+               throw new BaseException("ERROR","El kit se encuentra alquilado y no puede ser eliminado");
+           }
            boolean baja = new TKit().baja(kit);           
            if ( baja){
                TKit_detalle tkd =  new TKit_detalle();
                List<Kit_detalle> lstDetalle =tkd.getByKitId(kit.getId());
+               TActivo ta = new TActivo();
                for(Kit_detalle d:lstDetalle){
+                    // Cuando se elimina un kit, hay que devolver el stock del activo.
+                   Activo activo = ta.getById(d.getId_activo());
+                   if(activo!=null){
+                    activo.setStock(activo.getStock() + 1);
+                    activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                    ta.actualizar(activo);
+                   }
                    tkd.baja(d);
                }
                jr.setResult("OK");

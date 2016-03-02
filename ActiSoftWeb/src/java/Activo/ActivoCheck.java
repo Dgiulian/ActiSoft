@@ -6,6 +6,7 @@ package Activo;
 
 import bd.Activo;
 import bd.Certificado;
+import bd.Kit;
 import bd.Rubro;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TActivo;
 import transaccion.TCertificado;
+import transaccion.TKit;
 import transaccion.TRubro;
 import utils.BaseException;
 import utils.JsonRespuesta;
@@ -35,7 +37,7 @@ public class ActivoCheck extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
-     */
+     */ 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
          response.setContentType("application/json;charset=UTF-8");
@@ -49,6 +51,7 @@ public class ActivoCheck extends HttpServlet {
         }        
         String codigo = request.getParameter("codigo");
         Activo activo = null;
+        Kit kit = null;
         TRubro tr;
         TActivo ta = new TActivo();
         TCertificado tc = new TCertificado();
@@ -61,26 +64,31 @@ public class ActivoCheck extends HttpServlet {
                 activo = ta.getById(id_activo);
             else if(codigo!=null ) activo = ta.getByCodigo(codigo);
             
-            if(activo==null) 
-                throw new BaseException("ERROR","No se encontr&oacute; el activo");            
-            
+            if(activo==null){ 
+                kit = new TKit().getByCodigo(codigo);
+                if(kit==null)
+                    throw new BaseException("ERROR","No se encontr&oacute; el activo o el kit");
+            } else {
          
-            tr = new TRubro();
-            Rubro r = tr.getById(activo.getId_rubro());
-            if (r.getAplica_certificado()!=0){
-                
-                Certificado vigente = tc.getVigente(activo.getId());
-                if(vigente == null) throw new BaseException("ERROR","El activo " + activo.getCodigo() + " no tiene un certificado v&aacute;lido");
-                    
+                tr = new TRubro();
+                Rubro r = tr.getById(activo.getId_rubro());
+                if (r.getAplica_certificado()!=0){
+
+                    Certificado vigente = tc.getVigente(activo.getId());
+                    if(vigente == null) throw new BaseException("ERROR","El activo " + activo.getCodigo() + " no tiene un certificado v&aacute;lido");
+
+                }
             }
-               if (activo != null) {
+            if (activo != null || kit!=null) {
                 jr.setTotalRecordCount(1);
+                if(activo!=null) jr.setRecord(activo);
+                else if(kit !=null) jr.setRecord(kit);
             } else {
                 jr.setTotalRecordCount(0);
             }
 
             jr.setResult("OK");
-            jr.setRecord(activo);
+            
         } catch (BaseException ex){
             jr.setResult(ex.getResult());
             jr.setMessage(ex.getMessage());

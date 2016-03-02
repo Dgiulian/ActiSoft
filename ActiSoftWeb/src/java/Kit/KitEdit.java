@@ -9,7 +9,9 @@ import bd.Kit;
 import bd.Kit_detalle;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -77,9 +79,12 @@ public class KitEdit extends HttpServlet {
         String[] codigoActivos = request.getParameterValues("codigoActivo");        
         Kit kit ;
         TKit tk = new TKit();
+        TActivo ta = new TActivo();
+        TKit_detalle tkd = new TKit_detalle();
         boolean nuevo = false;
         ArrayList<Kit_detalle> lstDetalle = new ArrayList<Kit_detalle>();
-        
+        ArrayList<Activo> lstActivos = new ArrayList<Activo>();
+        Map<Integer,Activo> mapActivos      = new HashMap<Integer,Activo>();
         
         try{            
             Integer id_kit = Parser.parseInt(request.getParameter("id"));
@@ -88,10 +93,23 @@ public class KitEdit extends HttpServlet {
             Integer id_rubro = Parser.parseInt(request.getParameter("id_rubro"));
             Integer id_subrubro = Parser.parseInt(request.getParameter("id_subrubro"));
             kit = tk.getById(id_kit);
+            List<Kit_detalle> lstActual = tkd.getByKitId(id_kit);
             if(kit==null){
                 kit = new Kit();
                 kit.setFecha_creacion(TFecha.ahora());
                 nuevo = true;
+//                kit.setStock(1f);
+                kit.setId_estado(OptionsCfg.KIT_ESTADO_DISPONIBLE);
+            } else { // Cuando se edita un kit, hay que incrementar 
+                     // el stock de los activos que se eliminaron.
+                     
+                for(Kit_detalle d: lstActual){
+                    Activo a = ta.getById(d.getId_activo());
+                    a.setStock(a.getStock() + 1);
+                    a.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                    mapActivos.put(a.getId(), a);
+                    lstActivos.add(a);
+                }
             }
             if(nuevo && tk.getByCodigo(codigo)!=null) 
                  throw new BaseException("ERROR","Ya existe un kit con ese c&oacute;digo");
@@ -101,50 +119,61 @@ public class KitEdit extends HttpServlet {
             kit.setId_rubro(id_rubro);
             kit.setId_subrubro(id_subrubro);
             
-            
          
          for (int i = 0;i<codigoActivos.length;i++){
              if (codigoActivos[i].equals("")) continue;
              String cod_activo = codigoActivos[i];
-             Activo activo = new TActivo().getByCodigo(cod_activo.trim());
+             Activo activo = ta.getByCodigo(cod_activo.trim());
              if(activo==null) {
                  throw new BaseException("Activo inexistente", String.format("No existe el activo: %s",cod_activo));
              }
-             if(activo.getId_estado()!=OptionsCfg.ACTIVO_ESTADO_DISPONIBLE){
-                 throw new BaseException("Activo no disponible", String.format("El activo %s no est&aacute; disponible",activo.getCodigo()));
-             }
-            
+             
+    //             if(activo.getId_estado()!=OptionsCfg.ACTIVO_ESTADO_DISPONIBLE){
+    //                 throw new BaseException("Activo no disponible", String.format("El activo %s no est&aacute; disponible",activo.getCodigo()));
+    //             }
+             
              Kit_detalle detalle = new Kit_detalle();
              detalle.setId_activo(activo.getId());            
              detalle.setCantidad(1);
              lstDetalle.add(detalle);
+             
+             Activo activo_old = mapActivos.get(activo.getId());
+             if(activo_old!=null){ // Si el activo existe en el mapa, signigica que sigue estando en el kit. 
+                                   // Por lo tanto no lo actualizamos
+                 lstActivos.remove(activo_old);
+             } else{
+                activo.setStock(activo.getStock()-1);
+                activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_KIT);
+                lstActivos.add(activo);
+             }
          }
             if(nuevo){
                 id_kit  = tk.alta(kit);
             } else {
-                tk.actualizar(kit);
+                tk.actualizar(kit);                
             }   
-            TKit_detalle tkd = new TKit_detalle();
-            TActivo ta = new TActivo();
+            
+            
             
             if(id_kit!=0){
-                List<Kit_detalle> lstActual = tkd.getByKitId(id_kit);
-                
+               
+              
                for (Kit_detalle d:lstActual){
                    tkd.baja(d);
                }
                for (Kit_detalle kd :lstDetalle){
                    kd.setId_kit(id_kit);
                    tkd.alta(kd);
-               }               
+               }
+               for(Activo a:lstActivos){
+                   ta.actualizar(a);
+               }
             }
             HttpSession session = request.getSession();
             Integer id_usuario = (Integer) session.getAttribute("id_usuario");
             Integer id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
             TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_KIT,OptionsCfg.ACCION_ALTA,kit.getId());
             response.sendRedirect(PathCfg.KIT);
-         
-            
         }
         catch(BaseException ex){
             request.setAttribute("titulo", ex.getResult());

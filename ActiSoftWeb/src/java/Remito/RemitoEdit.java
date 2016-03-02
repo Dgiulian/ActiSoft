@@ -8,6 +8,7 @@ import bd.Activo;
 import bd.Cliente;
 import bd.Contrato;
 import bd.Contrato_detalle;
+import bd.Kit;
 import bd.Remito_detalle;
 import bd.Remito;
 import bd.Site;
@@ -25,6 +26,7 @@ import transaccion.TAuditoria;
 import transaccion.TCliente;
 import transaccion.TContrato;
 import transaccion.TContrato_detalle;
+import transaccion.TKit;
 import transaccion.TRemito_detalle;
 import transaccion.TRemito;
 import transaccion.TSite;
@@ -114,11 +116,14 @@ public class RemitoEdit extends HttpServlet {
        
         ArrayList<Remito_detalle> lstDetalle = new ArrayList<Remito_detalle>();
         ArrayList<Activo> lstActivo = new ArrayList<Activo>();
+        ArrayList<Kit> lstKit = new ArrayList<Kit>();
+        
         Integer id_remito = Parser.parseInt("id");
         
         TRemito tr = new TRemito();
         TRemito_detalle dm = new TRemito_detalle();
         TActivo ta = new TActivo();
+        TKit    tk = new TKit();
         HttpSession session = request.getSession();
         Integer id_usuario = (Integer) session.getAttribute("id_usuario");
         Integer id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
@@ -192,36 +197,47 @@ public class RemitoEdit extends HttpServlet {
              if (codigoActivos[i].equals("")) continue;
              
              Float cant = Parser.parseFloat(cantActivos[i]);
-             String codigo = codigoActivos[i];
+             String codigo = codigoActivos[i].trim();
              Integer pos = Parser.parseInt(codigoPos[i]);
              
              if (cant <= 0) continue;
-             
-             Activo activo = new TActivo().getByCodigo(codigo.trim());
-             if(activo==null) {
-                 throw new BaseException("Activo inexistente", String.format("No existe el activo seleccionado: %s",codigo));
-             }
-             if(activo.getId_estado()!=OptionsCfg.ACTIVO_ESTADO_DISPONIBLE){
-                 throw new BaseException("Activo no disponible", String.format("El activo %s no est&aacute; disponible",activo.getCodigo()));
-             }
-             if(activo.getAplica_stock() == 1) {
-                if(activo.getStock()<cant){
-                    throw new BaseException("Cantidad insuficiente",String.format("El stock de %s es insuficiente. Stock actual: %.2f",activo.getCodigo(),activo.getStock()));
-                }
-                activo.setStock(activo.getStock() - cant);
-             }
-            // Contrato_detalle d = mapDetalle.get(pos);
-            // if(d == null) throw new BaseException("Posici&oacute;n incorrecta","La posici&oacute;n " + pos +" del remito no corresponde al contrato");
-             
-             //if( d.getId_rubro() != activo.getId_rubro())  throw new BaseException("Posici&oacute;n incorrecta","El activo " + activo.getCodigo() + " no corresponde a la  posic&oacute;n " + pos + " del contrato");
-            // if( d.getId_subrubro() != activo.getId_subrubro())  throw new BaseException("Posici&oacute;n incorrecta","El activo " + activo.getCodigo() + " no corresponde a la  posic&oacute;n " + pos + " del contrato");
-             
              Remito_detalle detalle = new Remito_detalle();
-             detalle.setId_activo(activo.getId());
+             
+             
+             Activo activo = ta.getByCodigo(codigo);
+             if(activo!=null) {
+                if(activo.getId_estado()!=OptionsCfg.ACTIVO_ESTADO_DISPONIBLE){
+                    throw new BaseException("Activo no disponible", String.format("El activo %s no est&aacute; disponible",activo.getCodigo()));
+                }
+                if(activo.getAplica_stock() == 1) {
+                   if(activo.getStock()<cant){
+                       throw new BaseException("Cantidad insuficiente",String.format("El stock de %s es insuficiente. Stock actual: %.2f",activo.getCodigo(),activo.getStock()));
+                   }
+                   activo.setStock(activo.getStock() - cant);
+                }
+                detalle.setId_activo(activo.getId());
+               lstActivo.add(activo);
+             } else { // KIT
+                 Kit kit = tk.getByCodigo(codigo);
+                 if (kit==null)
+                     throw new BaseException("Activo o Kit inexistente", String.format("No existe el activo o el kit seleccionado: %s",codigo));
+                 
+                 if(kit.getId_estado()!=OptionsCfg.KIT_ESTADO_DISPONIBLE){
+                    throw new BaseException("Kit no disponible", String.format("El kit %s no est&aacute; disponible",activo.getCodigo()));
+                }
+                
+//                if(kit.getStock()<cant){
+//                    throw new BaseException("Cantidad insuficiente",String.format("El stock de %s es insuficiente. Stock actual: %.2f",activo.getCodigo(),activo.getStock()));
+//                }
+//                kit.setStock(kit.getStock() - cant);                
+                detalle.setId_kit(kit.getId());
+                lstKit.add(kit);
+             }
+             
              detalle.setCantidad(cant);
              detalle.setPosicion(pos);
              lstDetalle.add(detalle);
-             lstActivo.add(activo);
+             
          }
          if(nuevo) {
            id_remito = tr.alta(remito);
@@ -244,6 +260,11 @@ public class RemitoEdit extends HttpServlet {
                         a.setId_estado(OptionsCfg.ACTIVO_ESTADO_ALQUILADO);
                         ta.actualizar(a);
                    }
+               }
+               for(Kit k:lstKit){
+//                   if ( k.getStock() <= 0)
+                    k.setId_estado(OptionsCfg.ACTIVO_ESTADO_ALQUILADO);
+                   tk.actualizar(k);
                }
             }
            

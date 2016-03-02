@@ -231,7 +231,8 @@
             $('.date-picker').datepicker({
                 language: 'es'
             }); 
-            $('.inCodigo').focusout(buscarActivo); 
+//            $('.inCodigo').focusout(buscarActivo); 
+             
             $('#btnSubmit').click(submitForm);
             $('#btnSelActivos').click(selActivos); 
             $('.btnDelActivo').click(deleteActivo);
@@ -284,6 +285,14 @@
             $('#id_rubro_kit').change(function(){
                 rubroChange("<%= PathCfg.SUBRUBRO_LIST%>",{id_rubro:$(this).val(),id_contrato:$('#id_contrato').val()},$('#id_subrubro_kit'))
             });
+             $('form').bind('keypress keydown',function(e){
+                var code = e.keyCode || e.which;
+                if(code===13){
+                    e.preventDefault();
+                    return false;
+                }
+            });
+//            agregarActivo({});
         });
       function buscarActivo(){            
         // Combino los parametros por si no viene definido ninguno                      
@@ -315,11 +324,19 @@
         } 
        function agregarActivo(data){
            
-           html = generarHtml(data);
-                
-            $('#tblKit tbody').append(html);
-            
+           var html = generarHtml(data);
+
+            $('#tblKit_detalle').find('tbody').append(html);            
             $('.btnDelActivo').click(deleteActivo);
+            var elem = $('#tblKit_detalle tbody tr:last').find('.inCodigo');
+            //elem.focusout(buscarActivo);            
+            elem.on('keypress keydown',function(e){
+                var codigo = e.keyPress || e.which;
+                if(codigo ===13) {
+                    e.preventDefault();
+                    buscarActivo.bind(this)();
+                }
+            });
         }  
          function deleteActivo(){
 //          bootbox.confirm("Esta seguro que desea eliminar el registro?",function(result){
@@ -367,7 +384,7 @@
             }
             //$tr.remove();
             $('.btnDelActivo').click(deleteActivo);
-            //agregarActivo({});
+//            agregarActivo({});
             //$('#mdlActivo').modal('hide');
         } 
         function validar(){

@@ -100,6 +100,10 @@ public class ActivoDel extends HttpServlet {
            if(activo.getId_estado()==OptionsCfg.ACTIVO_ESTADO_ALQUILADO){
                throw new BaseException("Error","El activo est&aacute; alquilado y no puede eliminarse");
            }
+           if(activo.getId_estado()==OptionsCfg.ACTIVO_ESTADO_KIT){
+               throw new BaseException("Error","El activo forma parte de un kit y no puede eliminarse");
+           }
+           
 //           boolean baja = new TActivo().baja(activo);
            activo.setBloqueado(1);
            boolean baja = new TActivo().actualizar(activo);

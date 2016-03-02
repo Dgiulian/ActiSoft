@@ -2,13 +2,15 @@ package bd;
 public class Kit {
 
 	public Integer id = 0;
-        public String codigo = "";
-	public String nombre = "";
-	public String fecha_creacion = "";
-	public Integer id_usuario = 0;
-	public Integer id_rubro = 0;
-	public Integer id_clase = 0;
+        public String  codigo = "";
+	public String  nombre = "";
+	public String  fecha_creacion = "";
+	public Integer id_usuario  = 0;
+	public Integer id_rubro    = 0;
+	public Integer id_clase    = 0;
 	public Integer id_subrubro = 0;
+//        public Float   stock       = 0f;
+        public Integer id_estado   = 0;
         public Kit(){}
         public Kit(Kit kit){
             this.id             = kit.getId();
@@ -19,6 +21,8 @@ public class Kit {
             this.id_rubro       = kit.getId_rubro();
             this.id_clase       = kit.getId_clase();
             this.id_subrubro    = kit.getId_subrubro();
+//            this.stock          = kit.getStock();
+            this.id_estado      = kit.getId_estado();
         }
 	public Integer getId() {
 		return this.id;
@@ -90,4 +94,18 @@ public class Kit {
 		this.id_subrubro = id_subrubro;
 		return this;
 	}
+//        public Float getStock(){
+//            return this.stock;
+//        }
+//        public Kit setStock(Float stock){
+//            this.stock = stock;
+//            return this;
+//        }
+        public Integer getId_estado(){
+            return this.id_estado;
+        }
+        public Kit setId_estado(Integer id_estado){
+            this.id_estado = id_estado;
+            return this;
+        }
 }

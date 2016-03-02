@@ -138,8 +138,7 @@ function rubroChange(url,data,$id_subrubro) {
     
     $id_subrubro.html("");
     
-    if (data.id_rubro!=0) {
-        
+    if (data.id_rubro!==0) {
         $.ajax({
             url: url,
             data: data ,
@@ -153,9 +152,9 @@ function rubroChange(url,data,$id_subrubro) {
                 }
             }
         });
-        
     }
-    loadDataActivo(data);
+    if (loadDataActivo) loadDataActivo(data);
+    if (loadDataKit)    loadDataKit(data);
 }
 function subrubroChange() {                       
     $id_rubro = $('#id_rubro');

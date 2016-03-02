@@ -5,6 +5,7 @@
 package transaccion;
 
 import bd.Activo;
+import bd.Kit;
 import bd.Remito;
 import bd.Remito_detalle;
 import java.sql.ResultSet;
@@ -70,25 +71,41 @@ public class TRemito extends TransaccionBase<Remito> {
     public boolean eliminar(Remito remito){        
         TRemito_detalle td = new TRemito_detalle();        
         TActivo ta = new TActivo();
-        
+        TKit    tk = new TKit();
         List<Remito_detalle> lstDetalle = new TRemito_detalle().getByRemitoId(remito.getId());
         
         for(Remito_detalle d:lstDetalle){
-            Activo activo = ta.getById(d.getId_activo());
-            if(remito.getId_tipo_remito()==OptionsCfg.REMITO_ENTREGA) { // Si es un remito de entrega, se devuelven los activos
-                if(activo.getAplica_stock() == 1) {                
-                    activo.setStock(activo.getStock() + d.getCantidad());
-                 }             
-                activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
-            } else if(remito.getId_tipo_remito()==OptionsCfg.REMITO_DEVOLUCION) {
-                if(activo.getAplica_stock() == 1) {
-                    activo.setStock(activo.getStock() - d.getCantidad());
-                 }
+            if(d.getId_activo()!=0){
+                Activo activo = ta.getById(d.getId_activo());
+                if(activo==null) continue;
                 
-                if(activo.getStock()<=0) 
-                    activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_ALQUILADO);
+                if(remito.getId_tipo_remito()==OptionsCfg.REMITO_ENTREGA) { // Si es un remito de entrega, se devuelven los activos
+                    if(activo.getAplica_stock() == 1) {                
+                        activo.setStock(activo.getStock() + d.getCantidad());
+                     }             
+                    activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                } else if(remito.getId_tipo_remito()==OptionsCfg.REMITO_DEVOLUCION) {
+                    if(activo.getAplica_stock() == 1) {
+                        activo.setStock(activo.getStock() - d.getCantidad());
+                     }
+
+                    if(activo.getStock()<=0) 
+                        activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_ALQUILADO);
+                }
+                ta.actualizar(activo);
+            } else {
+                Kit kit = tk.getById(d.getId_kit());
+                if (kit==null) continue;
+                if(remito.getId_tipo_remito()==OptionsCfg.REMITO_ENTREGA) { // Si es un remito de entrega, se devuelven los activos
+//                    kit.setStock(kit.getStock() + d.getCantidad());
+                    kit.setId_estado(OptionsCfg.KIT_ESTADO_DISPONIBLE);
+                } else if(remito.getId_tipo_remito()==OptionsCfg.REMITO_DEVOLUCION) {
+//                    kit.setStock(kit.getStock() - d.getCantidad());
+//                    if(kit.getStock()<=0) 
+                     kit.setId_estado(OptionsCfg.KIT_ESTADO_ALQUILADO);
+                }
+                tk.actualizar(kit);
             }
-            ta.actualizar(activo);                   
             td.baja(d);
         }
         if(remito.getId_tipo_remito()==OptionsCfg.REMITO_DEVOLUCION){

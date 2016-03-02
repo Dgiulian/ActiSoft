@@ -93,6 +93,7 @@
         <url-pattern>/CompraEdit</url-pattern>
         <url-pattern>/CompraDel</url-pattern>
         <url-pattern>/ActivoContratoList</url-pattern>
+        <url-pattern>/KitContratoList</url-pattern>
         <url-pattern>/CertificadoUpload</url-pattern>
         <url-pattern>/Download</url-pattern>
         <url-pattern>/Upload</url-pattern>
@@ -444,6 +445,14 @@
     <servlet>
         <servlet-name>KitDel</servlet-name>
         <servlet-class>Kit.KitDel</servlet-class>
+    </servlet>
+     <servlet>
+        <servlet-name>KitContratoList</servlet-name>
+        <servlet-class>Kit.KitContratoList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>KitContratoSearch</servlet-name>
+        <servlet-class>Kit.KitContratoSearch</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SubrubroEdit</servlet-name>
@@ -844,6 +853,14 @@
     <servlet-mapping>
         <servlet-name>KitDel</servlet-name>
         <url-pattern>/KitDel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>KitContratoList</servlet-name>
+        <url-pattern>/KitContratoList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>KitContratoSearch</servlet-name>
+        <url-pattern>/KitContratoSearch</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SubrubroEdit</servlet-name>

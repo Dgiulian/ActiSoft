@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Activo;
+package Kit;
 
-import bd.Activo_contrato_view;
+import Kit.*;
+import bd.Kit_contrato_view;
 import bd.Subrubro;
 import bd.Rubro;
 import com.google.gson.Gson;
@@ -18,7 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import transaccion.TActivo_contrato_view;
+import transaccion.TKit_contrato_view;
 import transaccion.TSubrubro;
 import transaccion.TRubro;
 import utils.JsonRespuesta;
@@ -29,7 +30,7 @@ import utils.OptionsCfg.Option;
  *
  * @author Diego
  */
-public class ActivoContratoList extends HttpServlet {
+public class KitContratoList extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -58,11 +59,7 @@ public class ActivoContratoList extends HttpServlet {
         mapRubros = new TRubro().getMap();
         mapSubrubros = new TSubrubro().getMap();
         
-        mapEstados = new HashMap<Integer,Option>();
-        for (Iterator<Option> it = OptionsCfg.getEstadoActivo().iterator(); it.hasNext();) {
-             Option o = it.next();
-             mapEstados.put(o.getId(),o);
-        }
+       
         Integer page = 0;
         Integer id_rubro = 0;
         Integer id_subrubro = 0;
@@ -81,21 +78,21 @@ public class ActivoContratoList extends HttpServlet {
         try {
             JsonRespuesta jr = new JsonRespuesta();           
            
-            List<Activo_contrato_view> lista ;
+            List<Kit_contrato_view> lista ;
             
-            TActivo_contrato_view ta = new TActivo_contrato_view();
+            TKit_contrato_view ta = new TKit_contrato_view();
             HashMap<String,String> mapFiltro = new HashMap<String,String> ();
             
             if(id_subrubro !=0) { mapFiltro.put("id_subrubro",id_subrubro.toString());}            
             if (id_rubro!=0) { mapFiltro.put("id_rubro",id_rubro.toString());}
             if (id_contrato!=0){ mapFiltro.put("c_id_contrato",id_contrato.toString());}
-            //else if(page!=0) lista = new TActivo_contrato_view().getList(page,10);
+            //else if(page!=0) lista = new TKit_contrato_view().getList(page,10);
              
             lista =  ta.getListFiltro(mapFiltro);
             
-            List<ActivoDet> listaDet = new ArrayList();
-            for(Activo_contrato_view activo:lista){               
-                listaDet.add(new ActivoDet(activo));
+            List<KitDet> listaDet = new ArrayList();
+            for(Kit_contrato_view activo:lista){               
+                listaDet.add(new KitDet(activo));
             }
             if (lista != null) {
                 jr.setTotalRecordCount(listaDet.size());
@@ -112,18 +109,16 @@ public class ActivoContratoList extends HttpServlet {
             out.close();
         }
     }
- private class ActivoDet extends Activo_contrato_view{
+ private class KitDet extends Kit_contrato_view{
      String rubro = "";
      String cod_rubro = "";
      String cod_subrubro = "";
      String subrubro = "";
-     String estado = "";
-     public ActivoDet(Activo_contrato_view activo){
+     public KitDet(Kit_contrato_view activo){
          super(activo);
          // Por default devolvemos el Id
          this.rubro = activo.getId_rubro().toString();         
          this.subrubro = activo.getId_subrubro().toString();
-         this.estado = activo.getId_estado().toString();
          
          Rubro r = mapRubros.get(activo.getId_rubro());
          if (r!=null){
@@ -132,9 +127,7 @@ public class ActivoContratoList extends HttpServlet {
          }
          Subrubro s = mapSubrubros.get(activo.getId_subrubro());       
          if (s!=null) {this.subrubro = s.getDescripcion(); this.cod_subrubro = s.getCodigo();};             
-         Option o = mapEstados.get(activo.getId_estado());
-         if(o!=null)
-             this.estado = o.getDescripcion();
+         
      }
  }
    

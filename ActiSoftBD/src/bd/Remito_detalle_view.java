@@ -9,16 +9,17 @@ package bd;
  * @author Diego
  */
 public class Remito_detalle_view extends Remito_detalle{
-    private String  codigo       = "";
+    private String  codigo             = "";
     private String codigoNew     = "";
     private String desc_corta          = "";
     private String desc_larga          = "";
+    private String longitud            = "";
     private String desc_opcional       = "";
     private String rubro_opcional      = "";
     private String subrubro_opcional   = "";
     private Integer id_rubro = 0;
     private Integer id_subrubro = 0;
-    private String longitud = "";
+    
     
     public Remito_detalle_view(){}
     public Remito_detalle_view(Remito_detalle_view d){

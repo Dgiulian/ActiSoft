@@ -156,9 +156,11 @@ public class RemitoDiario extends HttpServlet {
            if (id_remito_diario == 0) throw new BaseException("Error", "Ocurrió un error al crear el remito de devoluci&oacute;n");
            diario.setId(id_remito_diario);
            for(Remito_detalle rd:lstDetalle){
-                Activo activo = ta.getById(rd.getId_activo());
-                if (activo.getId_rubro()== RUBRO_TRANSPORTE ){
-                    continue;
+                if(rd.getId_activo()!=0) {
+                    Activo activo = ta.getById(rd.getId_activo());
+                    if (activo!=null && activo.getId_rubro()== RUBRO_TRANSPORTE ){
+                        continue;
+                    }
                 }
                 Remito_detalle det_dia = new Remito_detalle(rd);
                 det_dia.setId_remito(diario.getId());

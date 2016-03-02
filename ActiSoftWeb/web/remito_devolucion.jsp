@@ -1,3 +1,6 @@
+
+<%@page import="bd.Kit"%>
+<%@page import="transaccion.TKit"%>
 <%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
 <%@page import="transaccion.TCliente"%>
 <%@page import="bd.Activo"%>
@@ -127,8 +130,11 @@
                                     </thead>
                                     <tbody class="table-content">
                                         <% TActivo ta = new TActivo();
-                                            for(Remito_detalle rm: detalle){ 
-                                                Activo activo = ta.getById(rm.getId_activo());
+                                           TKit tk = new TKit();
+                                           for(Remito_detalle rm: detalle){ 
+                                               if(rm.getId_activo()!=0){
+                                               Activo activo = ta.getById(rm.getId_activo());
+                                               if(activo==null) continue;
                                         %>
                                         <tr>
                                             <input type="hidden" name="detalle" value="<%= rm.getId() %>">
@@ -138,6 +144,19 @@
                                             <td><%= rm.getCantidad()%></td>
                                             <td><span class="btn btn-xs btn-circle btn-danger btnDelActivo" style="display:none"> <span class="fa fa-minus fw"></span></span></td>
                                         </tr>
+                                        <% } else { 
+                                            Kit kit = tk.getById(rm.getId_kit());
+                                            if (kit==null) continue;
+                                        %>
+                                        <tr>
+                                            <input type="hidden" name="detalle" value="<%= rm.getId() %>">
+                                            <td><%= kit.getCodigo()%></td>
+                                            <td><%= rm.getPosicion() %></td>
+                                            <td><%= StringEscapeUtils.escapeHtml4(kit.getNombre())%></td>
+                                            <td><%= rm.getCantidad()%></td>
+                                            <td><span class="btn btn-xs btn-circle btn-danger btnDelActivo" style="display:none"> <span class="fa fa-minus fw"></span></span></td>
+                                        </tr>
+                                        <% } %>
                                         <% } %>
                                     </tbody>
 <!--                                    <tfoot>

@@ -23,6 +23,7 @@ import transaccion.TRubro;
 import transaccion.TSubrubro;
 import utils.JsonRespuesta;
 import utils.OptionsCfg;
+import utils.OptionsCfg.Option;
 import utils.TFecha;
 
 /**
@@ -121,23 +122,24 @@ public class KitList extends HttpServlet {
      String cod_subrubro = "";
      String subrubro = "";
      String estado = "";
-     public KitDet(Kit activo){
-         super(activo);
+     public KitDet(Kit kit){
+         super(kit);
          // Por default devolvemos el Id
-         this.rubro = activo.getId_rubro().toString();         
-         this.subrubro = activo.getId_subrubro().toString();
-//         this.estado = activo.getId_estado().toString();
+         this.rubro = kit.getId_rubro().toString();         
+         this.subrubro = kit.getId_subrubro().toString();
+
+         this.estado = kit.getId_estado().toString();
+         
 //         this.fecha_creacion = TFecha.convertirFecha(this.fecha_creacion, TFecha.formatoBD + " " + TFecha.formatoHora, TFecha.formatoBD);
-         Rubro r = mapRubros.get(activo.getId_rubro());
+         Rubro r = mapRubros.get(kit.getId_rubro());
          if (r!=null){
              this.rubro = r.getDescripcion();
              this.cod_rubro = r.getCodigo();
          }
-         Subrubro s = mapSubrubros.get(activo.getId_subrubro());       
+         Subrubro s = mapSubrubros.get(kit.getId_subrubro());       
          if (s!=null) {this.subrubro = s.getDescripcion(); this.cod_subrubro = s.getCodigo();};             
-//         Option o = mapEstados.get(activo.getId_estado());
-//         if(o!=null)
-//             this.estado = o.getDescripcion();
+         Option o = mapEstados.get(kit.getId_estado());
+         this.estado = (o!=null)?o.getDescripcion():kit.getId().toString();
      }
  }
     /**

@@ -27,6 +27,8 @@ public class PathCfg {
     public static final String ACTIVO_CONTRATO_LIST   = ACTIVO + "ContratoList";
     public static final String ACTIVO_CONTRATO_SEARCH = ACTIVO + "ContratoSearch";
     
+    
+    
     public static final String ACTIVO_HISTORIA_LIST = ACTIVO + "HistoriaList";
     
     public static final String CLIENTE ="Cliente";
@@ -122,6 +124,9 @@ public class PathCfg {
     public static final String KIT_EDIT   = KIT + "Edit";
     public static final String KIT_DEL    = KIT + "Del";    
     public static final String KIT_SEARCH = KIT + "Search";
+    
+    public static final String KIT_CONTRATO_LIST   = KIT + "ContratoList";
+    public static final String KIT_CONTRATO_SEARCH = KIT + "ContratoSearch";
     
     public static final String AGENDA        = "Agenda";
     public static final String AGENDA_LIST   = AGENDA + "List";
