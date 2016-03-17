@@ -13,6 +13,7 @@ import java.util.List;
  * @author Diego
  */
 public class TActivo extends TransaccionBase<Activo>{
+    @Override
     public List<Activo> getList() {
         return super.getList("select * from activo where activo.bloqueado = 0");
     }

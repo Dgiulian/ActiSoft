@@ -1,4 +1,5 @@
-<%@page import="bd.Kit"%>
+<%@page import="utils.OptionsCfg.Option"%>
+<%@page import="utils.OptionsCfg"%>
 <%@page import="bd.Kit"%>
 <%@page import="transaccion.TSubrubro"%>
 <%@page import="bd.Subrubro"%>
@@ -31,6 +32,24 @@
             </div>
             <!-- /.row -->
             <div class="row">
+<!--                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="" for="id_estado">Estado</label>
+                        <select class="form-control" name="id_estado" id="id_estado">
+                            <option value="0" selected>Todos</option>
+                            <% for(Option o:OptionsCfg.getEstadoKit()){%>
+                              <option value="<%=o.getId()%>"><%=StringEscapeUtils.escapeHtml4(o.getDescripcion())%></option>
+                            <%}%>                            
+                        </select>
+                    </div>
+                </div>-->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="activo">
+                        <input type="checkbox" class="checkbox checkbox-inline" name="activo" id="activo" value='1' > Mostrar eliminados</label>
+                    </div>
+               </div>
+                                
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -91,8 +110,15 @@
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        loadData({id_kit:<%= kit.getId()%>});
+        filtrar();
+        $('#id_estado').change(filtrar);
+        $('#activo').change(filtrar);
     });
+    function filtrar(){
+            var id_estado = $('#id_estado').val();
+            var activo = $('#activo').prop('checked')?1:0;
+        loadData({id_kit:<%= kit.getId()%>,id_estado:id_estado,activo:activo});
+    }
     function loadData(data){
          var $tabla = $('#tblKit');
 
@@ -145,16 +171,23 @@
             html += wrapTag('td',d.nombre,'');            
             html += wrapTag('td',d.rubro,'');            
             html += wrapTag('td',d.subrubro,'');            
-            html += wrapTag('td',d.estado,'');            
+            
+            var htmlEstado = '<a href="#" data-toggle="modal" data-target="#mdlKitHistoria" data-index="'+ d.id + '" >' + d.estado + ' </a>';
+            html += wrapTag('td',htmlEstado,'');            
+//          
            var htmlEdit = "<a href='<%= PathCfg.KIT_EDIT%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
+            if(d.activo )
            var htmlDel = "<span href='' data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span>";
+           else var htmlDel = "";
            html +=wrapTag('td',htmlEdit + htmlDel,'');
            html +="</tr>";
        }
        return html;
     }    
      </script>
+     <%@include file="kit_historia_mdl.jsp"%>
 <%@include file="tpl_footer.jsp"%>
+
 </body>
 
 </html>

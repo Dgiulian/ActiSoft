@@ -7,6 +7,7 @@ package Kit;
 import bd.Activo;
 import bd.Kit;
 import bd.Kit_detalle;
+import bd.Kit_historia;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import transaccion.TActivo;
 import transaccion.TAuditoria;
 import transaccion.TKit;
 import transaccion.TKit_detalle;
+import transaccion.TKit_historia;
 import utils.BaseException;
 import utils.OptionsCfg;
 import utils.Parser;
@@ -81,36 +83,33 @@ public class KitEdit extends HttpServlet {
         TKit tk = new TKit();
         TActivo ta = new TActivo();
         TKit_detalle tkd = new TKit_detalle();
+        TKit_historia th = new TKit_historia();
         boolean nuevo = false;
-        ArrayList<Kit_detalle> lstDetalle = new ArrayList<Kit_detalle>();
-        ArrayList<Activo> lstActivos = new ArrayList<Activo>();
-        Map<Integer,Activo> mapActivos      = new HashMap<Integer,Activo>();
+        ArrayList<Kit_detalle> lstDetalle   = new ArrayList<Kit_detalle>();
+        ArrayList<Activo> lstActivos        = new ArrayList<Activo>();        
+        ArrayList<Kit_historia> lstHistoria = new ArrayList<Kit_historia>();
         
+        Map<Integer,Activo> mapActivos      = new HashMap<Integer,Activo>();
+        Map<Integer,Kit_historia> mapHistoria = new HashMap<Integer,Kit_historia>();
         try{            
             Integer id_kit = Parser.parseInt(request.getParameter("id"));
             String codigo = request.getParameter("codigo");
             String nombre = request.getParameter("nombre");
             Integer id_rubro = Parser.parseInt(request.getParameter("id_rubro"));
             Integer id_subrubro = Parser.parseInt(request.getParameter("id_subrubro"));
+            Integer estado_activo = Parser.parseInt(request.getParameter("activo"));
             kit = tk.getById(id_kit);
             List<Kit_detalle> lstActual = tkd.getByKitId(id_kit);
+            List<Kit_detalle> lstBaja   = new ArrayList<Kit_detalle>();
             if(kit==null){
                 kit = new Kit();
                 kit.setFecha_creacion(TFecha.ahora());
                 nuevo = true;
-//                kit.setStock(1f);
                 kit.setId_estado(OptionsCfg.KIT_ESTADO_DISPONIBLE);
-            } else { // Cuando se edita un kit, hay que incrementar 
+            } //else { // Cuando se edita un kit, hay que incrementar 
                      // el stock de los activos que se eliminaron.
-                     
-                for(Kit_detalle d: lstActual){
-                    Activo a = ta.getById(d.getId_activo());
-                    a.setStock(a.getStock() + 1);
-                    a.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
-                    mapActivos.put(a.getId(), a);
-                    lstActivos.add(a);
-                }
-            }
+            if(kit.getId_estado()==OptionsCfg.KIT_ESTADO_ALQUILADO ) throw new BaseException("ERROR","El Kit está alquilado y no puede ser editado");
+            
             if(nuevo && tk.getByCodigo(codigo)!=null) 
                  throw new BaseException("ERROR","Ya existe un kit con ese c&oacute;digo");
             
@@ -118,9 +117,10 @@ public class KitEdit extends HttpServlet {
             kit.setNombre(nombre);            
             kit.setId_rubro(id_rubro);
             kit.setId_subrubro(id_subrubro);
+            kit.setActivo(estado_activo);      
             
-         
-         for (int i = 0;i<codigoActivos.length;i++){
+            // Recorro todos los activos que integran el kit.
+            for (int i = 0;i<codigoActivos.length;i++){
              if (codigoActivos[i].equals("")) continue;
              String cod_activo = codigoActivos[i];
              Activo activo = ta.getByCodigo(cod_activo.trim());
@@ -128,45 +128,68 @@ public class KitEdit extends HttpServlet {
                  throw new BaseException("Activo inexistente", String.format("No existe el activo: %s",cod_activo));
              }
              
-    //             if(activo.getId_estado()!=OptionsCfg.ACTIVO_ESTADO_DISPONIBLE){
-    //                 throw new BaseException("Activo no disponible", String.format("El activo %s no est&aacute; disponible",activo.getCodigo()));
-    //             }
-             
              Kit_detalle detalle = new Kit_detalle();
-             detalle.setId_activo(activo.getId());            
+             detalle.setId_activo(activo.getId());
              detalle.setCantidad(1);
              lstDetalle.add(detalle);
-             
-             Activo activo_old = mapActivos.get(activo.getId());
-             if(activo_old!=null){ // Si el activo existe en el mapa, signigica que sigue estando en el kit. 
-                                   // Por lo tanto no lo actualizamos
-                 lstActivos.remove(activo_old);
-             } else{
-                activo.setStock(activo.getStock()-1);
-                activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_KIT);
-                lstActivos.add(activo);
-             }
-         }
+             mapActivos.put(activo.getId(),activo);
+             activo.setStock(0f);
+             activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_KIT);
+             lstActivos.add(activo);
+             Kit_historia historia = new Kit_historia();
+             historia.setId_activo(activo.getId());
+             historia.setId_accion(OptionsCfg.ACCION_ALTA);
+             historia.setFecha(TFecha.ahora(TFecha.formatoBD + " " + TFecha.formatoHora));
+             lstHistoria.add(historia); 
+             mapHistoria.put(activo.getId(),historia);
+           }
+            
+            for(Kit_detalle d: lstActual){
+                Activo a = mapActivos.get(d.getId_activo());
+                
+                if(a!=null){
+                    // Si el activo esta en el map. Sigue formando parte del Kit, por lo tanto no hay que la historia.                    
+                    Kit_historia historia = mapHistoria.get(a.getId());
+                    lstHistoria.remove(historia);
+                } else {
+                    // Si el activo no esta en el map. Se eliminó y hay que volver a poner lo disponible.                
+                    a = ta.getById(d.getId_activo());
+                    if(a == null ) continue; // Si se elimino no hacemos nada 
+                    
+                    a.setStock( 1f);
+                    a.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                    Kit_historia historia = new Kit_historia();
+                    historia.setId_activo(d.getId_activo());
+                    historia.setId_accion(OptionsCfg.ACCION_BAJA);
+                    historia.setFecha(TFecha.ahora(TFecha.formatoBD + " " + TFecha.formatoHora));
+                    lstHistoria.add(historia);
+                    lstActivos.add(a);
+                    lstBaja.add(d);
+                }
+            }
+         
+         /*************** */ 
             if(nuevo){
                 id_kit  = tk.alta(kit);
             } else {
                 tk.actualizar(kit);                
             }   
             
-            
-            
             if(id_kit!=0){
-               
-              
                for (Kit_detalle d:lstActual){
-                   tkd.baja(d);
+                   //Borramos todo el detalle
+                   boolean bajaOk = tkd.baja(d);                  
                }
                for (Kit_detalle kd :lstDetalle){
                    kd.setId_kit(id_kit);
                    tkd.alta(kd);
                }
-               for(Activo a:lstActivos){
+               for(Activo a:lstActivos){ //Actualizamos los activos
                    ta.actualizar(a);
+               }
+               for(Kit_historia h:lstHistoria){ //Agregamos la historia del kit
+                   h.setId_kit(id_kit);
+                   th.alta(h);
                }
             }
             HttpSession session = request.getSession();
@@ -179,7 +202,6 @@ public class KitEdit extends HttpServlet {
             request.setAttribute("titulo", ex.getResult());
             request.setAttribute("mensaje", ex.getMessage());
             request.getRequestDispatcher("message.jsp").forward(request,response);
-            return;
         }
     }
 

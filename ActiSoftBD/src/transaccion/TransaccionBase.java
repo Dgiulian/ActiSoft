@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * @author Diego
  */
 public abstract class TransaccionBase<E> {
-
+    protected String orderBy = " ";
     protected Conexion conexion;
     Class<E> clase;
 

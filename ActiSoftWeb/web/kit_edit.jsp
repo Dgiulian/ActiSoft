@@ -42,7 +42,7 @@
     filtroSubrubro.put("id_estado","1");
     filtroSubrubro.put("id_rubro",kit.getId_rubro().toString());
     List<Subrubro> lstSubrubro = new TSubrubro().getListFiltro(filtroSubrubro);
-    
+    String checked = kit.getActivo()!=0?"checked":"";
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,7 +98,16 @@
     <!--                                     <div class="col-lg-3 " >
                                         </div>-->
                                     <!--</div>-->
-                                   
+                            <% if(kit.getActivo()==0){%>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="activo">
+                                    <input type="checkbox" class="checkbox checkbox-inline" name="activo" id="activo" value='1' <%=checked%>> Activo</label>
+                                </div>
+                           </div>
+                                <% } else {%>
+                                 <input type="hidden" class="checkbox checkbox-inline" name="activo" id="activo" value='1'>
+                                <% }%>
                                        
                                     </div>
                             </fieldset>
@@ -110,7 +119,7 @@
                                             <select name="id_rubro" id="id_rubro_kit" class="form-control">
                                                 <option value="0">Seleccione el rubro</option>
                                                 <% for(Rubro r:lstRubro){ 
-                                                    String selected = (r.getId() == kit.getId_rubro())?"selected":"";
+                                                    String selected = (r.getId().equals(kit.getId_rubro()))?"selected":"";
                                                 %>
                                                     <option value="<%= r.getId()%>" <%= selected  %>>
                                                         <%= r.getCodigo() + " - " +  StringEscapeUtils.escapeHtml4(r.getDescripcion())%>
@@ -125,7 +134,7 @@
                                         <select name="id_subrubro" id="id_subrubro_kit" class="form-control" >
                                              <option value="0">Seleccione el subrubro</option>
                                             <% for(Subrubro s:lstSubrubro){
-                                                String selected = (s.getId() == kit.getId_subrubro())?"selected":"";
+                                                String selected = (s.getId().equals(kit.getId_subrubro()))?"selected":"";
                                                 %>                                                
                                                 <option value="<%= s.getId()%>"  <%= selected %>>
                                                     <%= s.getCodigo() + " - " + StringEscapeUtils.escapeHtml4(s.getDescripcion())%>
@@ -145,7 +154,7 @@
                         <div class="row" >
                             
                             <div class="col-lg-12">
-                                <h3>Activos del kit <span data-toggle="modal" data-target="#mdlActivo" class="btn btn-default" > Agregar</span></h3>
+                                <h3>Activos del kit <span class="btn btn-default"  id="btnAgregar"> Agregar</span></h3>
                                 <table class="table table-bordered table-condensed table-responsive table-striped" id="tblKit_detalle">
                                     <thead>
                                         <tr>
@@ -159,6 +168,7 @@
                                     <tbody>
                                         <% for( Kit_detalle detalle:lstDetalle) {
                                            Activo a   = ta.getById(detalle.getId_activo());
+                                           if(a==null) continue;
 //                                           Rubro r    = mapRubros.get(a.getId_rubro());
 //                                           Subrubro s = mapSubrubros.get(a.getId_subrubro());
                                         %>
@@ -181,7 +191,11 @@
                 
                         <div class="row">
                             <div class="col-lg-12">
-                                <button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Guardar</button>
+                                <% if( kit.getId_estado()!=OptionsCfg.KIT_ESTADO_ALQUILADO) {%>
+                                <button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Guardar</button>                                
+                                <%} else { %>
+                                <h4>El kit se encuentra utilizado y no puede ser modificado</h4>
+                                <% } %>
                                 <a type="reset" class="btn btn-default" href="<%=PathCfg.KIT%>">Cancelar</a>
                             </div>
                         </div>
@@ -257,8 +271,6 @@
                 $id_rubro = $('#id_rubro');
                 $id_subrubro = $('#id_subrubro');
                 
-                
-                
                 loadDataActivo({ id_rubro: $id_rubro.val(),
                               id_subrubro: $id_subrubro.val(),
                              
@@ -270,6 +282,7 @@
                     $invoker.parent().find('input').focus();    
                 
             });
+            $('#btnAgregar').click(function(){agregarActivo({})});
             $('#id_rubro').change(function(){
                 rubroChange("<%= PathCfg.SUBRUBRO_LIST%>",{id_rubro:$(this).val()})
             });
@@ -292,7 +305,7 @@
                     return false;
                 }
             });
-//            agregarActivo({});
+            agregarActivo({});
         });
       function buscarActivo(){            
         // Combino los parametros por si no viene definido ninguno                      
@@ -369,17 +382,17 @@
             
             var $arr = $('input.chkSelActivo:checked');
             for(var i = 0;i<$arr.length;i++){
-                $codigo = $($arr[i]).data('codigo'); 
-                $descripcion = $($arr[i]).data('descripcion'); 
-                $pos = $($arr[i]).data('pos'); 
-                $cant = $tr.find('input[name="cantActivo"]');
+                var $codigo = $($arr[i]).data('codigo'); 
+                var $descripcion = $($arr[i]).data('descripcion'); 
+                var $pos = $($arr[i]).data('pos'); 
+                var $cant = $tr.find('input[name="cantActivo"]');
                 if ($cant.val()==="") $cant.val(1);
                 var html = generarHtml({codigo:$codigo,pos:$pos ,cant:$cant.val(),descripcion:$descripcion,disabled:true});
-                //$tr.after(html);
-                var $tabla = $('#tblKit_detalle');
+                $tr.before(html);
+                /* var $tabla = $('#tblKit_detalle');
                 var html_ant = $tabla.find('tbody').html();
                 $tabla.find('tbody').html(html_ant + html);
-                
+                */
                 //agregarActivo({codigo:$codigo,pos:$pos.val(),cant:$cant.val(),descripcion:$descripcion});
             }
             //$tr.remove();

@@ -85,7 +85,8 @@ public class KitDel extends HttpServlet {
            if(kit.getId_estado()==OptionsCfg.KIT_ESTADO_ALQUILADO){
                throw new BaseException("ERROR","El kit se encuentra alquilado y no puede ser eliminado");
            }
-           boolean baja = new TKit().baja(kit);           
+           kit.setActivo(0);
+           boolean baja = new TKit().actualizar(kit);           
            if ( baja){
                TKit_detalle tkd =  new TKit_detalle();
                List<Kit_detalle> lstDetalle =tkd.getByKitId(kit.getId());
@@ -98,7 +99,7 @@ public class KitDel extends HttpServlet {
                     activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
                     ta.actualizar(activo);
                    }
-                   tkd.baja(d);
+//                   tkd.baja(d);
                }
                jr.setResult("OK");
                 Integer id_usuario = 0;

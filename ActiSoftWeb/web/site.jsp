@@ -43,10 +43,10 @@
                                 <table class="table table-striped table-bordered table-condensed" id="tblParametro">
                                     <thead>
                                         <tr>
-                                            <th>Id</th>
-                                            <th>Nombre</th>
-                                            <th>C&oacute;digo</th>
-                                            <th>Valor</th>
+                                            <th>Locaci&oacute;n</th>
+                                            <th>Area</th>
+                                            <th>Pozo</th>
+                                            <th>Equipo</th>
                                             <th></th>
                                         </tr>
                                     </thead>

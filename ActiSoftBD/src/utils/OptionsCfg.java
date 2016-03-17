@@ -104,7 +104,10 @@ public class OptionsCfg {
     
     public static final Integer KIT_ESTADO_DISPONIBLE = 1;
     public static final Integer KIT_ESTADO_ALQUILADO = 2;
-    public static final Integer KIT_ESTADO_BAJA = 2;
+    public static final Integer KIT_ESTADO_ELIMINADO = 3;
+    
+//    public static final Integer KIT_HISTORIA_ALTA  = 1;
+//    public static final Integer KIT_HISTORIA_BAJA  = 2;
     
     public static ArrayList<Option> getTipoRemitos(){
         ArrayList<Option> lista = new ArrayList();
@@ -151,7 +154,7 @@ public class OptionsCfg {
         lista.add(new Option(REMITO_ESTADO_CERRADO,String.format("%03d",REMITO_ESTADO_CERRADO),"Cerrado"));                
         return lista;
     }
-     public static ArrayList<Option> getEstadoCertificados(){
+    public static ArrayList<Option> getEstadoCertificados(){
         ArrayList<Option> lista = new ArrayList();
         lista.add(new Option(CERTIFICADO_APTO,String.format("%03d",CERTIFICADO_APTO),"Apto"));
         lista.add(new Option(CERTIFICADO_NO_APTO,String.format("%03d",CERTIFICADO_NO_APTO),"No Apto"));
@@ -244,7 +247,7 @@ public static ArrayList<Option> getTipoActividades(){
         ArrayList<Option> lista = new ArrayList();
         lista.add(new Option(KIT_ESTADO_DISPONIBLE,String.format("%03d",KIT_ESTADO_DISPONIBLE),"Disponible"));
         lista.add(new Option(KIT_ESTADO_ALQUILADO,String.format("%03d",KIT_ESTADO_ALQUILADO),"Alquilado"));
-        lista.add(new Option(KIT_ESTADO_BAJA,String.format("%03d",KIT_ESTADO_BAJA),"Baja"));
+        lista.add(new Option(KIT_ESTADO_ELIMINADO,String.format("%03d",KIT_ESTADO_ELIMINADO),"Eiiminado"));
 //        lista.add(new Option(6,"003","Cabeza fractura 001"));        
         return lista;
    }

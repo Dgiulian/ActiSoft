@@ -93,7 +93,6 @@
         <url-pattern>/CompraEdit</url-pattern>
         <url-pattern>/CompraDel</url-pattern>
         <url-pattern>/ActivoContratoList</url-pattern>
-        <url-pattern>/KitContratoList</url-pattern>
         <url-pattern>/CertificadoUpload</url-pattern>
         <url-pattern>/Download</url-pattern>
         <url-pattern>/Upload</url-pattern>
@@ -128,6 +127,7 @@
         <url-pattern>/Kit</url-pattern>
         <url-pattern>/KitList</url-pattern>
         <url-pattern>/KitEdit</url-pattern>
+        <url-pattern>/KitContratoList</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
     <servlet>
@@ -446,7 +446,7 @@
         <servlet-name>KitDel</servlet-name>
         <servlet-class>Kit.KitDel</servlet-class>
     </servlet>
-     <servlet>
+    <servlet>
         <servlet-name>KitContratoList</servlet-name>
         <servlet-class>Kit.KitContratoList</servlet-class>
     </servlet>
@@ -537,6 +537,10 @@
     <servlet>
         <servlet-name>ServicioDel</servlet-name>
         <servlet-class>Servicio.ServicioDel</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>KitHistoriaList</servlet-name>
+        <servlet-class>Kit.KitHistoriaList</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ActivoServlet</servlet-name>
@@ -945,6 +949,10 @@
     <servlet-mapping>
         <servlet-name>ServicioDel</servlet-name>
         <url-pattern>/ServicioDel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>KitHistoriaList</servlet-name>
+        <url-pattern>/KitHistoriaList</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

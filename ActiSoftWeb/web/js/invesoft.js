@@ -154,7 +154,7 @@ function rubroChange(url,data,$id_subrubro) {
         });
     }
     if (loadDataActivo) loadDataActivo(data);
-    if (loadDataKit)    loadDataKit(data);
+    else if (loadDataKit)    loadDataKit(data);
 }
 function subrubroChange() {                       
     $id_rubro = $('#id_rubro');

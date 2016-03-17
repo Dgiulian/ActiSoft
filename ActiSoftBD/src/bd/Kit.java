@@ -11,6 +11,8 @@ public class Kit {
 	public Integer id_subrubro = 0;
 //        public Float   stock       = 0f;
         public Integer id_estado   = 0;
+        public Integer activo      = 1;
+        
         public Kit(){}
         public Kit(Kit kit){
             this.id             = kit.getId();
@@ -23,6 +25,7 @@ public class Kit {
             this.id_subrubro    = kit.getId_subrubro();
 //            this.stock          = kit.getStock();
             this.id_estado      = kit.getId_estado();
+            this.activo         = kit.getActivo();
         }
 	public Integer getId() {
 		return this.id;
@@ -106,6 +109,14 @@ public class Kit {
         }
         public Kit setId_estado(Integer id_estado){
             this.id_estado = id_estado;
+            return this;
+        }
+        
+        public Integer getActivo(){
+            return this.activo;
+        }
+        public Kit setActivo(Integer activo){
+            this.activo = activo;
             return this;
         }
 }

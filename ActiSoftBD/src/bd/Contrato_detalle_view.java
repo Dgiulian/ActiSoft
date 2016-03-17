@@ -21,7 +21,7 @@ public class Contrato_detalle_view extends Contrato_detalle{
 //private Float porcentaje = 0f;
 
 private String codigo = "";
-private Integer id_clase = 0;
+//private Integer id_clase = 0;
 
 //public Integer getId(){
 //    return this.id;
@@ -57,9 +57,9 @@ private Integer id_clase = 0;
     return this.codigo;
 }
   
-public Integer getId_clase() {
-    return this.id_clase;
-}
+//public Integer getId_clase() {
+//    return this.id_clase;
+//}
 
 //public Contrato_detalle_view setId(Integer id){
 //    this.id = id;
@@ -105,8 +105,8 @@ public Contrato_detalle_view setCodigo(String codigo){
     this.codigo = codigo;
     return this;
 }    
-public Contrato_detalle_view setId_clase(Integer id_clase) {
-        this.id_clase = id_clase;
-        return this;
-}    
+//public Contrato_detalle_view setId_clase(Integer id_clase) {
+//        this.id_clase = id_clase;
+//        return this;
+//}    
 }

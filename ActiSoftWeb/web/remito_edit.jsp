@@ -418,10 +418,10 @@
         function selActivos(){
             var $arr = $('input.chkSelActivo:checked');
             for(var i = 0;i<$arr.length;i++){
-                $codigo = $($arr[i]).data('codigo'); 
-                $descripcion = $($arr[i]).data('descripcion'); 
-                $pos = $($arr[i]).data('pos'); 
-                $cant = $tr.find('input[name="cantActivo"]');
+                var $codigo = $($arr[i]).data('codigo'); 
+                var $descripcion = $($arr[i]).data('descripcion'); 
+                var $pos = $($arr[i]).data('pos'); 
+                var $cant = $tr.find('input[name="cantActivo"]');
                 if ($cant.val()==="") $cant.val(1);
                 var html = generarHtml({codigo:$codigo,pos:$pos ,cant:$cant.val(),descripcion:$descripcion,disabled:true});
                 //$tr.after(html);

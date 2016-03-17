@@ -52,10 +52,9 @@
                             <div class="dataTable_wrapper">
                                 <div class="col-lg-12">
                                      <div class="form-group">
-                                            
                                             <label for="id_estado">
-                                                <input type="checkbox" class="checkbox checkbox-inline" name="id_estado" id="id_estado" value='1'> Mostrar eliminados</label>
-                                        </div>
+                                            <input type="checkbox" class="checkbox checkbox-inline" name="id_estado" id="id_estado" value='1'> Mostrar eliminados</label>
+                                    </div>
                                 </div>
                                 
                                 <table class="table table-striped table-bordered table-condensed " id="tblRubro">

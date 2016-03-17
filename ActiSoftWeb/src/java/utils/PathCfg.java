@@ -125,6 +125,9 @@ public class PathCfg {
     public static final String KIT_DEL    = KIT + "Del";    
     public static final String KIT_SEARCH = KIT + "Search";
     
+    public static final String KIT_HISTORIA = KIT + "Historia";
+    public static final String KIT_HISTORIA_LIST   = KIT_HISTORIA + "List";
+    
     public static final String KIT_CONTRATO_LIST   = KIT + "ContratoList";
     public static final String KIT_CONTRATO_SEARCH = KIT + "ContratoSearch";
     

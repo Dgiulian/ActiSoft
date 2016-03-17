@@ -102,7 +102,7 @@
 
                                 <div class="col-lg-12 " >
                                     <div class="form-group">
-                                        <label for="nombre">Nombre</label>
+                                        <label for="nombre">Locaci&oacute;n</label>
                                         <input class="form-control" name="nombre" id="nombre"   value="<%=site.getNombre() %>">
                                     </div>
                                 </div>

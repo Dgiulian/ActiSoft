@@ -125,7 +125,6 @@
           var id_activo = $invoker.data('index');
           var fecha_alta = $invoker.data('fecha_alta');
           
-          console.log($invoker);
           var data = {id_activo:id_activo};
           loadDataActivoHistoria(data);
           loadDataCertificado(data);

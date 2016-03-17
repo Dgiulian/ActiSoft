@@ -20,7 +20,7 @@ import utils.OptionsCfg;
  * @author Diego
  */
 public class TRemito extends TransaccionBase<Remito> {
-    public String orderBy = " remito.fecha desc ";
+//    private String orderBy = " remito.fecha desc ";
     public List<Remito>getList(){
         return super.getList("select * from remito");
     }
@@ -41,7 +41,7 @@ public class TRemito extends TransaccionBase<Remito> {
     
     @Override
     public String getOrderBy(){
-        if (this.orderBy.equals("")) return "";
+        if (this.orderBy.trim().equals("")) return "";
         else return " order by " + this.orderBy;
     }
     public TRemito setOrderBy(String orderBy){

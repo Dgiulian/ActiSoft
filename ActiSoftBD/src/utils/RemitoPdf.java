@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import transaccion.TActivo;
 import transaccion.TCliente;
 import transaccion.TContrato;
 import transaccion.TContrato_detalle;
@@ -62,12 +63,15 @@ public class RemitoPdf extends BasePdf {
      protected void addContent(Document document){
            PdfContentByte cb = docWriter.getDirectContent();
 //           Integer start = 670;
-           Integer start = 678;
+           
+           addText(cb,470,760,TFecha.formatearFechaBdVista(remito.getFecha()));
+           
+           Integer start = 690;
            printHeader(cb,start);
-           printSite(cb,636);
+           printSite(cb,645);
            
            
-           start = 570;
+           start = 577;
            Float lineHeight = 16f;
            Integer i = 0;
 //           TActivo ta = new TActivo();
@@ -214,16 +218,16 @@ public class RemitoPdf extends BasePdf {
         //Integer start = 678;
         Integer lineHeight = 15;
         if(this.cliente!=null) {
-         addText(cb,80,start,cliente.getNombre_comercial());
-         addText(cb,80,start - lineHeight,cliente.getDireccion_fisica());           
+         addText(cb,75,start,cliente.getNombre_comercial());
+         addText(cb,75,start - lineHeight,cliente.getDireccion_fisica());           
          addText(cb,425,start - lineHeight,cliente.getCuit());
         }
         // Contrato
         start -= 48;
 //           start -= 43;
         if(this.contrato!=null)
-             addText(cb,210,start  ,contrato.getNumero().toString());
-//           addText(cb,205,start  ,remito.getNumero().toString());
+//             addText(cb,210,start  ,contrato.getNumero().toString());
+           addText(cb,205,start  ,contrato.getNumero().toString());
         
  }
      public void printSite(PdfContentByte cb,Integer start){
@@ -313,14 +317,20 @@ public class RemitoPdf extends BasePdf {
      }
     public static void main(String[] args){
         
-        Remito remito = new TRemito().getById(234);
-        String fileName = String.format("c:\\remito_%d.pdf",remito.getNumero());
-        RemitoPdf rm = new RemitoPdf(remito);
-        rm.createPdf(fileName);
-        System.out.println("Imprimiendo documento");
-        rm.abrir(fileName);
-       // rm.imprimir(fileName);
+//        Remito remito = new TRemito().getById(99);
+//        String fileName = String.format("c:\\remito_%d.pdf",remito.getNumero());
+//        RemitoPdf rm = new RemitoPdf(remito);
+//        rm.createPdf(fileName);
+//        System.out.println("Imprimiendo documento");
+//        rm.abrir(fileName);
+//        rm.imprimir(fileName);
 
-         
+TActivo ta = new TActivo();
+    System.out.println(ta.getList("select * from activo").size());
+    System.out.println(ta.getList("select * from activo where activo.bloqueado = 0").size());
+    
+    HashMap<String,String> lstFiltro = new HashMap<String,String>();
+    lstFiltro.put("bloqueado","0");
+        System.out.println(ta.getListFiltro(lstFiltro).size());
     }
 }

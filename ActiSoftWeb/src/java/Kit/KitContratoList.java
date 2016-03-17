@@ -87,7 +87,7 @@ public class KitContratoList extends HttpServlet {
             if (id_rubro!=0) { mapFiltro.put("id_rubro",id_rubro.toString());}
             if (id_contrato!=0){ mapFiltro.put("c_id_contrato",id_contrato.toString());}
             //else if(page!=0) lista = new TKit_contrato_view().getList(page,10);
-             
+            mapFiltro.put("activo", "1");
             lista =  ta.getListFiltro(mapFiltro);
             
             List<KitDet> listaDet = new ArrayList();
