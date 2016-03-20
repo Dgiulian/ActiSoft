@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TLocalidad;
 import utils.JsonRespuesta;
+import utils.Parser;
 
 /**
  *
@@ -43,8 +44,10 @@ public class LocalidadList extends HttpServlet {
          
         try {
             JsonRespuesta jr = new JsonRespuesta();           
-            Integer idProv = Integer.parseInt(request.getParameter("idProv"));
-            List<Localidad> lista = new TLocalidad().recuperarLocalidades(idProv);            
+            Integer idProv = Parser.parseInt(request.getParameter("idProv"));
+            List<Localidad> lista;
+            if(idProv==0) lista = new TLocalidad().getList();
+            else lista = new TLocalidad().recuperarLocalidades(idProv);            
             if (lista != null) {
                 jr.setTotalRecordCount(lista.size());
             } else {

@@ -48,7 +48,10 @@ public class TLocalidad extends TransaccionBase<Localidad>{
     @Override
     public HashMap<Integer,Localidad> getMap() {
         HashMap<Integer,Localidad> mapa = new HashMap<>();
-        for (Localidad l : this.getList()) mapa.put(l.getLoc_id(),l);
+        List<Localidad> list = this.getList();
+        if (list!=null) {
+            for (Localidad l : list) mapa.put(l.getLoc_id(),l);
+        }
         return mapa;
     }
 }
