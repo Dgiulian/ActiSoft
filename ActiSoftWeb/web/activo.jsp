@@ -104,6 +104,7 @@
                                             <th>Descripci&oacute;n</th>
                                             <th>Estado</th>
                                             <th>Stock</th>                                            
+                                            <th>Certificado</th>                                            
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -237,6 +238,7 @@
            var htmlEstado = '<a href="#" data-toggle="modal" data-target="#mdlActivoHistoria" data-index="'+ d.id + '" data-fecha_alta=' +  d.fecha_alta + '>' + d.estado + ' </a>';
            html +=wrapTag('td',htmlEstado,'');
            html += wrapTag('td',d.stock,'');
+           html += wrapTag('td',d.certificado,'');
            
 //           html +=wrapTag('td',d.num_rfid,'');
             var htmlEdit = "<a href='<%= PathCfg.ACTIVO_EDIT%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";

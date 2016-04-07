@@ -83,7 +83,7 @@ public class CertificadoEdit extends HttpServlet {
         certificado = new TCertificado().getById(id_certif);
         if(certificado==null) {
             certificado = new Certificado();
-            certificado.setId_resultado(OptionsCfg.CERTIFICADO_NO_APTO);
+            certificado.setId_resultado(OptionsCfg.CERTIFICADO_APTO);
             nuevo = true;
         }
         try{

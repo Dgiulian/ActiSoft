@@ -12,8 +12,8 @@ public class Certificado {
     public Integer id = 0;
     public Integer id_activo = 0;
     public String  fecha = "";
-    public String fecha_vigencia = "";
-    public String fecha_efectiva  = "";
+    public String  fecha_vigencia = "";
+    public String  fecha_efectiva  = "";
     public String  codigo = "";
     public String  precinto = "";
     public Integer id_resultado = 0;

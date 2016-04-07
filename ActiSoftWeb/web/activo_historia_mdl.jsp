@@ -17,10 +17,11 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <!--<h4 class="modal-title">Historia del activo</h4>-->
         <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-                    <li class="active"><a href="#tab1" data-toggle="tab">Historial</a></li>
+                    <li class="active"><a href="#tab1" data-toggle="tab">Remitos</a></li>
                     <li><a href="#tab2" data-toggle="tab">Certificados</a></li>
                     <li><a href="#tab3" data-toggle="tab">Compras</a></li>
                     <li><a href="#tab4" data-toggle="tab">Correctivos</a></li>                           
+                    <li><a href="#tab5" data-toggle="tab">Kit</a></li>                           
             </ul>
       </div>
       <div class="modal-body">        
@@ -110,6 +111,24 @@
                         </table>
                     </div>
             </div>
+            <div class="tab-pane" id="tab5">
+                <div class="dataTable_wrapper">
+                        <table class="table table-striped table-bordered table-hover" id="tblKitHistoria">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Kit</th>                               
+                                <th>Nombre</th>
+                                <th>Rubro</th>
+                                <th>Subrubro</th>
+                                <th>Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    </div>
+            </div>
             </div><!-- tab-content -->
       </div>
       <div class="modal-footer">
@@ -130,6 +149,7 @@
           loadDataCertificado(data);
           loadDataCompra(data);
           loadDataCorrectivo(data);
+          loadDataKitHistoria(data);
           if(fecha_alta!==undefined && fecha_alta!=="") $('#fecha_alta').val(convertirFecha(fecha_alta));
        });
        
@@ -180,7 +200,8 @@
             html += wrapTag('td',d.contrato, '');
             html += wrapTag('td',convertirFecha(d.fecha), '');
             html += wrapTag('td',d.punto_venta, '');
-            html += wrapTag('td',d.numero, '');
+            var htmlRemito ="<a href='<%=PathCfg.REMITO_VIEW%>?id=" + d.id + "'>" + d.numero + "</a>";
+            html += wrapTag('td',htmlRemito, '');
             html += wrapTag('td',d.cantidad, '');
            html +="</tr>";
        }
@@ -352,6 +373,56 @@
        }
        return html;
     }
-    
+    function loadDataKitHistoria(data){    
+        var $tabla = $('#tblKitHistoria');
+        $.ajax({
+               url: '<%= PathCfg.KIT_HISTORIA_LIST %>',
+               data: data,
+               method:"POST",
+               dataType: "json",
+               beforeSend:function(){
+                    var cant_cols = $tabla.find('thead th').length;
+                    $tabla.find('tbody').html("<tr><td colspan='" + cant_cols + "'><center><img src='images/ajax-loader.gif'/></center></td></tr>");
+               },
+               success: function(data) {
+                   $('#selTodos').prop('checked',false);
+                   if(data.Result === "OK") {
+                       $tabla.find('tbody').html(createTableKitHist(data.Records));
+                       $tabla.DataTable({
+                                responsive: true,
+                                paging: false,
+                                retrieve: true,
+                                ordering: true,
+                                searching: false,
+                                lengthChange: false,
+                                bInfo: false,
+                                order: [0, "desc" ],
+                                columnDefs: [                                   
+                                    { type: 'date-uk', targets: 0 },
+                               ],
+                                language: {
+                                    url:'bower_components/datatables-plugins/i18n/Spanish.json',
+                                }
+                        });        
+                   }
+               }
+        });
+    }
+    function createTableKitHist(data){
+        var html = "";
+        for(var i = 0;i< data.length;i++){
+           html +="<tr class=''>";
+           var d = data[i];
+//           console.log("D",d);
+            html += wrapTag('td',convertirFecha(d.fecha), '');
+            html += wrapTag('td',d.codigo, '');
+            html += wrapTag('td',d.nombre, '');
+            html += wrapTag('td',d.rubro, '');
+            html += wrapTag('td',d.subrubro, '');
+            html += wrapTag('td',d.accion, '');            
+           html +="</tr>";
+       }
+       return html;
+    }  
     
      </script>

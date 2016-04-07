@@ -66,7 +66,7 @@
           
           console.log($invoker);
           var data = {id_kit:id_kit};
-          loadDataKitHistoria(data);          
+          loadDataKitHistoria(data);
           
        });
        

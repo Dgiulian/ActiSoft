@@ -6,6 +6,7 @@ package transaccion;
 
 import bd.Certificado;
 import java.util.List;
+import utils.OptionsCfg;
 
 public class TCertificado extends TransaccionBase<Certificado>{
     public List<Certificado>getList(){
@@ -22,11 +23,15 @@ public class TCertificado extends TransaccionBase<Certificado>{
         return super.actualizar(certificado, "id");
     }
     public Certificado getVigente(Integer id_activo){
-        String query = "select * from certificado\n" +
+        /* Fecha efectiva: Desde */
+        /* Fecha vigencia: Hasta */
+        String query = String.format("select * from certificado\n" +
         " where certificado.id_activo = %d\n" +
-        " and certificado.id_resultado = 1 " +
-        " and certificado.fecha_vigencia >= CURDATE()";
-        return super.getById(String.format(query,id_activo));
+        " and certificado.id_resultado = %d " +
+        " and certificado.fecha_efectiva <= curdate()" +
+        " and certificado.fecha_vigencia >= CURDATE()" ,id_activo,OptionsCfg.CERTIFICADO_APTO);
+        System.out.println(query);
+        return super.getById(query);
     }
     public static void main(String[] args){
         Certificado certificado = new TCertificado().getById(558);

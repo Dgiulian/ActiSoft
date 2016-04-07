@@ -42,19 +42,36 @@ public abstract class BasePdf {
     protected final String logoFileName = "e:\\ActiSoft\\LogoACTIgde.jpg";
     protected void createHeadings(PdfContentByte cb, float x, float y, String text){
         cb.beginText();
-        cb.setFontAndSize(bfBold, 10);
+        cb.setFontAndSize(bf, 8);
         cb.setTextMatrix(x,y);
         cb.showText(text.trim());
-        cb.setFontAndSize(bfBold, 8);
+        cb.setFontAndSize(bf, 7);
         cb.endText();
     }
     protected void addText(PdfContentByte cb, float x, float y, String text){
         cb.beginText();
-        cb.setFontAndSize(bf, 8);
+        cb.setFontAndSize(bf, 7);
         cb.setTextMatrix(x,y);
         cb.showText(text.trim());
         cb.endText();
     }
+    protected void addText(PdfContentByte cb, float x, float y, Integer size,String text){
+        cb.beginText();
+        cb.setFontAndSize(bf, size);
+        cb.setTextMatrix(x,y);
+        cb.showText(text.trim());
+        cb.endText();
+    }
+   protected void addTextAligned(PdfContentByte cb, float x, float y, Integer size,String text,Integer align){       
+        cb.beginText();
+        cb.setFontAndSize(bf, size);
+        cb.setTextMatrix(x,y);
+        cb.showTextAligned(align, text.trim(), x, y, 0);
+        cb.endText();
+       
+   }
+        
+
     public BasePdf(){        
     }
      public boolean createPdf(String fileName){

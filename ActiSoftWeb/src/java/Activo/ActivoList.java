@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TActivo;
+import transaccion.TCertificado;
 import transaccion.TCompra;
 import transaccion.TSubrubro;
 import transaccion.TRubro;
@@ -48,6 +49,7 @@ public class ActivoList extends HttpServlet {
      HashMap<Integer,Subrubro> mapSubrubros;
      HashMap<Integer,Option> mapEstados;
      TCompra tc ;
+     TCertificado  tcert;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
@@ -56,7 +58,8 @@ public class ActivoList extends HttpServlet {
         String idRubro = request.getParameter("id_rubro");
         String idSubrubro = request.getParameter("id_subrubro");
         String codigo = request.getParameter("codigo");
-        tc = new TCompra();
+        tc    = new TCompra();
+        tcert = new TCertificado();
         mapRubros = new TRubro().getMap();
         
         mapSubrubros = new TSubrubro().getMap();
@@ -126,7 +129,7 @@ public class ActivoList extends HttpServlet {
      String subrubro = "";
      String estado = "";
      String fecha_alta = "";
-     
+     String certificado = "";
      public ActivoDet(Activo activo){
          super(activo);
          // Por default devolvemos el Id
@@ -148,6 +151,7 @@ public class ActivoList extends HttpServlet {
          
          Compra compra = tc.getPrimerCompra(activo.getId());
          if(compra!=null) this.fecha_alta = compra.getFecha();         
+         this.certificado = (tcert.getVigente(activo.getId())!=null)?"Si":"No";
      }
  }
    

@@ -42,7 +42,8 @@
     if(site == null) site = new Site();
     List<Remito_contrato> lstDetalle = (List<Remito_contrato>) request.getAttribute("detalle");
     
-    if (lstDetalle == null) lstDetalle = new ArrayList<Remito_contrato>();     
+    if (lstDetalle == null) lstDetalle = new ArrayList<Remito_contrato>();    
+    HashMap<Integer,OptionsCfg.Option> mapUnidades = OptionsCfg.getMap(OptionsCfg.getUnidades());
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -187,7 +188,9 @@
                                         <col span="1" style="width: 5%;">
                                         <col span="1" style="width: 5%;">
                                         <col span="1">
+                                        <col span="1" style="width: 5%;">
                                         <col span="1" style="width: 8%;">
+                                        <col span="1" style="width: 5%;">
                                         <col span="1" style="width: 8%;">
                                         <col span="1" style="width: 10%;text-align: right">
                                      </colgroup>
@@ -201,8 +204,10 @@
                                             <th style="width:50px">Posici&oacute;n</th>
                                             <th>Descripci&oacute;n</th>
                                             <th style="width:50px">Cantidad</th>
+                                            <th style="width:50px">Dias Herramientas</th>
+                                            <th style="width:50px">Unidad</th>
                                             <th style="width:50px">Precio unitario</th>
-                                            <th style="width:50px;" >Total</th>
+                                            <th style="width:50px;text-align: right" >Total</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-content">
@@ -210,14 +215,17 @@
                                             Float subtotal = 0f;
                                             String divisa = "";
                                             Integer dias;
+                                            Float dias_herramienta ;
                                             for( Remito_contrato detalle: lstDetalle) {
                                                 if(detalle.getActivo_id_rubro()!=14)
                                                     dias = TFecha.diferenciasDeFechas( remito_inicio.getFecha(),remito_cierre.getFecha()) + 1;
                                                 else dias = !transitorio?1:2;
                                                 divisa = detalle.getContrato_detalle_id_divisa()==0?"U$S":"$";
-                                                subtotal = dias * detalle.getRemito_detalle_cantidad() * detalle.getContrato_detalle_precio() ;                                                
                                                 
-//                                                subtotal = Float.parseFloat(String.format("%,2f",subtotal));
+                                                dias_herramienta = dias * detalle.getRemito_detalle_cantidad();
+                                                subtotal = dias_herramienta * detalle.getContrato_detalle_precio() ;
+//                                                subtotal =
+//                                                subtot Float.parseFloat(String.format("%,2f",subtotal));
                                                 
                                                 
                                                 total +=subtotal;
@@ -242,10 +250,10 @@
                                                     <%= TFecha.formatearFechaBdVista(remito_cierre.getFecha()) %>
                                                     <input type="hidden" name ="fecha_cierre" value="<%= TFecha.formatearFechaBdVista(remito_cierre.getFecha()) %>">
                                                 </td>
-                                                <th>
+                                                <td>
                                                     <%=dias %>
                                                     <input type="hidden" name ="dias" value="<%=dias %>">
-                                                </th>
+                                                </td>
                                                 <td >
                                                     <%= detalle.getPosicion() %>
                                                     <input type="hidden" name ="posicion" value="<%= detalle.getPosicion() %>">
@@ -258,17 +266,29 @@
                                                     <%= detalle.getRemito_detalle_cantidad()%>
                                                     <input type="hidden" name ="cantidad" value="<%= detalle.getRemito_detalle_cantidad()%>">
                                                 </td>
+                                                <td  >
+                                                    <%= dias_herramienta %>
+                                                    <input type="hidden" name ="dias_herramienta " value="<%= dias_herramienta %>">
+                                                </td>
+                                                <td  >
+                                                    <% 
+                                                        Option o = mapUnidades.get(detalle.getContrato_detalle_id_unidad());
+                                                        if (o!=null) { %>
+                                                                <%= o.getDescripcion() %> 
+                                                    <% } %>
+                                                    <input type="hidden" name ="id_unidad" value="<%= detalle.getContrato_detalle_id_unidad()%>">
+                                                </td>
                                                     <td style="width:75px">
-                                                       
-                                                       <%= detalle.getContrato_detalle_precio()%>
                                                        <%=  divisa %>
+                                                       <%= detalle.getContrato_detalle_precio()%>
+                                                       
                                                        <input type="hidden" name ="precio" value="<%= detalle.getContrato_detalle_precio()%>">
                                                        <input type="hidden" name ="id_divisa" value="<%=  detalle.getContrato_detalle_id_divisa() %>">
                                                     </td>                                                    
-                                                    <td>
-                                                        <%= subtotal %> 
+                                                    <td syle="text-align:right" >
+                                                            <%= divisa %> <span syle="width:100%;text-align:right"><%= subtotal %> </span>
                                                         <input type="hidden" name ="subtotal" value="<%= subtotal %>">
-                                                        <%= divisa %>                                                        
+                                                                                                              
                                                     </td>
                                                 </tr>
                                          <% } %>
@@ -277,9 +297,9 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td colspan="9"></td>
+                                            <td colspan="11"></td>
                                             <td>
-                                                <%= total %> <%=divisa%>
+                                                 <%=divisa%> <%= total %>
                                                 <input type="hidden" name ="total" value="<%= total %>">
                                             </td>
 <!--                                            <td id="total"> 

@@ -5,7 +5,10 @@
 package Kit;
 
 import bd.Activo;
+import bd.Kit;
 import bd.Kit_historia;
+import bd.Rubro;
+import bd.Subrubro;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,7 +23,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TActivo;
+import transaccion.TKit;
 import transaccion.TKit_historia;
+import transaccion.TRubro;
+import transaccion.TSubrubro;
 import utils.BaseException;
 import utils.JsonRespuesta;
 import utils.OptionsCfg;
@@ -33,6 +39,9 @@ import utils.Parser;
  */
 public class KitHistoriaList extends HttpServlet {
     HashMap<Integer, Option> mapAcciones;
+    HashMap<Integer,Kit> mapKits;
+    HashMap<Integer,Rubro> mapRubro;
+    HashMap<Integer,Subrubro> mapSubrubro;
     TActivo ta;
     /**
      * Processes requests for both HTTP
@@ -50,6 +59,7 @@ public class KitHistoriaList extends HttpServlet {
         PrintWriter out = response.getWriter();
         String pagNro = request.getParameter("pagNro");
         Integer id_kit = Parser.parseInt(request.getParameter("id_kit"));
+        Integer id_activo = Parser.parseInt(request.getParameter("id_activo"));
         mapAcciones = OptionsCfg.getMapAcciones();
         ta = new TActivo();
         Integer page = 0;
@@ -66,16 +76,23 @@ public class KitHistoriaList extends HttpServlet {
            
             List<Kit_historia> lista ;
             
-            TKit_historia tk = new TKit_historia();
+            TKit_historia thk = new TKit_historia();
+            TKit tk = new TKit();
             HashMap<String,String> mapFiltro = new HashMap<String,String> ();
 //            mapFiltro.put("bloqueado","0");
             if(id_kit!=0){
                mapFiltro.put("id_kit",id_kit.toString());
-            }  else throw new BaseException("ERROR","Ingrese el id del Kit");
-            
+               Kit kit = tk.getById(id_kit);
+               mapKits.put(id_kit,kit);
+            } else if(id_activo!=0){
+                mapFiltro.put("id_activo",id_activo.toString());
+                mapKits = tk.getMap();                
+            } else throw new BaseException("ERROR","Ingrese el id del Kit");
+            mapRubro = new TRubro().getMap();
+            mapSubrubro = new TSubrubro().getMap();
             //else if(page!=0) lista = new TKit_contrato_view().getList(page,10);
              
-            lista =  tk.getListFiltro(mapFiltro);
+            lista =  thk.getListFiltro(mapFiltro);
             
             List<Kit_historiaDet> listaDet = new ArrayList();
             for(Kit_historia h:lista){
@@ -101,6 +118,11 @@ private class Kit_historiaDet extends Kit_historia{
    
      String accion = "";
      String activo = "";
+     String codigo = "";
+     String nombre = "";
+     String rubro = "";
+     String subrubro = "";
+            
      public Kit_historiaDet(Kit_historia historia){
          super(historia);                  
          
@@ -108,6 +130,15 @@ private class Kit_historiaDet extends Kit_historia{
          this.accion = (o!=null)?o.getDescripcion():historia.getId_accion().toString();
          Activo a = ta.getById(historia.getId_activo());
          if(a!=null) this.activo = a.getCodigo();
+         Kit k = mapKits.get(historia.getId_kit());
+         if(k!=null){
+            codigo = k.getCodigo();
+            nombre = k.getNombre();
+            Rubro r  = mapRubro.get(k.getId_rubro());
+            Subrubro s = mapSubrubro.get(k.getId_subrubro());
+            rubro = (r!=null)?r.getCodigo():"";
+            subrubro = (s!=null)?s.getCodigo():"";
+        }
      }
 }                                       
     /**

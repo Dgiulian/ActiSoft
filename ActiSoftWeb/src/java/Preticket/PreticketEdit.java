@@ -26,6 +26,7 @@ import transaccion.TRemito_contrato;
 import transaccion.TRemito_detalle;
 import utils.BaseException;
 import utils.OptionsCfg;
+import utils.Parser;
 import utils.PathCfg;
 import utils.TFecha;
 
@@ -120,6 +121,8 @@ public class PreticketEdit extends HttpServlet {
             String[] arrPrecio        = request.getParameterValues("precio");
             String[] arrId_divisa     = request.getParameterValues("id_divisa");
             String[] arrSubtotal      = request.getParameterValues("subtotal");
+            String[] arrUnidad        = request.getParameterValues("id_unidad");
+
             Integer id_cliente;
             Integer id_contrato;
             Integer id_site;
@@ -132,14 +135,14 @@ public class PreticketEdit extends HttpServlet {
             TPreticket_detalle tpd = new TPreticket_detalle();
             TRemito tr = new TRemito();
             
-            try{ id_cliente = Integer.parseInt(idCliente);} catch(NumberFormatException ex){ id_cliente = 0;}
-            try{ id_contrato = Integer.parseInt(idContrato);} catch(NumberFormatException ex){ id_contrato = 0;}
-            try{ id_site = Integer.parseInt(idSite);} catch(NumberFormatException ex){ id_site = 0;}
-            try{ total = Float.parseFloat(strTotal);} catch(NumberFormatException ex){ total = 0f;}
+            id_cliente = Parser.parseInt(idCliente);
+            id_contrato = Parser.parseInt(idContrato);
+            id_site = Parser.parseInt(idSite);
+            total = Parser.parseFloat(strTotal);
             
             try{
-              punto_venta =   Integer.parseInt(ptoVta);
-              numero = Integer.parseInt(strNumero);
+              punto_venta = Integer.parseInt(ptoVta);
+              numero      = Integer.parseInt(strNumero);
             } catch(NumberFormatException ex){
                 numero = 0;
                 punto_venta = 0 ;
@@ -159,18 +162,19 @@ public class PreticketEdit extends HttpServlet {
             
             ArrayList<Preticket_detalle> lstPreticket_detalle = new ArrayList<Preticket_detalle>();
             for( int i=0;i<arrRemito_inicio.length;i++) {
-                Integer remito_inicio = Integer.parseInt(arrRemito_inicio [i].trim());
-                String fecha_inicio   = arrFecha_inicio [i].trim();
-                Integer remito_cierre = Integer.parseInt(arrRemito_cierre [i].trim());
-                String fecha_cierre   = arrFecha_cierre [i].trim();
-                Integer dias          = Integer.parseInt(arrDias [i].trim());
-                Integer posicion      = Integer.parseInt(arrPosicion [i].trim());
-                String descripcion    = arrDescripcion [i].trim();
-                Float cantidad        = Float.parseFloat(arrCantidad [i].trim());
-                Float precio          = Float.parseFloat(arrPrecio [i].trim());
-                Integer id_divisa     = Integer.parseInt(arrId_divisa [i].trim());
-                Float subtotal        = Float.parseFloat(arrSubtotal [i].trim());
-                
+                Integer remito_inicio   = Parser.parseInt(arrRemito_inicio [i].trim());
+                String fecha_inicio     = arrFecha_inicio [i].trim();
+                Integer remito_cierre   = Parser.parseInt(arrRemito_cierre [i].trim());
+                String fecha_cierre     = arrFecha_cierre [i].trim();
+                Integer dias            = Parser.parseInt(arrDias [i].trim());
+                Integer posicion        = Parser.parseInt(arrPosicion [i].trim());
+                String descripcion      = arrDescripcion [i].trim();
+                Float cantidad          = Parser.parseFloat(arrCantidad [i].trim());
+                Float precio            = Parser.parseFloat(arrPrecio [i].trim());
+                Integer id_divisa       = Parser.parseInt(arrId_divisa [i].trim());
+                Float  subtotal         = Parser.parseFloat(arrSubtotal [i].trim());
+                Float  dias_herramienta = dias * cantidad;
+                Integer id_unidad = Parser.parseInt(arrUnidad[i].trim());
                 Preticket_detalle pd = new Preticket_detalle();
                 
                 pd.setRemito_inicio(remito_inicio);
@@ -181,6 +185,7 @@ public class PreticketEdit extends HttpServlet {
                 pd.setPosicion(posicion);
                 pd.setDescripcion(descripcion);
                 pd.setCantidad(cantidad);
+                pd.setId_unidad(id_unidad);
                 pd.setPrecio(precio);
                 pd.setSubtotal(subtotal);
                 

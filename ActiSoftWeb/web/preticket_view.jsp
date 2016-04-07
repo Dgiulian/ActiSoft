@@ -39,7 +39,9 @@
     if(site == null)   site = new Site();
     
     List<Preticket_detalle> lstDetalle = new TPreticket_detalle().getByPreticketId(preticket.getId());    
-    if (lstDetalle == null) lstDetalle = new ArrayList<Preticket_detalle>();     
+    if (lstDetalle == null) lstDetalle = new ArrayList<Preticket_detalle>();
+    
+    HashMap<Integer,OptionsCfg.Option> mapUnidades = OptionsCfg.getMap(OptionsCfg.getUnidades());
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -193,6 +195,8 @@
                                             <th style="width:50px">Posici&oacute;n</th>
                                             <th>Descripci&oacute;n</th>
                                             <th style="width:50px">Cantidad</th>
+                                            <th style="width:50px">Dias Herramientas</th>
+                                            <th style="width:50px">Unidad</th>
                                             <th style="width:50px">Precio unitario</th>
                                             <th style="width:50px;" >Total</th>
                                         </tr>
@@ -201,6 +205,7 @@
                                         <% 
                                             for( Preticket_detalle detalle: lstDetalle) {        
                                                 String divisa = detalle.getId_divisa()==0?"U$S":"$";
+                                                Float dias_herramienta = detalle.getCantidad() * detalle.getDias();
                                         %>
                                             <%--<%@include file="preticket_detalle.jsp" %>--%>                                            
                                             <tr>
@@ -230,6 +235,18 @@
                                                 </td>
                                                 <td  >
                                                     <%= detalle.getCantidad()%>
+                                                </td>
+                                                <td  >
+                                                    <%= dias_herramienta %>
+                                                    <input type="hidden" name ="dias_herramienta " value="<%= dias_herramienta %>">
+                                                </td>
+                                                <td  >
+                                                    <% 
+                                                        Option o = mapUnidades.get(detalle.getId_unidad());
+                                                        if (o!=null) { %>
+                                                                <%= o.getDescripcion() %> 
+                                                    <% } %>
+                                                    <input type="hidden" name ="id_unidad" value="<%= detalle.getId_unidad()%>">
                                                 </td>
                                                     <td style="width:75px">                                                       
                                                        <%= detalle.getPrecio()%>

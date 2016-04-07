@@ -51,6 +51,7 @@
                     String action = PathCfg.COMPRA_EDIT;
                     action += "?id_activo=" + activo.getId();
                     action += (!nuevo)?"&id="+compra.getId():"";
+                    String disabled=nuevo?"":"disabled";
                 %>
                 <form role="form" method="POST" action="<%=action%>" >
                     
@@ -73,11 +74,23 @@
                                         <label for="fecha">Fecha</label>
                                         <input class="form-control date-picker" name="fecha" id="fecha" size="10"  value="<%=TFecha.formatearFechaBdVista(compra.getFecha()) %>">
                                     </div>
-                                </div>    
+                                </div>
+                                <div class="col-lg-2 " >   
+                                    <div class="form-group">
+                                        <label for="id_accion">Stock</label>
+                                        <select name="id_accion" class="form-control" <%=disabled%> >
+                                            <% for (Option o: OptionsCfg.getCompraAcciones()) {
+                                            String selAccion = (o.getId().equals(compra.getId_accion()))?"selected":"";
+                                            %>
+                                            <option value="<%=o.getId()%>" <%=selAccion%> ><%=o.getDescripcion()%></option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-lg-2 " >   
                                     <div class="form-group">
                                         <label for="cantidad">Cantidad</label>
-                                        <input class="form-control" name="cantidad" id="cantidad" value="<%=compra.getCantidad() %>">
+                                        <input class="form-control" name="cantidad" id="cantidad" value="<%=compra.getCantidad() %>" <%=disabled%>>
                                     </div>
                                 </div>
 
@@ -108,7 +121,7 @@
                                           <input class="form-control" name="precio_tot" id="precio_tot" value="<%= compra.getPrecio_unit() %>">
                                       </div>                                        
                                  </div>
-                                  <div class="col-lg-2 " >   
+                                  <div class="col-lg-4 " >   
                                      <div class="form-group " >
                                           <label for="id_proveedor">Proveedor</label>
                                           <select name="id_proveedor" id="id_proveedor" class="form-control">
@@ -118,7 +131,13 @@
                                             <%}%>
                                           </select>
                                       </div>                                        
-                                 </div>     
+                                 </div>
+                                <div class="col-lg-3 " >   
+                                     <div class="form-group " >
+                                          <label for="factura">Factura</label>
+                                          <input class="form-control" name="factura" id="factura" value="<%= compra.getFactura() %>">
+                                      </div>                                        
+                                 </div>
                                <!--</div>-->
                             </fieldset>
                         </div>

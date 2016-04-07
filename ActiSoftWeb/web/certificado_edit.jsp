@@ -16,7 +16,7 @@
     boolean nuevo = false;
     if (certificado==null) {
         certificado= new Certificado();    
-        certificado.setId_resultado(OptionsCfg.CERTIFICADO_NO_APTO);
+        certificado.setId_resultado(OptionsCfg.CERTIFICADO_APTO);
     }    
     nuevo = certificado.getId()==0;
 %>

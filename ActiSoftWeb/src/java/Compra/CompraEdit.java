@@ -57,6 +57,7 @@ public class CompraEdit extends HttpServlet {
         String idCompra = request.getParameter("id");        
         String idActivo = request.getParameter("id_activo");
         
+        
         Integer  id_compra;
         Compra compra;
         boolean nuevo = false;
@@ -69,15 +70,12 @@ public class CompraEdit extends HttpServlet {
         if(compra==null) {
             compra = new Compra();
             nuevo = true;
+            
         }
         Integer id_activo;
         try{
             if (nuevo) {
-                try{
-                    id_activo = Integer.parseInt(idActivo);                
-                } catch (NumberFormatException ex){
-                    id_activo = 0;
-                }
+                id_activo = Parser.parseInt(idActivo);
             } else id_activo = compra.getId_activo();
             
             Activo activo = new TActivo().getById(id_activo);
@@ -108,15 +106,16 @@ public class CompraEdit extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String idCompra = request.getParameter("id");
-        String idActivo = request.getParameter("id_activo");        
-        String fecha  = request.getParameter("fecha");
-        String id_divisa = request.getParameter("id_divisa");
-        String cantidad = request.getParameter("cantidad");
-        String precio_unit = request.getParameter("precio_unit");
-        String precio_tot = request.getParameter("precio_tot");
+        String idCompra     = request.getParameter("id");
+        String idActivo     = request.getParameter("id_activo");        
+        String fecha        = request.getParameter("fecha");
+        String id_divisa    = request.getParameter("id_divisa");
+        String cantidad     = request.getParameter("cantidad");
+        String precio_unit  = request.getParameter("precio_unit");
+        String precio_tot   = request.getParameter("precio_tot");
         String id_proveedor = request.getParameter("id_proveedor");
-                
+        String factura      = request.getParameter("factura");
+        Integer id_accion   = Parser.parseInt(request.getParameter("id_accion"));        
         try{
             Integer id_activo;
             Integer  id_compra;
@@ -139,25 +138,40 @@ public class CompraEdit extends HttpServlet {
                 compra = new Compra();
                 nuevo = true;
             }            
-            try{
-                compra.setId_activo(id_activo);
-                compra.setFecha(TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));
-                compra.setId_divisa(Parser.parseInt(id_divisa));
-                compra.setCantidad(Parser.parseFloat(cantidad));
-                compra.setPrecio_unit(Parser.parseFloat(precio_unit));
-                compra.setPrecio_tot(Parser.parseFloat(precio_tot));
-                compra.setId_proveedor(Parser.parseInt(id_proveedor));
-            } catch (NumberFormatException ex){
-                throw new BaseException("Error","Error de parseo de argumentos");
-            }
+           
+            String fechabd = TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD);
+            String fechaAnt = compra.getFecha();
+            compra.setFecha(fechabd);
+            compra.setId_activo(id_activo);
+            
+            if(!fechaAnt.equalsIgnoreCase(fechabd) && tc.getCompraPosterior(compra)!=null) throw new BaseException("ERROR","La fecha de compra no puede ser anterior a las compras anteriores");
+            if (activo.getStock()==0f) throw new BaseException("ERROR","No se puede crear una compra si el stock del activo es 0");
+            
+            compra.setId_divisa(Parser.parseInt(id_divisa));
+            
+            compra.setPrecio_unit(Parser.parseFloat(precio_unit));
+            compra.setPrecio_tot(Parser.parseFloat(precio_tot));
+            compra.setId_proveedor(Parser.parseInt(id_proveedor));
+            compra.setFactura(factura);
             boolean todoOk = true;
             if(nuevo) {
+                compra.setCantidad(Parser.parseFloat(cantidad)); 
+                compra.setStock_anterior(activo.getStock());
+                compra.setId_accion(id_accion);
+                switch(id_accion) {
+                    case OptionsCfg.COMPRA_NADA: break;
+                    case OptionsCfg.COMPRA_REEMPLAZA: activo.setStock(compra.getCantidad()); break;
+                    case OptionsCfg.COMPRA_SUMA: activo.setStock(activo.getStock() + compra.getCantidad());
+                    break;
+                default: break;
+            }
                 id_compra = tc.alta(compra);
                 compra.setId(id_compra);
                 todoOk = id_compra!=0;
             } else todoOk = tc.actualizar(compra);
             if(!todoOk) throw new BaseException ("Error","Ocurri&oacute; un error al guardar la compra");
-            activo.setStock(activo.getStock() + compra.getCantidad());
+            
+            
             new TActivo().actualizar(activo);
             
             HttpSession session = request.getSession();

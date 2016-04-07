@@ -37,4 +37,21 @@ public class TCompra extends TransaccionBase<Compra>{
         String query = String.format("select * from compra where compra.id_activo = %d order by compra.fecha asc", id_activo);
         return super.getById(query);
     }
+    public Compra getCompraPosterior(Compra compra){
+        String query;
+        if(compra.getId()==0) {
+            query  = String.format ("Select * from compra where compra.id_activo = %d and compra.fecha >= '%s'",compra.getId_activo(),compra.getFecha());
+        }
+        else { query  = String.format ("Select * from compra where compra.id_activo = %d and compra.fecha >= '%s' and compra.id <> %d ",compra.getId_activo(),compra.getFecha(),compra.getId());}
+        System.out.println(query);
+        return this.getById(query);
+    }
+     public Compra getCompraAnterior(Compra compra){
+         String query;
+         if(compra.getId()==0)
+              query  = String.format ("Select * from compra where compra.id_activo = %d and compra.fecha <= '%s'",compra.getId_activo(),compra.getFecha());
+         else query  = String.format ("Select * from compra where compra.id_activo = %d and compra.fecha <= '%s' and compra.id <> %d",compra.getId_activo(),compra.getFecha(),compra.getId());
+        System.out.println(query);
+        return this.getById(query);
+    }
 }

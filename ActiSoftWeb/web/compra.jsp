@@ -115,6 +115,10 @@
                                 searching: false,
                                 lengthChange: false,
                                 bInfo:false,
+                                order: [ 0, "desc" ],
+                                columnDefs: [                                   
+                                    { type: 'date-uk', targets: 0 },
+                               ],
                                 language: {
                                     url:'bower_components/datatables-plugins/i18n/Spanish.json',
                                 }

@@ -90,15 +90,23 @@ public class CompraDel extends HttpServlet {
         JsonRespuesta jr = new JsonRespuesta();
         try {           
            Integer id = Integer.parseInt(request.getParameter("id"));
-           Compra compra = new TCompra().getById(id);            
-           if (compra==null) throw new BaseException("ERROR","No existe el registro");
+           TCompra tc = new TCompra();
+           TActivo ta = new TActivo();
+           Compra compra = tc.getById(id);
            
-           boolean baja = new TCompra().baja(compra);
+           if (compra==null) throw new BaseException("ERROR","No existe el registro");
+           Activo activo = ta.getById(compra.getId_activo());
+           
+           if(tc.getCompraPosterior(compra)!=null) throw new BaseException("ERROR","Existe una compra posterior. No se puede eliminar la compra.");
+           
+           if (activo!=null && activo.getStock()==0f) throw new BaseException("ERROR","No se puede crear una compra si el stock del activo es 0");
+           
+           boolean baja = tc.baja(compra);
            if ( baja){
-               TActivo ta = new TActivo();
-               Activo activo = ta.getById(compra.getId_activo());
+               
                if(activo!=null) {
-                   activo.setStock(Math.max(0,activo.getStock() - compra.getCantidad()));
+                   activo.setStock(compra.getStock_anterior());
+                   //activo.setStock(Math.max(0,activo.getStock() - compra.getCantidad()));
                    ta.actualizar(activo);
                }
                

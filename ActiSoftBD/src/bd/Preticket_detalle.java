@@ -13,7 +13,7 @@ public class Preticket_detalle {
 	public Float precio = 0f;
 	public Integer id_divisa = 0;
 	public Float subtotal = 0f;
-
+        public Integer id_unidad = 0;
 	public Integer getId_preticket() {
 		return this.id_preticket;
 	}
@@ -119,6 +119,15 @@ public class Preticket_detalle {
 
 	public Preticket_detalle setSubtotal(Float subtotal) {
 		this.subtotal = subtotal;
+		return this;
+	}
+        
+        public Integer getId_unidad() {
+		return this.id_unidad;
+	}
+
+	public Preticket_detalle setId_unidad(Integer id_unidad) {
+		this.id_unidad = id_unidad;
 		return this;
 	}
 }

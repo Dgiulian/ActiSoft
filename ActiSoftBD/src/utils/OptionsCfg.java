@@ -14,16 +14,15 @@ import java.util.List;
  */
 public class OptionsCfg {
     
-    public static final Integer ACTIVO_ESTADO_DISPONIBLE = 1;
-    public static final Integer ACTIVO_ESTADO_ALQUILADO = 2;
-    public static final Integer ACTIVO_ESTADO_BAJA = 3;
-    public static final Integer ACTIVO_ESTADO_FALLA = 4;
-    public static final Integer ACTIVO_ESTADO_INSPECCION = 5;
-    public static final Integer ACTIVO_ESTADO_PRESTADO = 6;
+    public static final Integer ACTIVO_ESTADO_DISPONIBLE    = 1;
+    public static final Integer ACTIVO_ESTADO_ALQUILADO     = 2;
+    public static final Integer ACTIVO_ESTADO_BAJA          = 3;
+    public static final Integer ACTIVO_ESTADO_FALLA         = 4;
+    public static final Integer ACTIVO_ESTADO_INSPECCION    = 5;
+    public static final Integer ACTIVO_ESTADO_PRESTADO      = 6;
     public static final Integer ACTIVO_ESTADO_NO_DISPONIBLE = 7;
-    public static final Integer ACTIVO_ESTADO_NO_APTO = 8;
-    public static final Integer ACTIVO_ESTADO_KIT = 9;
-    
+    public static final Integer ACTIVO_ESTADO_NO_APTO       = 8;
+    public static final Integer ACTIVO_ESTADO_KIT           = 9;
     
     
     public static final Integer REMITO_ENTREGA = 1;
@@ -105,6 +104,10 @@ public class OptionsCfg {
     public static final Integer KIT_ESTADO_DISPONIBLE = 1;
     public static final Integer KIT_ESTADO_ALQUILADO = 2;
     public static final Integer KIT_ESTADO_ELIMINADO = 3;
+    
+    public static final int COMPRA_NADA      = 0;
+    public static final int COMPRA_REEMPLAZA = 1;
+    public static final int COMPRA_SUMA      = 2;
     
 //    public static final Integer KIT_HISTORIA_ALTA  = 1;
 //    public static final Integer KIT_HISTORIA_BAJA  = 2;
@@ -258,6 +261,13 @@ public static ArrayList<Option> getTipoActividades(){
         }
         return mapa;
    } 
+    public static ArrayList<Option> getCompraAcciones(){
+        ArrayList<Option> lista = new ArrayList();
+        lista.add(new Option(COMPRA_NADA,"Nada","Nada"));
+        lista.add(new Option(COMPRA_REEMPLAZA,"Reemplaza","Reemplaza"));
+        lista.add(new Option(COMPRA_SUMA,"Suma","Suma"));        
+        return lista;
+    }
     public static class Option{
         Integer id ;
         String codigo;

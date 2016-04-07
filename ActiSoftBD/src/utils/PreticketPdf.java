@@ -17,6 +17,7 @@ import bd.Site;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfContentByte;
@@ -25,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,13 +58,12 @@ public class PreticketPdf extends BasePdf{
     Site site;
     public PreticketPdf( Integer id_remito){
         this.remito_cierre  = new TRemito().getById(id_remito);
-        this.detalle_dev = new TRemito_detalle().getByRemitoId(this.remito_cierre.getId());
+        this.detalle_dev    = new TRemito_detalle().getByRemitoId(this.remito_cierre.getId());
         this.remito_inicio  = new TRemito().getById(remito_cierre.getId_referencia());
         this.contrato    = new TContrato().getById(remito_cierre.getId_contrato());
         this.contrato_det = new TContrato_detalle().getByContratoId(this.contrato.getId());        
         this.cliente     = new TCliente().getById(remito_cierre.getId_cliente());
         this.site        = new TSite().getById(remito_cierre.getId_site());
-        
     }
      public PreticketPdf(Preticket preticket){
          this.preticket = preticket;
@@ -115,6 +116,8 @@ public class PreticketPdf extends BasePdf{
 
     @Override
     protected void addContent(Document document) {
+        HashMap<Integer, OptionsCfg.Option> mapUnidades = OptionsCfg.getMap(OptionsCfg.getUnidades());
+        HashMap<Integer, OptionsCfg.Option> mapIVA = OptionsCfg.getMap(OptionsCfg.getClasesIva());
         try {
             PdfContentByte cb = docWriter.getDirectContent();
     //           Integer start = 670;
@@ -136,52 +139,64 @@ public class PreticketPdf extends BasePdf{
 //        createHeadings(cb,93,start,cliente.getNombre_comercial());
 //        createHeadings(cb,93,start,cliente.getNombre_comercial());
         
-        start = 473;
+        start = 475;
         lineHeight = 11;        
         if(this.cliente!=null) {
-           createHeadings(cb,93,start,cliente.getNombre_comercial());
-           createHeadings(cb,93,start - lineHeight,cliente.getDireccion_fisica());     
+           createHeadings(cb,80,start,cliente.getNombre_comercial());
+           createHeadings(cb,80,start - lineHeight,cliente.getDireccion_fisica());     
            cliente.setCuit(cliente.getCuit());
            createHeadings(cb,665,start - lineHeight,cliente.getCuit());
-           String sitIVA = cliente.getId_iva().toString();
-           createHeadings(cb,93,start - lineHeight * 2,sitIVA);     
+            OptionsCfg.Option optIva = mapIVA.get(cliente.getId_iva());
+           String sitIVA = optIva!=null?optIva.getDescripcion():"";
+           createHeadings(cb,80,start - lineHeight * 2,sitIVA);     
         }
         
            // Contrato
 //           start -= 48;
         start -= 39;
         if(this.contrato!=null)
-             createHeadings(cb,205,start  ,contrato.getNumero().toString());
+             createHeadings(cb,190,start  ,contrato.getNumero().toString());
 //           createHeadings(cb,205,start  ,remito.getNumero().toString());
         start = 442;
         lineHeight= 15;
         if(this.site!=null){
-             createHeadings(cb,500,start,site.getArea());
-             createHeadings(cb,500,start - lineHeight,site.getPozo());
-             createHeadings(cb,645,start - lineHeight,site.getEquipo());
+             createHeadings(cb,495,start,site.getArea());
+             createHeadings(cb,495,start - lineHeight,site.getPozo());
+             createHeadings(cb,640,start - lineHeight,site.getEquipo());
         }
         
         start = 390;        
         lineHeight=17;
         String divisa = "";
         Float total = 0f;
+        Float dias_herr;
+        String unidad = "";
+        
         for(Preticket_detalle d: this.detalle){
+            dias_herr = (d.getDias() * d.getCantidad());
             divisa = (d.getId_divisa()==1)?" $":" USD";
-            addText(cb,60,start,d.getRemito_inicio().toString());            
-            addText(cb,80,start,TFecha.formatearFechaBdVista(d.getFecha_inicio()));            
-            addText(cb,140,start,d.getRemito_cierre().toString());            
-            addText(cb,170,start,TFecha.formatearFechaBdVista(d.getFecha_cierre()));            
-            addText(cb,240,start,d.getDias().toString());
-            addText(cb,280,start,d.getPosicion().toString());
-            addText(cb,310,start,d.getDescripcion());
-            addText(cb,685,start,d.getCantidad().toString());
-            addText(cb,720,start,d.getPrecio().toString() + divisa);
-            addText(cb,770,start,d.getSubtotal().toString() + divisa )  ;            
+            OptionsCfg.Option optUnidad = mapUnidades.get(d.getId_unidad());
+            unidad=(optUnidad!=null)?optUnidad.getDescripcion():"";
+            addText(cb,35,start,d.getRemito_inicio().toString());            
+            addText(cb,70,start,TFecha.formatearFechaBdVista(d.getFecha_inicio()));            
+            addText(cb,125,start,d.getRemito_cierre().toString());            
+            addText(cb,155,start,TFecha.formatearFechaBdVista(d.getFecha_cierre()));            
+            addText(cb,220,start,d.getDias().toString());
+            addText(cb,250,start,d.getPosicion().toString());
+            addText(cb,285,start,d.getDescripcion());
+            addText(cb,615,start,d.getCantidad().toString());
+            addText(cb,660,start,dias_herr.toString());
+            addTextAligned(cb,715,start,7,unidad,Element.ALIGN_RIGHT);
+            
+            addTextAligned(cb,768,start,7,d.getPrecio().toString() + divisa,Element.ALIGN_RIGHT)  ;
+            addTextAligned(cb,818,start,7,d.getSubtotal().toString() + divisa,Element.ALIGN_RIGHT)  ;            
+            //addTextAligned(cb,820,start,7,total.toString() + divisa,Element.ALIGN_RIGHT);
             total += d.getSubtotal();
             start -= lineHeight;
         }
         start = 105;
-        createHeadings(cb,770,start,total.toString() + divisa )  ;
+        addTextAligned(cb,820,start,7,total.toString() + divisa,Element.ALIGN_RIGHT);
+        //createHeadings(cb,770,start,total.toString() + divisa )  ;
         } catch (BadElementException ex) {
             Logger.getLogger(PreticketPdf.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DocumentException ex) {
@@ -212,7 +227,7 @@ public class PreticketPdf extends BasePdf{
         return todoOk;
     }
     public static void main(String[] args){                
-        Preticket r = new TPreticket().getById(3);
+        Preticket r = new TPreticket().getById(8);
         if(r!=null) {
             PreticketPdf p = new PreticketPdf(r);
             p.createPdf("c:\\preticket.pdf");
