@@ -17,7 +17,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Pretickets 
+                    <h1 class="page-header">Pretickets
                         <!--<a href="<%= PathCfg.PRETICKET_EDIT%>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a>-->
                     </h1>
                 </div>
@@ -31,18 +31,18 @@
                             Listado de Pretickets
                         </div>
                         <!-- /.panel-heading -->
-                        <div class="panel-body">                            
+                        <div class="panel-body">
                             <div class="dataTable_wrapper">
                                 <table class="table table-striped table-bordered table-hover" id="tblPreticket">
                                     <thead>
                                         <tr>
                                             <!--<th>Id</th>-->
-                                            <th>Punto venta</th>                                            
-                                            <th>N&uacute;mero</th>                                            
+                                            <th>Punto venta</th>
+                                            <th>N&uacute;mero</th>
                                             <th>Fecha</th>
                                             <th>Cliente</th>
                                             <th>Contrato</th>
-                                            <th>Monto</th>                                            
+                                            <th>Monto</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -50,7 +50,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            
+
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -77,11 +77,11 @@
     <!-- DataTables JavaScript -->
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
-    <script src="js/bootbox.min.js"></script>        
+    <script src="js/bootbox.min.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
     <script src="js/moment-with-locales.min.js"></script>
-    
+
     <script src="js/invesoft.js"></script>
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
@@ -95,7 +95,7 @@
     $('#btnParcial').click(submitForm);
     $('#btnTotal').click(submitForm);
     });
-    
+
     function validar(){
         return true;
     }
@@ -106,7 +106,7 @@
         });
     }
     function loadData(data){
-        
+
         var $tabla = $('#tblPreticket');
         $.ajax({
                url: '<%= PathCfg.PRETICKET_LIST %>',
@@ -122,7 +122,7 @@
                    if(data.Result === "OK") {
                        $tabla.find('tbody').html(createTable(data.Records));
 //                     $('#btnExcel').attr('href','Excel?type=GRC&pageNro='+page);
-                        $('.btn-del').click(deleteData);                        
+                        $('.btn-del').click(deleteData);
                         $('.btn-print').click(impresion);
                        $tabla.DataTable({
                             responsive: true,
@@ -135,7 +135,7 @@
                             language: {
                                 url:'bower_components/datatables-plugins/i18n/Spanish.json',
                             }
-                    });                    
+                    });
                    }
                }
            });
@@ -148,33 +148,33 @@
 //            html += wrapTag('td',d.id,'');
             html += wrapTag('td',d.punto_venta,'');
             html += wrapTag('td',d.numero,'');
-            
-            
+
+
             html += wrapTag('td',convertirFecha(d.fecha),'');
             var clienteLnk  = '<a href="<%= PathCfg.CLIENTE_EDIT %>?id='+d.id_cliente+ '">'+ d.cliente + '</a>';
             var contratoLnk = '<a href="<%= PathCfg.CONTRATO_EDIT %>?id='+d.id_contrato+ '">'+ d.contrato + '</a>';
             html += wrapTag('td',clienteLnk,'');
             html += wrapTag('td',contratoLnk,'');
             var divisa = (d.id_divisa===0)?"U$S":"$";
-    
+
             html += wrapTag('td',divisa + " " + d.total,'');
-            
+
             var htmlEdit = "<a href='<%= PathCfg.PRETICKET_EDIT%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-info'><span class='glyphicon glyphicon-sunglasses fw'></span></a> ";
             var htmlDel = " <span data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span> ";
 //            var htmlDel = "";
             var htmlPrint = "<a target='_blank' href='<%= PathCfg.PRETICKET_PRINT%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-default'><span class='fa fa-print fw'></span></a> ";
-            
+
 //            htmlPrint = "";
             html +='<td  style="width:120px">' + htmlEdit  + htmlPrint + htmlDel + '</td>';
            html +="</tr>";
        }
        return html;
-    }    
+    }
     function impresion(){
         var id = $(this).data('index');
-        
+
         $tr = $(this).parent().parent();
-        bootbox.confirm("Esta seguro que desea imprimir el registro?",function(result){           
+        bootbox.confirm("Esta seguro que desea imprimir el registro?",function(result){
             if(result) {
                 $.ajax({
                     url: '<%= PathCfg.PRETICKET_PRINT %>', //DATAENTRY_DEL
@@ -188,14 +188,14 @@
                         } else if (data.Message) bootbox.alert(data.Message);
                     }
                 });
-            }            
+            }
         });
-        return;       
+        return;
     }
-    
+
     function deleteData(){
         var id = $(this).data('index');
-        
+
         $tr = $(this).parent().parent();
         bootbox.confirm("Esta seguro que desea eliminar el registro?",function(result){
              if(result) {
@@ -204,7 +204,7 @@
                  data: {id:id },
                  method:"POST",
                  dataType: "json",
-                 success: function(data) {            
+                 success: function(data) {
                      if(data.Result === "OK") {
                          $tr.remove();
                      } else if (data.Message) bootbox.alert(data.Message);
@@ -216,5 +216,7 @@
      </script>
 <%@include file="tpl_footer.jsp"%>
 </body>
-<%--<%@include file="remito_mdl.jsp" %>--%>
+
+
+
 </html>

@@ -59,7 +59,7 @@
           </div>
            <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
                     <li class="active"><a href="#tabAct" data-toggle="tab">Activos</a></li>
-                    <li><a href="#tabKit" data-toggle="tab">Kits</a></li>                    
+                    <li id="liKit"><a href="#tabKit" data-toggle="tab">Kits</a></li>                    
             </ul>  
             <div  class="tab-content">
                <div class="tab-pane active" id="tabAct">
@@ -118,7 +118,7 @@
 </div>
 <script>
     function loadDataActivo(data){
-        
+        console.log("LoadDataActivo");
         var $tabla = $('#tblActivo');  
         $tabla.find('tbody').html("")
         $tabla.find('tfoot').html("");
@@ -177,8 +177,7 @@
     }
    
    
-   function loadDataKit(data){
-        
+   function loadDataKit(data){        
         var $tabla = $('#tblKit');  
         $tabla.find('tbody').html("")
         $tabla.find('tfoot').html("");

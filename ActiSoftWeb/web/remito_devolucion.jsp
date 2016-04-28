@@ -61,20 +61,14 @@
                     action += "?id="+remito.getId();
                 %>                
                 <form action="<%= action%>" method="POST"  role="form">
-                
+                <input type="hidden" name="id_contrato" id="id_contrato" value="<%=contrato.getId()%>">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
-                      <div class="panel-heading"> Datos b&aacute;sicos del remito </div>            
+                      <div class="panel-heading"> Datos b&aacute;sicos del remito</div>            
                       <div class="panel-body">
 
                         <input type='hidden' name="id" id="id" value="<%= remito.getId() %>">
                         <div class="row">
-<!--                            <div class="col-lg-2 " >
-                                <div class="form-group ">
-                                    <label for="punto_venta">Punto de venta</label>                                       
-                                   <input class="form-control" name="punto_venta" id="punto_venta" >                                        
-                               </div>
-                            </div>-->
                             <div class="col-lg-3">
                                   <div class="form-group">
                                       <label class="" for="numero_devolucion">N&uacute;mero de remito de devoluci&oacute;n</label>
@@ -115,9 +109,20 @@
                                   </div>
                               </div>
                         </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                 <div class="form-group">
+                                      <label class="" for="id_activo_transporte">Transporte</label>
+                                      <input class="form-control date-picker" type="hidden" name="id_activo_transporte" id="id_activo_transporte" >
+                                      <input class="form-control date-picker" type="hidden" name="pos_activo_transporte" id="pos_activo_transporte" >
+                                      <input class="form-control date-picker" type="text" name="activo_transporte" id="activo_transporte" disabled>
+                                      <span class="btn btn-default" id="" data-toggle="modal" data-target="#mdlActivo"> Agregar</span> 
+                                  </div>
+                              </div>
+                        </div>
                           <div class="row">
                             <div class="col-lg-12">
-                                <h3>Activos <span class="btn btn-primary" data-toggle="modal" data-target="#mdlRemito" id="btnAgregar">Agregar</span></h3>
+                                <h3>Activos  <span class="btn btn-primary" data-toggle="modal" data-target="#mdlRemito" id="btnAgregar">Agregar remito</span></h3>
                                 <table class="table table-bordered table-condensed table-responsive table-striped" id="tblRemito">
                                     <thead>
                                         <tr>
@@ -225,7 +230,24 @@
             $('#btnSubmit').click(submitForm);      
             $('#rdTotal').change(radioChange);
             $('#rdParcial').change(radioChange);
-            $('#btnAgregar').hide();
+            $('#btnAgregar').hide();  
+            $('#id_rubro').change(function(){
+                rubroChange("<%= PathCfg.SUBRUBRO_LIST%>",{id_rubro:$(this).val(),id_contrato:$('#id_contrato').val(),id_estado:1})
+            });
+            $('#id_subrubro').change(function() {
+                console.log("Subrubro change");
+                var $id_rubro = $('#id_rubro');
+                var $id_contrato = $('#id_contrato');
+                var data = {id_subrubro:$(this).val(),
+                            id_rubro:$id_rubro.val(),
+                            id_contrato: $id_contrato.val(),
+                };
+               loadDataActivo(data);
+               // loadDataKit(data);
+            });
+            $('#mdlActivo').on('shown.bs.modal',showModal);
+            $('#mdlActivo').on('hide.bs.modal', hideModal);
+            $('#btnSelActivos').click(selActivos);
         });
         function radioChange(){
 //            $('#rdTotal').change(radioChange);
@@ -236,15 +258,10 @@
             if(parcial) {
                 $('#btnAgregar').show();                
                 $('.btnDelActivo').show();
-//                $('tr').find('td:last').show()
-//                $('.btnDelActivo').removeClass('hidden');
             }
             else {
                 $('#btnAgregar').hide();
                 $('.btnDelActivo').hide();
-
-//                $('tr').find('td:last').hide()
-//                $('.btnDelActivo').addClass('hidden');
             }
             
             
@@ -307,8 +324,10 @@
             $('.btnDelActivo').click(deleteActivo);       
             //Cuando se agregan items al remito, no se puede volver a poner en entrega definitiva
             $('input[name=tipoEntrega]').prop('readonly',true);
+            
         }
         function generarHtml(data){
+            
            var codigo = (data.codigo !==undefined)? data.codigo:"";           
            var pos = (data.pos !== undefined )?data.pos:"";
            var cant = (data.cant !== undefined )?data.cant:"";
@@ -318,7 +337,7 @@
            var rubro = (data.rubro!==undefined)?data.rubro:"";
            var subrubro = (data.subrubro!==undefined)?data.subrubro:"";
            var id = (data.id!==undefined)?data.id:"";
-           
+           var parcial = $('#rdParcial').prop('checked');
            var html = '<tr>';
                html += '<input type="hidden" name="detalle" value="'+ id +'">';
                html += '<td style="width:150px">' + codigo + '</td>';
@@ -326,13 +345,91 @@
                html += '</span></td>';               
                html += '<td class="descripcion">'+ descripcion +'</td>';
                html += '<td style="width:90px">  ' + cant + '</td>';
-               html += '<td style="width:60px"><span class="btn btn-xs btn-circle btn-danger btnDelActivo"> <span class="fa fa-minus fw"></span></span></td>';
+               html += '<td style="width:60px">';
+               var disp= (parcial)?"":"style=display:none;";
+                html += '<span class="btn btn-xs btn-circle btn-danger btnDelActivo" '+  disp + '> <span class="fa fa-minus fw"></span></span>';
+               html += '</td>';
                html += '</tr>'; 
             return html;
         }
+       
+         function showModal(e) {
+            
+                 var $id_contrato = $('#id_contrato') ;
+                 if ($id_contrato===null || $id_contrato.val()===""){
+                      $('#mdlActivo').modal('hide');
+                     bootbox.alert("Ingrese el n&uacute;mero de contrato");
+                     return;
+                }
+                $invoker = $(e.relatedTarget);
+                $tr = $invoker.parent().parent().parent();
+                $codigo = $tr.find('input[name="codigoActivo"]');
+                
+                $('#id_rubro').prop('disabled',true);
+                $('#id_subrubro').prop('disabled',false);
+                $('#id_rubro').val(<%=OptionsCfg.RUBRO_TRANSPORTE%>);
+                $('#id_rubro').trigger("change");
+                //$('#id_subrubro').trigger("change");
+                $('#liKit').hide();
+                if ($codigo!==undefined){
+                    if ( $codigo.data('rubro')!== undefined && $codigo.data('rubro')!==''){
+//                        $('#id_rubro').val($codigo.data('rubro'));
+//                        $('#id_rubro').prop('disabled',true);
+                    } 
+                    if ( $codigo.data('subrubro')!== undefined && $codigo.data('subrubro')!=='' ) {
+//                        $('#id_subrubro').val($codigo.data('subrubro'));
+//                        $('#id_subrubro').prop('disabled',true);
+                    } 
+                }
+                var $id_rubro = $('#id_rubro');
+                var $id_subrubro = $('#id_subrubro');
+                $id_contrato = $('#id_contrato');
+                if ($id_contrato===null || $id_contrato.val()==="0" ){
+                     bootbox.alert("Ingrese el n&uacute;mero de contrato");
+                     return;
+                }
+                var data = { id_rubro: $id_rubro.val(),
+                              id_subrubro: $id_subrubro.val(),
+                              id_contrato: $id_contrato.val(),
+                };
+        console.log(data);
+               // loadDataActivo(data);
+        };
+        
+        function hideModal(e) {
+            if($invoker!==null)             
+               $invoker.parent().find('input').focus();    
+
+        }
+         function selActivos(){           
+            var $arr = $('input.chkSelActivo:checked');
+            for(var i = 0;i<$arr.length;i++){
+                var $codigo = $($arr[i]).data('codigo'); 
+                var $descripcion = $($arr[i]).data('descripcion'); 
+                var $pos = $($arr[i]).data('pos'); 
+                var $cant = $tr.find('input[name="cantActivo"]');
+                if ($cant.val()==="") $cant.val(1);
+                
+            $('#id_activo_transporte').val($codigo);
+            $('#pos_activo_transporte').val($pos);
+            $('#activo_transporte').val($descripcion);
+            
+            return;
+            var html = generarHtml({codigo:$codigo,pos:$pos ,cant:$cant.val(),descripcion:$descripcion,disabled:true});
+                //$tr.after(html);
+                //$('#tblRemito').append(html);
+                //agregarActivo({codigo:$codigo,pos:$pos.val(),cant:$cant.val(),descripcion:$descripcion});
+            }
+            //$tr.remove();
+            $('.btnDelActivo').click(deleteActivo);
+            //agregarActivo({});
+            //$('#mdlActivo').modal('hide');
+        }
         </script>
-        <%@include file="remito_mdl.jsp"%>
+        <%@include file="remito_detalle_mdl.jsp"%>
+        <%@include file="activo_contrato_mdl.jsp" %>
         <%@include file="tpl_footer.jsp"%>
+        
 </body>
 
 </html>

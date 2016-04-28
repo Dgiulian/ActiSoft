@@ -15,7 +15,7 @@ public class Remito_contrato {
     Integer id_cliente                   = 0;
     Integer id_site                      = 0;
     Integer id_contrato                  = 0;
-    Integer id_tipo_remito               = 0;
+    Integer remito_id_tipo_remito               = 0;
     String  remito_fecha                 = "";
     Integer remito_punto_venta           = 0;
     Integer remito_numero                = 0;
@@ -43,6 +43,40 @@ public class Remito_contrato {
     Float   contrato_detalle_precio      = 0f;
     Float   contrato_detalle_porcentaje  = 0f;
     Integer contrato_detalle_id_unidad   = 0; 
+    public Remito_contrato(Remito_contrato rc){
+        this.id                           = rc.getId();
+        this.id_remito                    = rc.getId_remito();
+        this.id_usuario                   = rc.getId_usuario();
+        this.id_cliente                   = rc.getId_cliente();
+        this.id_site                      = rc.getId_site();
+        this.id_contrato                  = rc.getId_contrato();
+        this.remito_id_tipo_remito        = rc.getRemito_id_tipo_remito();
+        this.remito_fecha                 = rc.getRemito_fecha();
+        this.remito_punto_venta           = rc.getRemito_punto_venta();
+        this.remito_numero                = rc.getRemito_numero();
+        this.id_referencia                = rc.getId_referencia();
+        this.remito_id_estado             = rc.getRemito_id_estado();
+        this.remito_facturado             = rc.getRemito_facturado();
+        this.posicion                     = rc.getPosicion();
+        this.remito_detalle_cantidad      = rc.getRemito_detalle_cantidad();
+        this.activo_codigoNew             = rc.getActivo_codigonew();
+        this.activo_id_rubro              = rc.getActivo_id_rubro();
+        this.activo_id_subrubro           = rc.getActivo_id_subrubro();
+        this.activo_desc_larga            = rc.getActivo_desc_larga();
+        this.contrato_numero              = rc.getContrato_numero();
+        this.contrato_fecha               = rc.getContrato_fecha();
+        this.contrato_fecha_inicio        = rc.getContrato_fecha_inicio();
+        this.contrato_fecha_fin           = rc.getContrato_fecha_fin();
+        this.contrato_id_divisa           = rc.getContrato_id_divisa();
+        this.contrato_detalle_id          = rc.getContrato_detalle_id();
+        this.contrato_detalle_posicion    = rc.getContrato_detalle_posicion();
+        this.contrato_detalle_descripcion = rc.getContrato_detalle_descripcion();
+        this.contrato_detalle_id_subrubro = rc.getContrato_detalle_id_subrubro();
+        this.contrato_detalle_id_divisa   = rc.getContrato_detalle_id_divisa();
+        this.contrato_detalle_precio      = rc.getContrato_detalle_precio();
+        this.contrato_detalle_porcentaje  = rc.getContrato_detalle_porcentaje();
+        this.contrato_detalle_id_unidad   = rc.getContrato_detalle_id_unidad();
+    }
     public Integer getId(){
         return this.id;
     }
@@ -50,7 +84,7 @@ public class Remito_contrato {
         return this.id_remito;
     }
     public Integer getRemito_id_tipo_remito(){
-        return this.id_tipo_remito;
+        return this.remito_id_tipo_remito;
     }
     public String  getRemito_fecha(){
         return this.remito_fecha;
@@ -148,7 +182,7 @@ public class Remito_contrato {
         return this;
     }
     public Remito_contrato setRemito_id_tipo_remito (Integer id_tipo_remito){
-        this.id_tipo_remito = id_tipo_remito;
+        this.remito_id_tipo_remito = id_tipo_remito;
         return this;
     }
     public Remito_contrato setRemito_fecha (String  remito_fecha){

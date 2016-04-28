@@ -73,16 +73,19 @@ public class RemitoList extends HttpServlet {
         JsonRespuesta jr = new JsonRespuesta();
         try {
             String idEstado = request.getParameter("id_estado");
+            String strFacturado = request.getParameter("facturado");
             String idTipo = request.getParameter("id_tipo");
             String strNumero = request.getParameter("numero");
             
             Integer id_estado = 0;
             Integer id_tipo = 0;
             Integer numero = 0;
+            Integer facturado = null;
             
             if (idEstado!=null && !idEstado.equals("")) id_estado = Integer.parseInt(idEstado);
             if (idTipo!=null && !idTipo.equals("")) id_tipo = Integer.parseInt(idTipo);
             if (strNumero!=null && !strNumero.equals("")) numero = Integer.parseInt(strNumero);
+            if(strFacturado!=null && !strFacturado.equals("")) facturado = Integer.parseInt(strFacturado);
             
             List<Remito> lista;
             TRemito tr = new TRemito();
@@ -94,6 +97,8 @@ public class RemitoList extends HttpServlet {
                 if(id_estado!=0)mapFiltro.put("id_estado",id_estado.toString());
                 if(id_tipo != 0) mapFiltro.put("id_tipo_remito",id_tipo.toString());
             }
+            
+            if(facturado!=null) mapFiltro.put("facturado",facturado.toString());
             
             lista = tr.getListFiltro(mapFiltro);
             

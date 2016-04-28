@@ -11,9 +11,7 @@ import bd.Activo;
 import bd.Kit;
 import bd.Remito;
 import bd.Remito_detalle;
-import com.google.gson.Gson;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +26,6 @@ import transaccion.TKit;
 import transaccion.TRemito;
 import transaccion.TRemito_detalle;
 import utils.BaseException;
-import utils.JsonRespuesta;
 import utils.OptionsCfg;
 import utils.Parser;
 import utils.TFecha;
@@ -86,22 +83,25 @@ public class RemitoDevolucion extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       Remito remito = null;
-       HttpSession session = request.getSession();
-       Integer id_usuario = (Integer) session.getAttribute("id_usuario");
-       Integer id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
-       String numRemitoEnt  = request.getParameter("numero_entrega");
-       String numRemitoDev  = request.getParameter("numero_devolucion");
-       String tipoEntrega = request.getParameter("tipoEntrega");
-       String fecha = request.getParameter("fecha");
-       String fecha_entrega = request.getParameter("fecha_entrega");
-       String observaciones = request.getParameter("observaciones");
+       Remito remito;
+       HttpSession session           = request.getSession();
+       Integer id_usuario            = (Integer) session.getAttribute("id_usuario");
+       Integer id_tipo_usuario       = (Integer) session.getAttribute("id_tipo_usuario");
+       String numRemitoEnt           = request.getParameter("numero_entrega");
+       String numRemitoDev           = request.getParameter("numero_devolucion");
+       String tipoEntrega            = request.getParameter("tipoEntrega");
+       String fecha                  = request.getParameter("fecha");
+       String fecha_entrega          = request.getParameter("fecha_entrega");
+       String observaciones          = request.getParameter("observaciones");
+       String cod_activo_transporte  = request.getParameter("id_activo_transporte");
+       Integer pos_activo_transporte = Parser.parseInt(request.getParameter("pos_activo_transporte"));
        String obs_ent = "Los remitos de entrega que intervienen son: ";
        try{
            TRemito tr = new TRemito();
            TRemito_detalle trd = new TRemito_detalle();
            TActivo ta = new TActivo();
            TKit tk    = new TKit();
+           
            HashMap<Integer,Remito> mapRemitos = new HashMap<Integer,Remito>();
            HashMap<Integer,Remito_detalle> mapDetalle = new HashMap<Integer,Remito_detalle>();
            HashMap<Integer,Activo> mapActivo = new HashMap<Integer,Activo>();
@@ -144,6 +144,10 @@ public class RemitoDevolucion extends HttpServlet {
            dev.setFecha_creacion(TFecha.ahora(TFecha.formatoBD));
            dev.setId_usuario(id_usuario);
            dev.setObservaciones(observaciones);
+           
+           Activo activo_transporte = ta.getByCodigo(cod_activo_transporte);
+           
+           
            Integer id_remito_dev = tr.alta(dev);
            if (id_remito_dev == 0) throw new BaseException("Error", "Ocurrió un error al crear el remito de devoluci&oacute;n");
            dev.setId(id_remito_dev);
@@ -166,6 +170,7 @@ public class RemitoDevolucion extends HttpServlet {
                        //remitoById.setId_referencia(dev.getId());
                        tr.actualizar(remitoById);
                        for(Remito_detalle det:trd.getByRemitoId(remitoById.getId())){ //Cierro todo el remito
+                           
                              Remito_detalle det_dev = new Remito_detalle(det);
                              det_dev.setId_remito(dev.getId());
                              det_dev.setId(0);
@@ -174,6 +179,9 @@ public class RemitoDevolucion extends HttpServlet {
                              if(det_dev.getId_activo()!=0) {
                                 Activo act_dev = ta.getById(det_dev.getId_activo());
                                 if(act_dev!=null){
+                                    if (act_dev.getId_rubro()==OptionsCfg.RUBRO_TRANSPORTE) continue;
+                                    /* En los remitos de devolución, no se duplica el transporte */ 
+                                    
                                     if (act_dev.getAplica_stock() == 1) {
                                         act_dev.setStock(act_dev.getStock() + det_dev.getCantidad());
                                     }
@@ -195,7 +203,20 @@ public class RemitoDevolucion extends HttpServlet {
                        }
                 }
            }
-          
+           
+           if(activo_transporte!=null && activo_transporte.getId_rubro()==OptionsCfg.RUBRO_TRANSPORTE){
+               Remito_detalle det_transp = new Remito_detalle();
+               det_transp.setId_activo(activo_transporte.getId());
+               det_transp.setCantidad(1f);
+               det_transp.setPosicion(pos_activo_transporte);
+               det_transp.setId_remito(dev.getId());
+               det_transp.setId(0);
+               det_transp.setId_referencia(0);
+               det_transp.setId_referencia(dev.getId()); // Actualizo al referencia
+               trd.alta(det_transp);
+           }
+           
+           
            if(transitorio) {
                 /* Creamos el nuevo remito de entrega como una copia del otro*/
                Remito ent = new Remito(remito);
@@ -219,6 +240,9 @@ public class RemitoDevolucion extends HttpServlet {
                    det_ent.setId_remito(ent.getId());
                    if(det_ent.getId_activo()!=0) {
                     Activo act_ent = mapActivo.get(det_ent.getId_activo());
+                    
+                    if(act_ent!=null && act_ent.getId_rubro()==OptionsCfg.RUBRO_TRANSPORTE) continue;
+                    
                     if(act_ent!=null){
                      if (act_ent.getAplica_stock() == 1) {
                         act_ent.setStock(act_ent.getStock() - det_ent.getCantidad());

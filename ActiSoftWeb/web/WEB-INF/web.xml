@@ -542,6 +542,10 @@
         <servlet-name>KitHistoriaList</servlet-name>
         <servlet-class>Kit.KitHistoriaList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RemitoContratoList</servlet-name>
+        <servlet-class>RemitoContrato.RemitoContratoList</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ActivoServlet</servlet-name>
         <url-pattern>/Activo</url-pattern>
@@ -953,6 +957,10 @@
     <servlet-mapping>
         <servlet-name>KitHistoriaList</servlet-name>
         <url-pattern>/KitHistoriaList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemitoContratoList</servlet-name>
+        <url-pattern>/RemitoContratoList</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

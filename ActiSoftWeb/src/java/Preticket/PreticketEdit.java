@@ -52,7 +52,10 @@ public class PreticketEdit extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-             Remito remito = null;
+             Remito remito_cierre = null;
+             Remito remito_inicio;
+             TRemito tr           = new TRemito();
+             TRemito_contrato trc = new TRemito_contrato();
              String idPreticket = request.getParameter("id");
              Integer id_preticket = 0;
              try{ 
@@ -70,16 +73,27 @@ public class PreticketEdit extends HttpServlet {
              if(request.getParameter("id_remito")==null) throw new BaseException( "Error","Debe seleccionar un remito");
              try{
                  Integer id_remito = Integer.parseInt(request.getParameter("id_remito"));
-                 remito = new TRemito().getById(id_remito);                     
+                 remito_cierre = tr.getById(id_remito);                     
              } catch (NumberFormatException ex){
                  throw new BaseException( "Error","No se ha encontrado el remito");
              }                        
-             if (remito==null) throw new BaseException("Error", "No se ha encontrado el remito");             
-             if(remito.getFacturado()!=0) throw new BaseException("ERROR","El remito ya fu&eacute; facturado");
-             request.setAttribute("remito", remito);
-            List<Remito_contrato> detalle = new TRemito_contrato().getByRemitoId(remito.getId());
-//             List<Remito_detalle> detalle = new TRemito_detalle().getByRemitoId(remito.getId());
-             request.setAttribute("detalle", detalle);
+             if (remito_cierre==null) throw new BaseException("Error", "No se ha encontrado el remito");             
+             if(remito_cierre.getFacturado()!=0) throw new BaseException("ERROR","El remito ya fu&eacute; facturado");
+             
+             remito_inicio = tr.getById(remito_cierre.getId_referencia());
+             if(remito_inicio ==null) throw new BaseException("ERROR","No se ha encontrado el remito de inicio");
+             request.setAttribute("remito_cierre", remito_cierre);
+             request.setAttribute("remito_inicio", remito_inicio);
+            
+             List<Remito_contrato> det_cierre = trc.getByRemitoId(remito_cierre.getId());
+            
+             List<Remito_contrato> det_inicio  = trc.getByRemitoId(remito_inicio.getId());
+             for(Remito_contrato rc : det_inicio){
+                 if(rc.getActivo_id_rubro()!=OptionsCfg.RUBRO_TRANSPORTE) continue;
+                 det_cierre.add(rc);
+             }
+             
+             request.setAttribute("detalle", det_cierre);
              request.getRequestDispatcher("preticket_edit.jsp").forward(request, response);
         } catch (BaseException ex) {
             request.setAttribute("titulo", ex.getResult());

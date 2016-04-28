@@ -297,7 +297,7 @@
             });
 
             $('#mdlActivo').on('show.bs.modal', function (e) {
-                 $id_contrato = $('#id_contrato') ;
+                 var $id_contrato = $('#id_contrato') ;
                  if ($id_contrato===null || $id_contrato.val()===""){
                       $('#mdlActivo').modal('hide');
                      bootbox.alert("Ingrese el n&uacute;mero de contrato");
@@ -319,8 +319,8 @@
 //                        $('#id_subrubro').prop('disabled',true);
                     } 
                 }
-                $id_rubro = $('#id_rubro');
-                $id_subrubro = $('#id_subrubro');
+                var $id_rubro = $('#id_rubro');
+                var $id_subrubro = $('#id_subrubro');
                 $id_contrato = $('#id_contrato');
                 if ($id_contrato===null || $id_contrato.val()==="0" ){
                      bootbox.alert("Ingrese el n&uacute;mero de contrato");

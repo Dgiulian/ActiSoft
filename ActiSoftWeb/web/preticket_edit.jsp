@@ -1,3 +1,5 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="transaccion.TSite"%>
 <%@page import="bd.Site"%>
 <%@page import="transaccion.TContrato"%>
@@ -30,8 +32,8 @@
         nuevo = true;
     }
     TRemito tr = new TRemito();
-    Remito remito_cierre  = (Remito) request.getAttribute("remito");
-    Remito remito_inicio  = tr.getById(remito_cierre.getId_referencia());
+    Remito remito_cierre  = (Remito) request.getAttribute("remito_cierre");
+    Remito remito_inicio  = (Remito)  request.getAttribute("remito_inicio"); //tr.getById(remito_cierre.getId_referencia());
     Contrato contrato     = new TContrato().getById(remito_cierre.getId_contrato());
     Cliente cliente       = new TCliente().getById(remito_cierre.getId_cliente());
     Site site             = new TSite().getById(remito_cierre.getId_site());
@@ -175,11 +177,14 @@
                             <!-- /.row (nested) -->
                         </div>  
                           <!-- ./row -->
+                        
+                        
                         <hr>
+                        <span class="btn btn-primary" data-toggle="modal" data-target="#mdlRemito">Nuevo</span>
                         <div class="row">
                             <div class="col-lg-12">
                                 <!--<h3>Items <span class="btn btn-default" id="btnAgregar"> Agregar</span></h3>-->
-                                <table class="table table-bordered table-condensed table-responsive table-striped" id="tblContrato">
+                                <table class="table table-bordered table-condensed table-responsive table-striped" id="tblPreticket">
                                     <colgroup>
                                         <col span="1" style="width: 5%;">
                                         <col span="1" style="width: 7%;">
@@ -346,6 +351,11 @@
     <script src="bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.min.js"></script>        
     <!-- Custom Theme JavaScript -->
     
+    <!-- DataTables JavaScript -->
+    <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="bower_components/datatables-plugins/sorting/date-uk.js"></script>
+    
     <script src="dist/js/sb-admin-2.js"></script>
     <script src="js/moment-with-locales.min.js"></script>
     <script src="js/invesoft.js"></script>
@@ -394,15 +404,50 @@
 //        } else campo.parent().removeClass("has-error");
 //        return true;
 //      }
-//        
-        
+//       
+    $(document).ready(function(){
+       $('#mdlRemito').on('show.bs.modal',function(){
+           var data = {id_tipo:2, facturado:0,id_estado :2};
+           loadDataRemito(data);
+       })
+    });
+    function selActivos(){           
+            var $arr = $('input.chkSelActivo:checked');
+            for(var i = 0;i<$arr.length;i++){
+                var $id = $($arr[i]).data('index');    
+                console.log($id);
+                loadDataRemitoContrato({id_remito:$id});
+            
+            }            
+    }
+    function loadDataRemitoContrato(data){
+        var $tabla = $('#tblPreticket');
+        $.ajax({
+               url: '<%= PathCfg.REMITO_CONTRATO_LIST %>',
+               data: data,
+               method:"POST",
+               dataType: "json",
+               beforeSend:function(){
+                    var cant_cols = $tabla.find('thead th').length;
+                    $tabla.find('tbody').html("<tr><td colspan='" + cant_cols + "'><center><img src='images/ajax-loader.gif'/></center></td></tr>");
+               },
+               success: function(result) {
+                   $('#selTodos').prop('checked',false);
+                   if(result.Result === "OK") {
+                       $tabla.find('tbody').html(createTableRemito(result.Records));                       
+                   }
+               }
+        });
+    }
     </script>
     <!-- Modal -->
 
-    <%@include file="cliente_mdl.jsp" %>
-    <%@include file="site_mdl.jsp" %>
-    <%@include file="rubro_mdl.jsp" %>
+    <%--<%@include file="cliente_mdl.jsp" %>--%>
+    <%--<%@include file="site_mdl.jsp" %>--%>
+    <%--<%@include file="rubro_mdl.jsp" %>--%>
+    <%@include file="remito_mdl.jsp" %>
     <%@include file="tpl_footer.jsp"%>
+    
 </body>
 
 </html>
