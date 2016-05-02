@@ -57,7 +57,7 @@
                                 <div class="col-lg-3">
                                     <div clas="form-group">
                                         <label for="numero">N&uacute;mero </label>
-                                        <span class="input-group">                                                                                            
+                                        <span class="input-group">
                                             <input type="text" class="form-control" name="numero" id="numero" size="20" value="">
                                             <span class="input-group-addon" id="btnBuscar" ><span class="fa fa-search fa-fw"></span></span>
                                         </span>
@@ -92,7 +92,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            
+
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -120,23 +120,23 @@
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
     <script src="bower_components/datatables-plugins/sorting/date-uk.js"></script>
-    
-    <script src="js/bootbox.min.js"></script>        
-    
+
+    <script src="js/bootbox.min.js"></script>
+
     <script src="bower_components/jquery-mask/jquery.mask.min.js"></script>
     <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
     <script src="bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.min.js"></script>
-    
+
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
     <script src="js/moment-with-locales.min.js"></script>
-    
+
     <script src="js/invesoft.js"></script>
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
         loadData({});
-        
+
     $('#estado_remito').change(cargarDatos);
     $('#tipo_remito').change(cargarDatos);
     $('#mdlRemito').on('shown.bs.modal', function (e) {
@@ -154,11 +154,11 @@
         $('#keyValue').val(id);
         $('#id').val(id);
     });
-        
-    
+
+
     });
     function buscar(){
-        var $numero = $('#numero');       
+        var $numero = $('#numero');
         var data = ($numero.val()!=="")?{numero:$numero.val()}:{id_tipo:$('#tipo_remito').val(),id_estado:$('#estado_remito').val()
         };
         loadData(data);
@@ -202,13 +202,13 @@
                                 lengthChange: false,
                                 bInfo: false,
                                 order: [ 2, "desc" ],
-                                columnDefs: [                                   
+                                columnDefs: [
                                     { type: 'date-uk', targets: 2 },
                                ],
                                 language: {
                                     url:'bower_components/datatables-plugins/i18n/Spanish.json',
                                 }
-                        });                        
+                        });
                    }
                }
            });
@@ -235,11 +235,11 @@
             html += wrapTag('td',d.facturado!==0?"Si":"No",'');
             html += wrapTag('td',d.estado,'');
             var htmlEdit = "<a href='<%= PathCfg.REMITO_VIEW%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-info'><span class='glyphicon glyphicon-sunglasses fw'></span></a> ";
-  //            var htmlDel = "";        
+  //            var htmlDel = "";
             var htmlDel = " <span data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span> ";
 
             var htmlPrint  = "<span target='_blank' href='<%= PathCfg.REMITO_PRINT%>?id=" + d.id + "' data-index='" + d.id + "' class='btn btn-xs btn-circle  btn-default btn-print'><span class='fa fa-print fw'></span></span> ";
-            
+
             var htmlDev = "";
             var htmlDiario = "";
             if (d.id_estado === <%= OptionsCfg.REMITO_ESTADO_ABIERTO %> ) {
@@ -256,21 +256,21 @@
     }
     function devolucion(){
         var id = $(this).data('index');
-        
+
         $tr = $(this).parent().parent();
-        bootbox.prompt({ 
+        bootbox.prompt({
            title:'Remito de devoluci&oacute;n',
             size: 'small',
-            message: "Ingrese el N&uacute;mero de remito de devoluci&oacute;n", 
-            callback: function(result){ /* your callback code */ 
+            message: "Ingrese el N&uacute;mero de remito de devoluci&oacute;n",
+            callback: function(result){ /* your callback code */
                 if(result) {
                     // href='<%= PathCfg.REMITO_DEV%>?id="+ d.id +"'
                     //window.location = '<%= PathCfg.REMITO_DEV%>?id="+ ' + id + '"';
-                    
+
                     $.ajax({
                         url: '<%= PathCfg.REMITO_DEV %>', //DATAENTRY_DEL
                         data: {id:id,
-                               numero:result 
+                               numero:result
                             },
                         method:"POST",
                         dataType: "json",
@@ -287,7 +287,7 @@
     }
     function impresion(){
         var id = $(this).data('index');
-        
+
         $tr = $(this).parent().parent();
         bootbox.dialog({
                 title:"",
@@ -296,20 +296,20 @@
                     imprimir:{
                         label: "Imprimir",
                         className: "btn-success",
-                        callback: function(result){           
+                        callback: function(result){
                             console.log(result);
                             if(result) {
                                 location.href='<%= PathCfg.REMITO_PRINT %>?id=' + id;
                             }
                         }
-                    },                    
+                    },
                     cancel:{
                         label: "Cancelar",
                         className:"btn-cancel"
                     }
             }
         });
-        return;       
+        return;
     }
     function diario(){
         var id = $(this).data('index');
@@ -320,7 +320,7 @@
     }
     function deleteData(){
         var id = $(this).data('index');
-        
+
         $tr = $(this).parent().parent();
         bootbox.confirm("Esta seguro que desea eliminar el registro?",function(result){
              if(result) {
@@ -329,7 +329,7 @@
                  data: {id:id },
                  method:"POST",
                  dataType: "json",
-                 success: function(data) {            
+                 success: function(data) {
                      if(data.Result === "OK") {
                          cargarDatos();
                          //$tr.remove();
@@ -342,7 +342,6 @@
      </script>
 
 </body>
-<%--<%@include file="remito_mdl.jsp" %>--%>
 <%@include  file="remito_upload_mdl.jsp" %>
 <%@include  file="remito_diario_mdl.jsp" %>
 <%@include file="tpl_footer.jsp"%>

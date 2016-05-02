@@ -7,6 +7,7 @@ package transaccion;
 import bd.Preticket;
 import bd.Preticket_detalle;
 import bd.Remito;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -35,11 +36,16 @@ public class TPreticket extends TransaccionBase<Preticket> {
         TPreticket_detalle tpd = new TPreticket_detalle();
         List<Preticket_detalle> lstDetalle = tpd.getByPreticketId(preticket.getId());
         TRemito tr = new TRemito();        
+        HashMap<Integer,Remito> mapRemitos =  new HashMap<Integer,Remito>();
         for(Preticket_detalle d:lstDetalle){
-            Remito r =  tr.getByNumero(d.getRemito_cierre());
-            if (r!=null) {
-                r.setFacturado(0);
-                tr.actualizar(r);
+            Remito r_cierre =  mapRemitos.get(d.getRemito_cierre());
+            if (r_cierre!=null) continue; // Si existe en el map, ya se facturó
+            
+            r_cierre = tr.getByNumero(d.getRemito_cierre());
+            if (r_cierre!=null) { //Desmarco el remito como facturado
+                mapRemitos.put(d.getRemito_cierre(),r_cierre);
+                r_cierre.setFacturado(0);
+                tr.actualizar(r_cierre);
             }
             tpd.baja(d);
         }

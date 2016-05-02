@@ -101,33 +101,34 @@
                success: function(result) {
                    $('#selTodos').prop('checked',false);
                    if(result.Result === "OK") {
-                       $tabla.find('tbody').html(createTableRemito(result.Records));
-                       $tabla.DataTable({
-                                responsive: true,
-                                paging: false,
-                                retrieve: true,
-                                ordering: true,
-                                searching: false,
-                                lengthChange: false,
-                                bInfo: false,
-                                order: [ 2, "desc" ,1,"desc"],
-                                columnDefs: [                                   
-                                    { type: 'date-uk', targets: 2 },
-                               ],
-                                language: {
-                                    url:'bower_components/datatables-plugins/i18n/Spanish.json',
-                                }
-                        });    
+                       $tabla.find('tbody').html(createTableRemito(result.Records,data.exclude));
+//                       $tabla.DataTable({
+//                                responsive: true,
+//                                paging: false,
+//                                retrieve: true,
+//                                ordering: true,
+//                                searching: false,
+//                                lengthChange: false,
+//                                bInfo: false,
+//                                order: [ 2, "desc" ,1,"desc"],
+//                                columnDefs: [                                   
+//                                    { type: 'date-uk', targets: 2 },
+//                               ],
+//                                language: {
+//                                    url:'bower_components/datatables-plugins/i18n/Spanish.json',
+//                                }
+//                        });    
                    }
                }
         });
     }
-    function createTableRemito(data){
+    function createTableRemito(data,exclude){
         var html = "";
         for(var i = 0;i< data.length;i++){
            html +="<tr class=''>";
-           d = data[i];
-//            html += wrapTag('td',d.id,'');
+           var d = data[i];           
+           if(exclude === d.id)  continue;
+            html += wrapTag('td',d.id,'');
             html += wrapTag('td',d.numero,'');
             html += wrapTag('td',d.tipo_remito ,'');
             html += wrapTag('td',convertirFecha(d.fecha),'');

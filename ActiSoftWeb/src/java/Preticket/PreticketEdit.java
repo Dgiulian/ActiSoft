@@ -12,7 +12,10 @@ import bd.Remito_detalle;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -88,6 +91,7 @@ public class PreticketEdit extends HttpServlet {
              List<Remito_contrato> det_cierre = trc.getByRemitoId(remito_cierre.getId());
             
              List<Remito_contrato> det_inicio  = trc.getByRemitoId(remito_inicio.getId());
+             //if( det_inicio!=null) 
              for(Remito_contrato rc : det_inicio){
                  if(rc.getActivo_id_rubro()!=OptionsCfg.RUBRO_TRANSPORTE) continue;
                  det_cierre.add(rc);
@@ -173,7 +177,7 @@ public class PreticketEdit extends HttpServlet {
                 Remito remito = tr.getById(id_remito);
                 if(remito!=null) lstRemitos.add(remito);
             }
-            
+            HashMap<Integer,Remito> mapRemitos =  new HashMap<Integer,Remito>();
             ArrayList<Preticket_detalle> lstPreticket_detalle = new ArrayList<Preticket_detalle>();
             for( int i=0;i<arrRemito_inicio.length;i++) {
                 Integer remito_inicio   = Parser.parseInt(arrRemito_inicio [i].trim());
@@ -191,10 +195,22 @@ public class PreticketEdit extends HttpServlet {
                 Integer id_unidad = Parser.parseInt(arrUnidad[i].trim());
                 Preticket_detalle pd = new Preticket_detalle();
                 
+                Remito r_inicio = mapRemitos.get(remito_inicio);
+                if (r_inicio ==null) {
+                    r_inicio = tr.getByNumero(remito_inicio);
+                    if (r_inicio == null) continue;
+                    mapRemitos.put(remito_inicio,r_inicio);
+                }
+                Remito r_cierre = mapRemitos.get(remito_cierre);
+                if (r_cierre ==null) {
+                    r_cierre = tr.getByNumero(remito_cierre);
+                    if (r_cierre == null) continue;
+                    mapRemitos.put(remito_cierre,r_cierre);
+                }
                 pd.setRemito_inicio(remito_inicio);
-                pd.setFecha_inicio(TFecha.formatearFecha(fecha_inicio, TFecha.formatoVista,TFecha.formatoBD));
+                pd.setFecha_inicio(fecha_inicio);
                 pd.setRemito_cierre(remito_cierre);
-                pd.setFecha_cierre(TFecha.formatearFecha(fecha_cierre, TFecha.formatoVista,TFecha.formatoBD));
+                pd.setFecha_cierre(fecha_cierre);
                 pd.setDias(dias);
                 pd.setPosicion(posicion);
                 pd.setDescripcion(descripcion);
@@ -222,6 +238,14 @@ public class PreticketEdit extends HttpServlet {
                     pd.setId_preticket(preticket.getId());
                     tpd.alta(pd);
                 }
+              /* Actualizo los remitos */ 
+                Iterator<Map.Entry<Integer, Remito>> it = mapRemitos.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry)it.next();
+                    lstRemitos.add((Remito) pair.getValue());
+                    it.remove(); // avoids a ConcurrentModificationException
+                }
+                
                 for(Remito remito:lstRemitos){
                     remito.setFacturado(1);
                     tr.actualizar(remito);

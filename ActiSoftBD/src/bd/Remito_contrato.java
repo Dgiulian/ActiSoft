@@ -28,21 +28,23 @@ public class Remito_contrato {
     Integer activo_id_rubro              = 0;
     Integer activo_id_subrubro           = 0;
     String  activo_desc_larga            = "";
-    
+
     String  contrato_numero              = "";
     String  contrato_fecha               = "";
     String  contrato_fecha_inicio        = "";
     String  contrato_fecha_fin           = "";
     Integer contrato_id_divisa           = 0;
     Integer contrato_detalle_id          = 0;
-    
+
     Integer contrato_detalle_posicion    = 0;
     String  contrato_detalle_descripcion = "";
     Integer contrato_detalle_id_subrubro = 0;
     Integer contrato_detalle_id_divisa   = 0;
     Float   contrato_detalle_precio      = 0f;
     Float   contrato_detalle_porcentaje  = 0f;
-    Integer contrato_detalle_id_unidad   = 0; 
+    Integer contrato_detalle_id_unidad   = 0;
+
+    public Remito_contrato(){}
     public Remito_contrato(Remito_contrato rc){
         this.id                           = rc.getId();
         this.id_remito                    = rc.getId_remito();
@@ -300,5 +302,5 @@ public class Remito_contrato {
     public Remito_contrato setContrato_detalle_id_unidad (Integer contrato_detalle_id_unidad){
         this.contrato_detalle_id_unidad = contrato_detalle_id_unidad;
         return this;
-    }    
+    }
 }

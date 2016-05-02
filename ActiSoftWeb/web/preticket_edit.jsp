@@ -80,9 +80,9 @@
                                 <% if (!nuevo) {%>
                                     <input type="hidden" name="id" value="<%= preticket.getId()%>">                                    
                                 <% }%>           
-                                <input type="hidden" name="id_remito" value="<%= remito_cierre.getId()%>">
-                                <input type="hidden" name="id_contrato" value="<%= contrato.getId()%>">                                
-                                <input type="hidden" name="id_site" value="<%= site.getId()%>">
+                                <input type="hidden" name="id_remito" id="id_remito" value="<%= remito_cierre.getId()%>">
+                                <input type="hidden" name="id_contrato" id="id_contrato" value="<%= contrato.getId()%>">                                
+                                <input type="hidden" name="id_site" id="id_site" value="<%= site.getId()%>">
                                 <!--<div class="col-lg-12 ">-->
                                     <div class="col-lg-4 " >
                                         <div class="form-group">
@@ -180,7 +180,7 @@
                         
                         
                         <hr>
-                        <span class="btn btn-primary" data-toggle="modal" data-target="#mdlRemito">Nuevo</span>
+                        <span class="btn btn-primary" data-toggle="modal" data-target="#mdlRemito">Agregar Remito</span>
                         <div class="row">
                             <div class="col-lg-12">
                                 <!--<h3>Items <span class="btn btn-default" id="btnAgregar"> Agregar</span></h3>-->
@@ -244,8 +244,7 @@
                                                 
                                                 <td style="width:20px;"> 
                                                     <%= TFecha.formatearFechaBdVista(remito_inicio.getFecha()) %>
-                                                    <input type="hidden" name ="fecha_inicio" value="<%= TFecha.formatearFechaBdVista(remito_inicio.getFecha()) %>">
-                                                </td>
+                                                    <input type="hidden" name ="fecha_inicio" value="<%= remito_inicio.getFecha() %>">                                                </td>
                                                 
                                                 <td>
                                                     <%= remito_cierre.getNumero() %>
@@ -253,7 +252,7 @@
                                                 </td>
                                                 <td style="width:20px;"> 
                                                     <%= TFecha.formatearFechaBdVista(remito_cierre.getFecha()) %>
-                                                    <input type="hidden" name ="fecha_cierre" value="<%= TFecha.formatearFechaBdVista(remito_cierre.getFecha()) %>">
+                                                    <input type="hidden" name ="fecha_cierre" value="<%= remito_cierre.getFecha() %>">
                                                 </td>
                                                 <td>
                                                     <%=dias %>
@@ -284,7 +283,7 @@
                                                     <input type="hidden" name ="id_unidad" value="<%= detalle.getContrato_detalle_id_unidad()%>">
                                                 </td>
                                                     <td style="width:75px">
-                                                       <%=  divisa %>
+                                                       <%= divisa %>
                                                        <%= detalle.getContrato_detalle_precio()%>
                                                        
                                                        <input type="hidden" name ="precio" value="<%= detalle.getContrato_detalle_precio()%>">
@@ -304,8 +303,8 @@
                                         <tr>
                                             <td colspan="11"></td>
                                             <td>
-                                                 <%=divisa%> <%= total %>
-                                                <input type="hidden" name ="total" value="<%= total %>">
+                                                <span id="spn_divisa"><%=divisa%></span> <span id="spn_total"><%= total %></span>
+                                                <input type="hidden" name ="total" id="total" value="<%= total %>">
                                             </td>
 <!--                                            <td id="total"> 
                                                 <span class="input-group">
@@ -407,7 +406,8 @@
 //       
     $(document).ready(function(){
        $('#mdlRemito').on('show.bs.modal',function(){
-           var data = {id_tipo:2, facturado:0,id_estado :2};
+           var $id_remito = parseInt($('#id_remito').val());           
+           var data = {id_tipo:2, facturado:0,id_estado :2,exclude: $id_remito};
            loadDataRemito(data);
        })
     });
@@ -417,7 +417,7 @@
                 var $id = $($arr[i]).data('index');    
                 console.log($id);
                 loadDataRemitoContrato({id_remito:$id});
-            
+                $('#mdlRemito').modal('hide');
             }            
     }
     function loadDataRemitoContrato(data){
@@ -428,16 +428,72 @@
                method:"POST",
                dataType: "json",
                beforeSend:function(){
-                    var cant_cols = $tabla.find('thead th').length;
-                    $tabla.find('tbody').html("<tr><td colspan='" + cant_cols + "'><center><img src='images/ajax-loader.gif'/></center></td></tr>");
+//                    var cant_cols = $tabla.find('thead th').length;
+//                    $tabla.find('tbody').html("<tr><td colspan='" + cant_cols + "'><center><img src='images/ajax-loader.gif'/></center></td></tr>");
                },
                success: function(result) {
                    $('#selTodos').prop('checked',false);
                    if(result.Result === "OK") {
-                       $tabla.find('tbody').html(createTableRemito(result.Records));                       
+                       $tabla.find('tbody').append(createTableRemitoContrato(result.Records));    
+                       actualizarTotal();
                    }
                }
         });
+    }
+    function createTableRemitoContrato(data){
+        var html = "";
+        for(var i = 0;i< data.length;i++){
+         
+            var d = data[i];
+            var dias_herramienta = d.dias * d.remito_detalle_cantidad;
+            var subtotal = dias_herramienta * d.contrato_detalle_precio;
+            html +="<tr class=''>";            
+//            html += wrapTag('td',d.id,'');
+            html += wrapTag('td',d.remito_inicio.numero,'');            
+            html += wrapTag('td',convertirFecha(d.remito_inicio.fecha),'');
+            html += wrapTag('td',d.remito_cierre.numero,'');            
+            html += wrapTag('td',convertirFecha(d.remito_cierre.fecha),'');
+            html += wrapTag('td',d.dias,'');
+            
+            html += wrapTag('td',d.posicion,'');
+            html += wrapTag('td',d.activo_desc_larga,'');
+            html += wrapTag('td',d.remito_detalle_cantidad,'');
+            
+            html += wrapTag('td',dias_herramienta,'');            
+            html += wrapTag('td',d.unidad,'');             
+            html += wrapTag('td',d.divisa + " " + d.contrato_detalle_precio,''); 
+            html += wrapTag('td',d.divisa + " " + subtotal,''); 
+//             var htmlSelect = "<input type='checkbox' class='chkSelActivo' data-index='" + d.id + "' data-pos='" + d.posicion + "' data-index='"+ d.id +"' data-codigo='"+d.codigo+"' data-descripcion='" + d.desc_larga + "' data-cant='"+d.cantidad+"'" ;
+//            html +=wrapTag('td',htmlSelect ,'');
+            html += '<input type="hidden" name ="remito_inicio"     value="' + d.remito_inicio.numero + '">';
+            html += '<input type="hidden" name ="fecha_inicio"      value="' + d.remito_inicio.fecha.split(" ")[0] + '">';
+            html += '<input type="hidden" name ="remito_cierre"     value="' + d.remito_cierre.numero + '">';
+            html += '<input type="hidden" name ="fecha_cierre"      value="' + d.remito_cierre.fecha.split(" ")[0] + '">';
+            html += '<input type="hidden" name ="dias"              value="' + d.dias + '">';
+            html += '<input type="hidden" name ="posicion"          value="' + d.posicion + '">';
+            html += '<input type="hidden" name ="descripcion"       value="' + d.activo_desc_larga + '">';
+            html += '<input type="hidden" name ="cantidad"          value="' + d.remito_detalle_cantidad + '">';
+            html += '<input type="hidden" name ="dias_herramienta " value="' + dias_herramienta  + '">';
+            html += '<input type="hidden" name ="id_unidad"         value="' + d.contrato_detalle_id_unidad + '">';
+            html += '<input type="hidden" name ="precio"            value="' + d.contrato_detalle_precio + '">';
+            html += '<input type="hidden" name ="id_divisa"         value="' + d.contrato_detalle_id_divisa + '">';
+            html += '<input type="hidden" name ="subtotal"          value="' + subtotal + '">';
+
+           html +="</tr>";
+       }
+       return html;
+    }
+    function actualizarTotal(){
+        var total = 0;
+        var arrST = $('input[name="subtotal"]');
+        for(var i=0;i<arrST.length;i++) {
+            var $st = $(arrST[i]).val();
+            total += parseFloat($st);
+            
+        }
+        
+        $('#spn_total').text(total);
+        $('#total').val(total);
     }
     </script>
     <!-- Modal -->

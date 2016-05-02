@@ -4,6 +4,7 @@
  */
 package RemitoContrato;
 
+import bd.Remito;
 import bd.Remito_contrato;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -15,16 +16,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import transaccion.TRemito;
 import transaccion.TRemito_contrato;
 import utils.BaseException;
 import utils.JsonRespuesta;
+import utils.OptionsCfg;
+import utils.OptionsCfg.Option;
+import utils.TFecha;
 
 /**
  *
  * @author Diego
  */
 public class RemitoContratoList extends HttpServlet {
-
+    TRemito tr;
+    HashMap<Integer,Option> mapUnidades;
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -44,32 +51,29 @@ public class RemitoContratoList extends HttpServlet {
         
         Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
         JsonRespuesta jr = new JsonRespuesta();
+        tr = new TRemito();
+        mapUnidades = OptionsCfg.getMap(OptionsCfg.getUnidades());
         try {
-            Integer id_remito = Integer.parseInt(request.getParameter("id_remito"));
-            
+            Integer id_remito = Integer.parseInt(request.getParameter("id_remito"));            
             
             List<Remito_contrato> lista;
-            TRemito_contrato tr = new TRemito_contrato();
+            TRemito_contrato trc = new TRemito_contrato();
             HashMap<String,String> mapFiltro = new HashMap<String,String>();
             if(id_remito==0) throw new BaseException("ERROR","Indique el remito");
-            
+
             mapFiltro.put("id_remito", id_remito.toString());
-            lista = tr.getListFiltro(mapFiltro);
-            
-            
+            lista = trc.getListFiltro(mapFiltro);
+            List<Remito_contratoDet> listaDet = new ArrayList();
             if (lista != null) {
-                List<Remito_contratoDet> listaDet = new ArrayList();
-            for(Remito_contrato activo:lista){
-                listaDet.add(new Remito_contratoDet(activo));
-            }
-                jr.setTotalRecordCount(lista.size());
+                for(Remito_contrato remito_contrato:lista){
+                    listaDet.add(new Remito_contratoDet(remito_contrato));
+                }
+                jr.setTotalRecordCount(listaDet.size());                
             } else {
                 jr.setTotalRecordCount(0);
-            }            
+            }
             jr.setResult("OK");
-            jr.setRecords(lista);
-            
-          
+            jr.setRecords(listaDet);
         } catch(BaseException ex){
             jr.setResult(ex.getResult());
             jr.setMessage(ex.getMessage());
@@ -80,10 +84,23 @@ public class RemitoContratoList extends HttpServlet {
         }
     }
 private class Remito_contratoDet extends Remito_contrato{
-    Integer remito_inicio;
-    
+    Remito remito_inicio;
+    Remito remito_cierre;
+    Integer dias;
+    Float dias_herramienta;
+    String divisa;
+    String unidad;
     public Remito_contratoDet(Remito_contrato rc){
         super(rc);
+        remito_inicio = tr.getById(rc.getId_referencia());        
+        remito_cierre = tr.getById(rc.getId_remito());    
+        if(rc.getActivo_id_rubro()!=14)
+            dias = TFecha.diferenciasDeFechas( remito_inicio.getFecha(),remito_cierre.getFecha()) + 1;
+        else dias = !tr.esTransitorio(remito_cierre)?1:2;
+        divisa = rc.getContrato_detalle_id_divisa()==0?"U$S":"$";
+        
+        Option o = mapUnidades.get(rc.getContrato_detalle_id_unidad());
+        unidad = (o!=null)? o.getDescripcion():"";
     }
 }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
