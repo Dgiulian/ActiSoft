@@ -111,14 +111,36 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
-                                 <div class="form-group">
-                                      <label class="" for="id_activo_transporte">Transporte</label>
-                                      <input class="form-control date-picker" type="hidden" name="id_activo_transporte" id="id_activo_transporte" >
-                                      <input class="form-control date-picker" type="hidden" name="pos_activo_transporte" id="pos_activo_transporte" >
-                                      <input class="form-control date-picker" type="text" name="activo_transporte" id="activo_transporte" disabled>
-                                      <span class="btn btn-default" id="" data-toggle="modal" data-target="#mdlActivo"> Agregar</span> 
-                                  </div>
-                              </div>
+                                <input class="form-control" type="hidden" name="id_activo_transporte" id="id_activo_transporte" >
+                                <input class="form-control" type="hidden" name="pos_activo_transporte" id="pos_activo_transporte" >
+                                <div class="col-lg-10">
+<!--                                    <div class="form-group">
+                                         <label class="" for="id_activo_transporte">Transporte</label>
+                                         <input class="form-control" type="text" name="activo_transporte" id="activo_transporte" disabled>
+                                     </div>                                -->
+                                    <span class="form-group">
+                                        <label class="" for="id_activo_transporte">Transporte</label>
+                                           <span class="input-group">
+                                           <span class="input-group-addon"  data-toggle="modal" data-target="#mdlActivo"><span class="fa fa-search fa-fw"></span></span>                                    
+                                           <input type="text" class="form-control" name="activo_transporte" id="activo_transporte" placeholder="" disabled>
+                                           </span>                                    
+                                    </span>
+                                 </div>                                
+                               
+<!--                                 <div class="col-lg-2">
+                                    <div class="form-group ">
+                                    <label class="" for="">&nbsp;</label>
+                                    <span class="btn btn-default" id="" data-toggle="modal" data-target="#mdlActivo"> Agregar</span> 
+                                    </div>
+                                </div>-->
+                                 <div class="col-lg-2">
+                                    <div class="form-group ">
+                                        <label class="" for="id_activo_transporte">Cantidad</label>
+                                        <input class="form-control" type="text" name="transporte_cantidad" id="transporte_cantidad">                                
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
                           <div class="row">
                             <div class="col-lg-12">

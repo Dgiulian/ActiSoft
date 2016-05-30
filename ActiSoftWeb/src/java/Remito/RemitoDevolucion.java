@@ -94,6 +94,7 @@ public class RemitoDevolucion extends HttpServlet {
        String fecha_entrega          = request.getParameter("fecha_entrega");
        String observaciones          = request.getParameter("observaciones");
        String cod_activo_transporte  = request.getParameter("id_activo_transporte");
+       Float transporte_cantidad     = Parser.parseFloat(request.getParameter("transporte_cantidad"));
        Integer pos_activo_transporte = Parser.parseInt(request.getParameter("pos_activo_transporte"));
        String obs_ent = "Los remitos de entrega que intervienen son: ";
        try{
@@ -207,7 +208,7 @@ public class RemitoDevolucion extends HttpServlet {
            if(activo_transporte!=null && activo_transporte.getId_rubro()==OptionsCfg.RUBRO_TRANSPORTE){
                Remito_detalle det_transp = new Remito_detalle();
                det_transp.setId_activo(activo_transporte.getId());
-               det_transp.setCantidad(1f);
+               det_transp.setCantidad(transporte_cantidad);
                det_transp.setPosicion(pos_activo_transporte);
                det_transp.setId_remito(dev.getId());
                det_transp.setId(0);

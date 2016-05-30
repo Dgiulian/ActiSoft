@@ -19,7 +19,7 @@
 <%@page import="transaccion.TProvincia"%>
 <%@page import="java.util.List"%>
 <%@page import="bd.Cliente"%>
-<%    
+<%
     Remito remito = (Remito) request.getAttribute("remito");
     List<Remito_detalle> detalle = (List<Remito_detalle>) request.getAttribute("detalle");
     boolean nuevo = false;
@@ -28,13 +28,13 @@
         nuevo= true;
     }
     if(detalle==null) detalle = new ArrayList<Remito_detalle>();
-    
+
     Contrato contrato = new TContrato().getById(remito.getId_contrato());
     if(contrato==null) contrato=new Contrato();
-    
+
     Cliente cliente = new TCliente().getById(remito.getId_cliente());
     if(cliente==null) cliente = new Cliente();
-    
+
     Site site = new TSite().getById(remito.getId_site());
     if(site==null) site = new Site();
     TActivo ta = new TActivo();
@@ -59,21 +59,21 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
-            
+
             <div class="row">
                 <form action="<%= PathCfg.REMITO_EDIT%>" method="POST"  role="form">
                     <input type="hidden" name="id" id="id" value="<%=remito.getId()%>">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
-                      <div class="panel-heading"> Datos b&aacute;sicos del remito </div>            
+                      <div class="panel-heading"> Datos b&aacute;sicos del remito </div>
                       <div class="panel-body">
                           <div class="row">
                                <div class="col-lg-3 " >
                                 <div class="form-group">
                                 <span class="input-group">
-                                    <label for="contrato">N&uacute;mero contrato</label>    
+                                    <label for="contrato">N&uacute;mero contrato</label>
                                     <span class="input-group">
-                                    <span class="input-group-addon"  data-toggle="modal" data-target="#mdlContrato"><span class="fa fa-search fa-fw"></span></span>                                
+                                    <span class="input-group-addon"  data-toggle="modal" data-target="#mdlContrato"><span class="fa fa-search fa-fw"></span></span>
                                     <input type="text" class="form-control"  name="contrato" id="contrato" placeholder="N&uacute;mero de contrato" size="20" value="<%= contrato.getNumero()%>">
                                     </span>
                                     <input type="hidden" name="id_contrato" id="id_contrato" value="<%=contrato.getId()%>">
@@ -82,25 +82,25 @@
                                </div>
                               <div class="col-lg-2 " >
                                     <div class="form-group ">
-                                        <label for="punto_venta">Punto de venta</label>                                       
-                                       <input class="form-control" name="punto_venta" id="punto_venta" value="<%=remito.getPunto_venta()%>">                                        
+                                        <label for="punto_venta">Punto de venta</label>
+                                       <input class="form-control" name="punto_venta" id="punto_venta" value="<%=remito.getPunto_venta()%>">
                                    </div>
-                                       
+
                                  </div>
                                    <div class="col-lg-3 " >
                                     <div class="form-group ">
-                                        <label for="numero">N&uacute;mero remito</label>                                       
-                                       <input class="form-control" name="numero" id="numero" value="<%= remito.getNumero()%>">                                        
+                                        <label for="numero">N&uacute;mero remito</label>
+                                       <input class="form-control" name="numero" id="numero" value="<%= remito.getNumero()%>">
                                    </div>
-                                       
-                                 </div>  
+
+                                 </div>
                               <div class="col-lg-3 " >
                                     <div class="form-group ">
-                                        <label for="fecha">Fecha remito</label>                                       
-                                        <input class="form-control date-picker" name="fecha" id="fecha" value="<%= TFecha.formatearFechaBdVista(remito.getFecha())%>" >                                        
+                                        <label for="fecha">Fecha remito</label>
+                                        <input class="form-control date-picker" name="fecha" id="fecha" value="<%= TFecha.formatearFechaBdVista(remito.getFecha())%>" >
                                    </div>
-                                       
-                                 </div> 
+
+                                 </div>
                           </div>
 
                           <hr>
@@ -108,7 +108,7 @@
                         <div class="col-lg-6 " >
                              <h3 class="">Cliente</h3>
                              <input type="hidden" name="idCliente" id="idCliente" value="<%= cliente.getId() %>" >
-                             <fieldset disabled>                                 
+                             <fieldset disabled>
                                  <div class="form-group">
                                     <label for="cliente_nombre">Nombre</label>
                                     <input class="form-control" name="cliente_nombre" id="cliente_nombre" value="<%= cliente.getNombre_comercial()%>">
@@ -122,7 +122,7 @@
                                        <label for="cliente_iva">IVA</label>
                                            <select class="form-control" name="cliente_iva" id="cliente_iva" >
                                            <option value="0"></option>
-                                           <% for(Option o:OptionsCfg.getClasesIva()){ 
+                                           <% for(Option o:OptionsCfg.getClasesIva()){
                                            String selected = "";%>
                                            <option value="<%=o.getId()%>" <%= selected %>><%= o.getDescripcion()%></option>
                                            <%  } %>
@@ -133,15 +133,15 @@
                                   <div class="col-lg-6 " >
                                     <div class="form-group">
                                        <label for="cliente_cuit">CUIT</label>
-                                       <input class="form-control" name="cliente_cuit" id="cliente_cuit"  value="<%= cliente.getCuit() %>" >                                        
+                                       <input class="form-control" name="cliente_cuit" id="cliente_cuit"  value="<%= cliente.getCuit() %>" >
                                    </div>
-                                 </div>     
-                                   
+                                 </div>
+
                             </fieldset>
                             <div class="form-group" >
                                 <span  class="btn btn-default" id="btnSelCliente" data-toggle="modal" data-target="#mdlCliente"><span class="fa fa-search fa-fw"></span> Seleccionar</span>
                             </div>
-                                           
+
                         </div>
                           <!-- ./Cliente -->
                         <div class="col-lg-6 " >
@@ -163,7 +163,7 @@
                                         <label for="">Equipo</label>
                                         <input class="form-control" name="equipo" id="equipo" value="<%=site.getEquipo()%>" >
                                     </div>
-                                </div>     
+                                </div>
                                 </fieldset>
                              <div class="form-group-sm " >
                                 <span  class="btn btn-default btnSelSite" data-toggle="modal" data-target="#mdlSite"><span class="fa fa-search fa-fw"></span> Seleccionar</span>
@@ -173,13 +173,13 @@
                           <!-- ./Locacion -->
                         <!-- /.col-lg-6 (nested) -->
                         <!-- /.row (nested) -->
-                        </div>  
-                          <!-- ./row -->                     
+                        </div>
+                          <!-- ./row -->
                           <hr>
-                          
+
                         <div class="row">
                             <div class="col-lg-12">
-                                <h3>Activos <span class="btn btn-default" id="btnAgregar"> Agregar</span> 
+                                <h3>Activos <span class="btn btn-default" id="btnAgregar"> Agregar</span>
                                     <span class="btn btn-default "  data-toggle="modal" data-target="#mdlContratoView"><span class="fa fa-file fa-fw"></span>Ver contrato</span>
                                     <!--<span class="btn btn-default" id="btn"> Ver contrato</span></h3>-->
                                     </h3>
@@ -211,8 +211,8 @@
 
 
                                                 <td class="descripcion"><%= StringEscapeUtils.escapeHtml4(activo.getDesc_larga())%></td>
-                                                <td style="width:90px">  
-                                                    <span class="form-group">                                    
+                                                <td style="width:90px">
+                                                    <span class="form-group">
                                                     <input class="form-control cant" name="cantActivo" id="" type="number" step="any" min="0" value="<%=d.getCantidad()%>"></span>
                                                 </td>
 
@@ -229,7 +229,7 @@
                                         </tr>
                                     </tfoot>-->
                                 </table>
-                                   
+
 
                             </div>
                                 <div class="col-lg-12">
@@ -267,30 +267,30 @@
     <script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
     <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry&v=3.7&key=AIzaSyD-jKlyAoMh8GxoIyaDbuvhI1WVw8XSpGA"></script>
     <script src="bower_components/mapplace/maplace-0.1.3.js"></script>
-    
+
     <script src="js/bootbox.min.js"></script>
-    <script src="bower_components/jquery-mask/jquery.mask.min.js"></script>    
-    <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>    
-    <script src="bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.min.js"></script>        
+    <script src="bower_components/jquery-mask/jquery.mask.min.js"></script>
+    <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.min.js"></script>
 
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
     <script src="js/moment-with-locales.min.js"></script>
     <script src="js/invesoft.js"></script>
-    
-    <script>
+
+    <script type="text/javascript">
         var $pos_item;
         var $tr;
         var $invoker = null;
 
     $(document).ready(function(){
-        
-    
+
+
             $('#btnSelActivos').click(selActivos);
-           
+
             $('.date-picker').datepicker({
                 language: 'es'
-            }); 
+            });
             $('.date-picker').mask('99/99/9999');
             $('#selTodos').change(function(e){
                 selTodos('input.chkSelActivo',$(this).prop('checked'));
@@ -306,18 +306,18 @@
                 $invoker = $(e.relatedTarget);
                 $tr = $invoker.parent().parent().parent();
                 $codigo = $tr.find('input[name="codigoActivo"]');
-                
+
                 $('#id_rubro').prop('disabled',false);
                 $('#id_subrubro').prop('disabled',false);
                 if ($codigo!==undefined){
                     if ( $codigo.data('rubro')!== undefined && $codigo.data('rubro')!==''){
 //                        $('#id_rubro').val($codigo.data('rubro'));
 //                        $('#id_rubro').prop('disabled',true);
-                    } 
+                    }
                     if ( $codigo.data('subrubro')!== undefined && $codigo.data('subrubro')!=='' ) {
 //                        $('#id_subrubro').val($codigo.data('subrubro'));
 //                        $('#id_subrubro').prop('disabled',true);
-                    } 
+                    }
                 }
                 var $id_rubro = $('#id_rubro');
                 var $id_subrubro = $('#id_subrubro');
@@ -330,19 +330,19 @@
                               id_subrubro: $id_subrubro.val(),
                               id_contrato: $id_contrato.val(),
                 };
-                        
+
                 loadDataActivo(data);
                 loadDataKit(data);
-                
-                
+
+
 
             });
              $('#mdlActivo').on('hide.bs.modal', function (e) {
-                 if($invoker!==null)             
-                    $invoker.parent().find('input').focus();    
-                
+                 if($invoker!==null)
+                    $invoker.parent().find('input').focus();
+
             });
-            
+
             $('#mdlCliente').on('shown.bs.modal', function (e) {
                 loadDataCliente();
             });
@@ -351,10 +351,10 @@
             });
              $('#mdlSite').on('shown.bs.modal', function (e) {
                  $idCliente = $('#idCliente');
-                 
+
                 loadDataSite({id_cliente:$idCliente.val()});
             });
-            
+
              $('#mdlContratoView').on('show.bs.modal', function (e) {
                  $id_contrato = $('#id_contrato') ;
                  if ($id_contrato===null || $id_contrato.val()===""){
@@ -363,10 +363,10 @@
                 }
                 loadDataContratoView({id_contrato:$id_contrato.val()});
             });
-             
-            
+
+
             //$('#mdlActivo').modal('show');
-            
+
            // $('.inCodigo').focusout(buscarActivo);
             $('#btnAgregar').click(function(){agregarActivo({})});
             $('#id_rubro').change(function(){
@@ -382,7 +382,7 @@
                 loadDataActivo(data);
                 loadDataKit(data);
             });
-            
+
             $('#contrato').change(function(){
                 var numero = $(this).val();
                 if (numero!=="")
@@ -390,8 +390,8 @@
                     $('#btnSelCliente').remove();
             });
             $('#btnSubmit').click(function (e){
-                e.preventDefault();                
-                if(!validar()) return false;                
+                e.preventDefault();
+                if(!validar()) return false;
                 validarCertificados();
             });
               $('#btnSiteNuevo').click(function(){
@@ -411,16 +411,16 @@
                 }
             });
             agregarActivo({});
-            
-            
-        });    
+
+
+        });
 
         function selActivos(){
             var $arr = $('input.chkSelActivo:checked');
             for(var i = 0;i<$arr.length;i++){
-                var $codigo = $($arr[i]).data('codigo'); 
-                var $descripcion = $($arr[i]).data('descripcion'); 
-                var $pos = $($arr[i]).data('pos'); 
+                var $codigo = $($arr[i]).data('codigo');
+                var $descripcion = $($arr[i]).data('descripcion');
+                var $pos = $($arr[i]).data('pos');
                 var $cant = $tr.find('input[name="cantActivo"]');
                 if ($cant.val()==="") $cant.val(1);
                 var html = generarHtml({codigo:$codigo,pos:$pos ,cant:$cant.val(),descripcion:$descripcion,disabled:true});
@@ -439,14 +439,14 @@
             var $numero = $('#numero');
             var $idCliente = $('#idCliente');
             var $fecha = $("#fecha");
-            
+
             if(!validarCampo($id_contrato,"Ingrese el n&uacute;mero de contrato del remito",validarNoCero)) return false;
             if(!validarCampo($punto_venta,"Ingrese el punto de venta del remito",validarNoCero)) return false;
             if(!validarCampo($numero,"Ingrese el n&uacute;mero de remito",validarNoCero)) return false;
-            
+
             if(!validarCampo($fecha,"Ingrese la fecha del remito",validarCampoFecha)) return false;
             if(!validarCampo($idCliente,"Seleccione el cliente del remito",validarNoCero)) return false;
-            
+
 
              // Validar que ingrese los campos de detalle
             rows = $('#tblRemito tbody tr');
@@ -455,8 +455,8 @@
             var funcObjects = [];
             for(var i=0;i<rows.length;i++) {
                var row = $(rows[i]);
-               $pos = row.find('input[name="posicion"]');               
-               $codigo = row.find('input[name="codigoActivo"]');               
+               $pos = row.find('input[name="posicion"]');
+               $codigo = row.find('input[name="codigoActivo"]');
                $cant = row.find('input[name="cantActivo"]');
                 if($pos.val()!=="" && $codigo.val()===""){
                     bootbox.alert("Seleccione un activo para la posici&oacute;n o elimine el registro");
@@ -470,7 +470,7 @@
                      return false;
                  }
                 row.removeClass('danger');
-                for(j=0;j<arrCodigos.length;j++){                    
+                for(j=0;j<arrCodigos.length;j++){
                      if ($codigo.val() === arrCodigos[j].val()) {
                          bootbox.alert("No se puede ingresar m&aacute;s de una vez el mismo c&oacute;digo de activo");
                          row.addClass('danger');
@@ -481,7 +481,7 @@
                  arrCodigos.push($codigo);
                  arrPos.push($pos);
             }
-           
+
             return true;
         }
         function validarCertificados(){
@@ -492,11 +492,11 @@
             var funcObjects = [];
             for(var i=0;i<rows.length;i++) {
                var row = $(rows[i]);
-               $codigo = row.find('input[name="codigoActivo"]'); 
+               $codigo = row.find('input[name="codigoActivo"]');
                if ($codigo===undefined || $codigo.val() === "") continue;
-               funcObjects.push(validarActivo({codigo:$codigo.val()})); 
-            }       
-                $.when.apply(validarActivo,funcObjects).done(function(){  
+               funcObjects.push(validarActivo({codigo:$codigo.val()}));
+            }
+                $.when.apply(validarActivo,funcObjects).done(function(){
                     var mostrar = false;
                     var mensajes = "";
                     mensajes += "<ul>";
@@ -526,7 +526,7 @@
                     } else $('form').submit();
             });
         }
-        
+
         function validarActivo(data){
              return $.ajax({
                url: '<%= PathCfg.ACTIVO_CHECK %>',
@@ -535,25 +535,25 @@
                dataType: "json",
 //               async: false,
                beforeSend:function(){},
-               success: function(result) {                   
+               success: function(result) {
                    if(result.Result !== "OK") {
 //                       bootbox.alert(result.Message);
-                   } 
+                   }
                }
            });
-        
+
         }
         function agregarActivo(data){
-           
+
            var html = generarHtml(data);
-            
+
                         $('#tblRemito tbody').append(html);
 
 //                        $('#tblRemito').find('tbody').append(html);
 
             var elem = $('#tblRemito tbody tr:last').find('.inCodigo');
             //elem.focusout(buscarActivo);
-            
+
             elem.on('keypress keydown',function(e){
                 var codigo = e.keyPress || e.which;
 
@@ -568,17 +568,17 @@
             //$('.inCodigo').trigger('focusout');
             $('.btnDelActivo').click(deleteActivo);
         }
-        
+
         function deleteActivo(){
 //          bootbox.confirm("Esta seguro que desea eliminar el registro?",function(result){
-//             if(result) {            
+//             if(result) {
                 var $tr = $(this).parent().parent();
-                $tr.remove();         
+                $tr.remove();
 //                }
 //            });
         }
         function generarHtml(data){
-           var codigo = (data.codigo !==undefined)? data.codigo:"";           
+           var codigo = (data.codigo !==undefined)? data.codigo:"";
            var pos = (data.pos !== undefined )?data.pos:"";
            var cant = (data.cant !== undefined )?data.cant:"";
            var descripcion = (data.descripcion!==undefined)?data.descripcion:"";
@@ -597,51 +597,51 @@
                 if (disabled){
                     html += '<input type="hidden" name="posicion" class="posicion form-control" size="2" min="0" value="'+ pos +'" >';
                 }
-                html += '</span></td>';               
+                html += '</span></td>';
                 html += '<td class="descripcion">'+ descripcion +'</td>' +
                         '<td style="width:90px">  ' +
                             '<span class="form-group">                                    ' +
                             '<input class="form-control cant" name="cantActivo" id="" type="number" step="any" min="0" value="' + cant + '">' +
                             '</span>' +
                         '</td>' +
-                        '<td style="width:60px"><span class="btn btn-xs btn-circle btn-danger btnDelActivo"> <span class="fa fa-minus fw"></span></span></td>' + 
-                    '</tr>'; 
+                        '<td style="width:60px"><span class="btn btn-xs btn-circle btn-danger btnDelActivo"> <span class="fa fa-minus fw"></span></span></td>' +
+                    '</tr>';
             return html;
         }
-        
-        
-        function buscarActivo(){ 
-            
-        // Combino los parametros por si no viene definido ninguno                      
-        var $tr = $(this).parent().parent().parent();          
-        var codigo = $(this).val().trim();        
+
+
+        function buscarActivo(){
+
+        // Combino los parametros por si no viene definido ninguno
+        var $tr = $(this).parent().parent().parent();
+        var codigo = $(this).val().trim();
         console.log($tr,codigo);
         var id_contrato = $('#id_contrato').val();
         var cant = 1;
-        
+
         if (codigo==='') {completarActivo({desc:'',
                                           cant:1,
-                                          c_posicion:''},$tr); 
-                          return; 
+                                          c_posicion:''},$tr);
+                          return;
                         }
         var data={codigo:codigo,
                 id_contrato:id_contrato};
         searchData('<%= PathCfg.ACTIVO_CONTRATO_SEARCH %>',data,function(result) {
-                if(result.Result === "OK") {                       
-                    if(result.TotalRecordCount===1){ 
+                if(result.Result === "OK") {
+                    if(result.TotalRecordCount===1){
                         completarActivo({desc:result.Record.desc_larga,
                                          cant:1,
                                          c_posicion:result.Record.c_posicion
                                         },$tr);
-                        agregarActivo({});             
-                        var elem = $('#tblRemito tbody tr:last').find('.inCodigo');                        
+                        agregarActivo({});
+                        var elem = $('#tblRemito tbody tr:last').find('.inCodigo');
                         elem.focus();
                     }else {
                         completarActivo({
                             desc:'',
                             cant:0,
                             c_posicion:''
-                        },$tr)                           
+                        },$tr)
                     }
                 }
             });
@@ -654,13 +654,13 @@
             $cant.val(data.cant);
             $posicion.val(data.c_posicion);
         }
-        function buscarCliente(data){            
+        function buscarCliente(data){
             var $tr = $(this).parent().parent().parent();
             searchData('<%= PathCfg.CLIENTE_SEARCH %>',data,function(result) {
                    var todoOk = true;
                    if(result.Result === "OK") {
                        if(result.TotalRecordCount==1){completarCliente(result.Record)}
-                       
+
                    }
                    if (!todoOk){
                        completarCliente({
@@ -672,9 +672,9 @@
                         id_iva:0,
                         });
                    }
-               });        
+               });
         }
-        
+
         function completarCliente(data){
             $('#idCliente').val(data.id);
             $('#cliente_nombre').val(data.nombre);
@@ -684,7 +684,7 @@
             else $('#cliente_cuit').val(data.dni);
             $('#cliente_iva').val(data.id_iva);
         }
-        function buscarContrato(data){            
+        function buscarContrato(data){
             var $tr = $(this).parent().parent().parent();
             searchData('<%= PathCfg.CONTRATO_SEARCH %>',data,function(result) {
                    var todoOk = true;
@@ -710,7 +710,7 @@
                         id_iva:0,
                         });
                    }
-               });        
+               });
         }
     </script>
     <!-- Modal -->

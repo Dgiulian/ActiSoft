@@ -188,16 +188,17 @@ $(document).ready(function() {
             data: data,
             method:'POST',
             dataType:'json',
-            success:function(data){
-                if(data.Result === "OK") {
+            success:function(result){
+                if(result.Result === "OK") {
                     //window.location.reload();
-                     $('#area').val(data.Record.area);
-                     $('#pozo').val(data.Record.pozo);
-                     $('#equipo').val(data.Record.equipo);
-                     $('#id_site').val(data.Record.id_site);
+                     console.log(result);
+                     $('#area').val(result.Record.area);
+                     $('#pozo').val(result.Record.pozo);
+                     $('#equipo').val(result.Record.equipo);
+                     $('#id_site').val(result.Record.id);
                   // location.href='<%= PathCfg.REMITO_PRINT %>?id=' + data.Record.id;
                   
-                } else if (data.Message) bootbox.alert(data.Message);
+                } else if (result.Message) bootbox.alert(result.Message);
             }
        });
    });

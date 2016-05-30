@@ -51,18 +51,18 @@ public class Conexion {
             
 
            String propiedad = "zeroDateTimeBehavior=convertToNull";           
-/* Para subir a produccion */
-//           String port = ":3306";
-//           String host = "127.0.0.1";
-//           String usr = "eventpass";
-//           String password = "Eventpass$Neuquencom";
-             /* Local con base produccion */ 
-//           String port = ":3306";
-//           String host = "138.219.40.110";           
-//           String usr = "eventpass";
-//           String password = "Eventpass$Neuquencom";
+            /* Para subir a produccion */
+//          String port = ":3306";
+//          String host = "127.0.0.1";
+//          String usr = "eventpass";
+//          String password = "Eventpass$Neuquencom";
+            /* Local con base produccion */ 
+//          String port = ":3306";
+//          String host = "138.219.40.110";           
+//          String usr = "eventpass";
+//          String password = "Eventpass$Neuquencom";
             
-            /* Local con base local */
+           /* Local con base local */
             String host = "127.0.0.1";
             String port = ":3307";            
             String nombrebd = "/actisoft";

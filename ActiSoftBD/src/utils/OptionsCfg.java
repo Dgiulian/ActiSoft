@@ -23,6 +23,7 @@ public class OptionsCfg {
     public static final Integer ACTIVO_ESTADO_NO_DISPONIBLE = 7;
     public static final Integer ACTIVO_ESTADO_NO_APTO       = 8;
     public static final Integer ACTIVO_ESTADO_KIT           = 9;
+    public static final Integer ACTIVO_ESTADO_ELIMINADO     = 10;
     
     
     public static final Integer REMITO_ENTREGA = 1;
@@ -148,6 +149,7 @@ public class OptionsCfg {
         lista.add(new Option(ACTIVO_ESTADO_NO_DISPONIBLE,String.format("%03d",ACTIVO_ESTADO_NO_DISPONIBLE),"Prestado"));
         lista.add(new Option(ACTIVO_ESTADO_NO_APTO,String.format("%03d",ACTIVO_ESTADO_NO_APTO),"No Apto"));
         lista.add(new Option(ACTIVO_ESTADO_KIT,String.format("%03d",ACTIVO_ESTADO_KIT),"Kit"));
+        lista.add(new Option(ACTIVO_ESTADO_ELIMINADO,String.format("%03d",ACTIVO_ESTADO_ELIMINADO),"Eliminado"));
         
 //        lista.add(new Option(6,"003","Cabeza fractura 001"));        
         return lista;
