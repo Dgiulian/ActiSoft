@@ -383,7 +383,7 @@
             var $arr = $('input.chkSelActivo:checked');
             for(var i = 0;i<$arr.length;i++){
                 var $id = $($arr[i]).data('index');
-                console.log($id);
+                
                 loadDataRemitoContrato({id_remito:$id});
                 $('#mdlRemito').modal('hide');
             }

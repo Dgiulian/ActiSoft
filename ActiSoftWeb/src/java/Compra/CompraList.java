@@ -120,7 +120,7 @@ public class CompraList extends HttpServlet {
         public CompraDet(Compra compra){
             super(compra);
             Proveedor p = mapProveedores.get(compra.getId_proveedor());
-            proveedor = p!=null?p.getNombre():compra.getId_proveedor().toString();
+            proveedor = p!=null?p.getNombre_comercial():compra.getId_proveedor().toString();
                             //this.resultado = compra.getId_resultado().toString();
             
         }

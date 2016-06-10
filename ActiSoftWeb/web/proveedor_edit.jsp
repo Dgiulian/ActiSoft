@@ -76,8 +76,8 @@
                                 <div class="tab-pane active" id="tab1">
                                    <div class="col-lg-6" >
                                         <div class="form-group">
-                                            <label for="nombre">Nombre</label>
-                                            <input class="form-control" name="nombre" id="nombre"  value="<%=proveedor.getNombre()%>">
+                                            <label for="razon_social">Raz&oacute;n social</label>
+                                            <input class="form-control" name="razon_social" id="razon_social"  value="<%=proveedor.getRazon_social()%>">
                                         </div>
                                         <div class="form-group">
                                             <label for="cuit">CUIT</label>
@@ -85,9 +85,8 @@
                                         </div>
                                        
                                         <div class="form-group">
-                                            <label for="nombre_comercial">Nombre comercial</label>
-                                            <input class="form-control"  name="nombre_comercial" id="nombre_comercial" value="<%=proveedor.getNombre_comercial()%>">
-                                            <!--<p class="help-block"></p>-->
+                                            <label for="nombre_comercial">Nombre</label>
+                                            <input class="form-control"  name="nombre_comercial" id="nombre_comercial" value="<%=proveedor.getNombre_comercial()%>">                                            <!--<p class="help-block"></p>-->
                                         </div>
 
                                     </div>
@@ -185,6 +184,11 @@
                                             <input class="form-control"  name="celular" id="celular" value="<%=proveedor.getCelular()%>">
                                             <!--<p class="help-block"></p>-->
                                      </div>
+                                            <div class="form-group">
+                                            <label>Email</label>
+                                            <input class="form-control"  name="email" id="email" value="<%=proveedor.getEmail()%>">
+                                            <!--<p class="help-block"></p>-->
+                                     </div>
                                 </div>
                                  </div>
                                 <div class="tab-pane" id="tab4">
@@ -259,10 +263,14 @@
                                 <div class="tab-pane" id="tab5">
                                     <div  class="col-lg-6">
                                      <div class="form-group">
-                                          <label for="conductores"></label>
-                                          <input class="form-control" rows="3"  name="conductores" id="conductores" value="<%= proveedor.getConductores()%>">
+                                          <label for="nombre_transportista">Nombre</label>
+                                          <input class="form-control" rows="3"  name="nombre_transportista" id="nombre_transportista" value="<%= proveedor.getNombre_transportista()%>">
                                       </div>
-                                      <div class="form-group">
+                                       <div class="form-group">
+                                          <label for="vencimiento_carnet">Vencimiento carnet</label>
+                                          <input class="form-control date-picker" rows="3"   name="vencimiento_carnet" id="vencimiento_carnet" value="<%= "".equals(proveedor.getVencimiento_carnet())?"":TFecha.formatearFechaBdVista(proveedor.getVencimiento_carnet())%>">
+                                      </div>
+<!--                                      <div class="form-group">
                                           <label for="vehiculos"></label>
                                           <input class="form-control" rows="3"  name="vehiculos" id="vehiculos" value="<%= proveedor.getVehiculos()%>">
                                       </div>
@@ -273,7 +281,7 @@
                                       <div class="form-group">
                                           <label for="dni_conductor"></label>
                                           <input class="form-control" rows="3"  name="dni_conductor" id="dni_conductor" value="<%= proveedor.getDni_conductor()%>">
-                                      </div>
+                                      </div>-->
                                     </div>
                                 </div>
                                   <div class="tab-pane" id="tab6">

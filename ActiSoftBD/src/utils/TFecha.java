@@ -23,6 +23,7 @@ public class TFecha {
     public static final String formatoBD = "yyyy-MM-dd";
     public static final String formatoVista = "dd/MM/yyyy";
     public static final String formatoHora = "HH:mm:ss";
+    public static final String FECHA_DEFAULT = "0000-00-00";
     
     public static String formatearFecha(String fecha, String formatoviejo, String formatonuevo) {
         if (fecha.equals("")) return "";
@@ -189,8 +190,13 @@ public class TFecha {
     }
      
     public static String formatearFechaBdVista(String fecha){
-        if (fecha!=null)
+        if (fecha!=null&&!fecha.equals(""))
             return TFecha.formatearFecha(fecha, TFecha.formatoBD, TFecha.formatoVista);
+        else return null;
+    }
+     public static String formatearFechaVistaBd(String fecha){
+        if (fecha!=null&&!fecha.equals(""))
+            return TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD);
         else return null;
     }
 }

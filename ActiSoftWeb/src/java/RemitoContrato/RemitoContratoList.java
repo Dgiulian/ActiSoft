@@ -61,6 +61,9 @@ public class RemitoContratoList extends HttpServlet {
             HashMap<String,String> mapFiltro = new HashMap<String,String>();
             if(id_remito==0) throw new BaseException("ERROR","Indique el remito");
 
+            Remito remito = new TRemito().getById(id_remito);
+            if (remito ==null)  throw new BaseException("ERROR","El remito no existe");
+            
             mapFiltro.put("id_remito", id_remito.toString());
             lista = trc.getListFiltro(mapFiltro);
             List<Remito_contratoDet> listaDet = new ArrayList();
@@ -68,6 +71,15 @@ public class RemitoContratoList extends HttpServlet {
                 for(Remito_contrato remito_contrato:lista){
                     listaDet.add(new Remito_contratoDet(remito_contrato));
                 }
+                if(remito.getId_tipo_remito()==OptionsCfg.REMITO_DEVOLUCION) {
+                    List<Remito_contrato> det_inicio  = trc.getByRemitoId(remito.getId_referencia());
+                    for(Remito_contrato rc : det_inicio){
+                        if(rc.getActivo_id_rubro()!=OptionsCfg.RUBRO_TRANSPORTE) continue;
+                         rc.setId_referencia(rc.getId_remito());
+                         listaDet.add(new Remito_contratoDet(rc));
+                    }
+                }
+                
                 jr.setTotalRecordCount(listaDet.size());                
             } else {
                 jr.setTotalRecordCount(0);

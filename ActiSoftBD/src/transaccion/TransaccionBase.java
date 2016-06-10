@@ -169,7 +169,11 @@ public abstract class TransaccionBase<E> {
         return "";
     }
      
-    
+     public TransaccionBase<E> setOrderBy(String orderBy){
+        this.orderBy = orderBy;
+        return this;
+        
+    }
     public HashMap<Integer,E> getMap(){        
         HashMap<Integer,E> mapa = new HashMap<Integer,E>();   
         try {

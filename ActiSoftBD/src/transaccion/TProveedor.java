@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TProveedor extends TransaccionBase<Proveedor>{
+    @Override
     public List<Proveedor>getList(){
         return super.getList("select * from proveedor");
     }
@@ -19,6 +20,17 @@ public class TProveedor extends TransaccionBase<Proveedor>{
     public boolean actualizar(Proveedor proveedor){
         return super.actualizar(proveedor, "id");
     }
+     @Override
+    public String getOrderBy(){
+        if (this.orderBy.trim().equals("")) return "";
+        else return " order by " + this.orderBy;
+    }
+     public Proveedor getByCuit(String cuit){
+         String query= String.format("select * from proveedor where proveedor.cuit = '%s'",cuit);
+         return this.getById(query);
+         
+     }
+   
 //    public HashMap<Integer,Proveedor> getMap(){
 //        HashMap<Integer,Proveedor> map = new HashMap<Integer,Proveedor>();
 //        for(Proveedor proveedor:this.getList()){

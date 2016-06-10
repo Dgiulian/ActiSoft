@@ -2,10 +2,11 @@ package bd;
 public class Proveedor {
 
 	protected Integer id = 0;
-	protected String nombre = "";
+	protected String nombre_comercial = "";
+        
 	protected String cuit = "";
         protected String dni = "";
-	protected String nombre_comercial = "";
+	protected String razon_social = "";
 	protected String direccion_fisica = "";
 	protected String direccion_legal = "";
 	protected String codigo_postal = "";
@@ -33,14 +34,16 @@ public class Proveedor {
 	protected String vehiculos = "";
 	protected String dominios = "";
 	protected String dni_conductor = "";
-        
+        protected String email = "";
+        protected String nombre_transportista = "";
+        protected String vencimiento_carnet = "";
         public Proveedor(){}
         public Proveedor(Proveedor proveedor){
             this.id                    = proveedor.getId();
-            this.nombre                = proveedor.getNombre();
+            this.nombre_comercial      = proveedor.getNombre_comercial();
             this.cuit                  = proveedor.getCuit();
             this.dni                   = proveedor.getDni();
-            this.nombre_comercial      = proveedor.getNombre_comercial();
+            this.razon_social          = proveedor.getRazon_social();
             this.direccion_fisica      = proveedor.getDireccion_fisica();
             this.direccion_legal       = proveedor.getDireccion_legal();
             this.codigo_postal         = proveedor.getCodigo_postal();
@@ -68,6 +71,9 @@ public class Proveedor {
             this.vehiculos             = proveedor.getVehiculos();
             this.dominios              = proveedor.getDominios();
             this.dni_conductor         = proveedor.getDni_conductor();
+            this.email                 = proveedor.getEmail();
+            this.nombre_transportista  = proveedor.getNombre_transportista();
+            this.vencimiento_carnet    = proveedor.getVencimiento_carnet();
         }
 	public Integer getId() {
 		return this.id;
@@ -78,12 +84,12 @@ public class Proveedor {
 		return this;
 	}
 
-	public String getNombre() {
-		return this.nombre;
+	public String getNombre_comercial() {
+		return this.nombre_comercial;
 	}
 
-	public Proveedor setNombre(String nombre) {
-		this.nombre = nombre;
+	public Proveedor setNombre_comercial(String nombre_comercial) {
+		this.nombre_comercial = nombre_comercial;
 		return this;
 	}
 
@@ -103,12 +109,12 @@ public class Proveedor {
             this.dni = dni;
             return this;
 	}
-	public String getNombre_comercial() {
-            return this.nombre_comercial;
+	public String getRazon_social() {
+            return this.razon_social;
 	}
 
-	public Proveedor setNombre_comercial(String nombre_comercial) {
-            this.nombre_comercial = nombre_comercial;
+	public Proveedor setRazon_social(String razon_social) {
+            this.razon_social = razon_social;
             return this;
 	}
 
@@ -354,4 +360,28 @@ public class Proveedor {
 		this.dni_conductor = dni_conductor;
 		return this;
 	}
+        public String getEmail(){
+            return this.email;
+        }
+        
+        public Proveedor setEmail(String email){
+            this.email = email;
+            return this;
+        }
+        public String getNombre_transportista(){
+            return this.nombre_transportista;
+        }
+        
+        public Proveedor setNombre_transportista(String nombre_transportista){
+            this.nombre_transportista = nombre_transportista;
+            return this;
+        }
+         public String getVencimiento_carnet(){
+            return this.vencimiento_carnet;
+        }
+        
+        public Proveedor setVencimiento_carnet(String vencimiento_carnet){
+            this.vencimiento_carnet = vencimiento_carnet;
+            return this;
+        }
 }

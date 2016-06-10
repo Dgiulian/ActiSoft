@@ -43,11 +43,7 @@ public class TRemito extends TransaccionBase<Remito> {
     public String getOrderBy(){
         if (this.orderBy.trim().equals("")) return "";
         else return " order by " + this.orderBy;
-    }
-    public TRemito setOrderBy(String orderBy){
-        this.orderBy = orderBy;
-        return this;
-    }
+    }    
     public boolean esTransitorio(Remito r){
         String query = String.format("select count(*) from remito where remito.id_tipo_remito = 2 and remito.id_referencia = %d ",r.getId());
         

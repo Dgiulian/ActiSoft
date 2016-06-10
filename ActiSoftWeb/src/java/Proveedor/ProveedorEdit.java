@@ -67,7 +67,7 @@ public class ProveedorEdit extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Integer id;
-        String nombre                = request.getParameter("nombre");
+        String razon_social          = request.getParameter("razon_social");
         String cuit                  = request.getParameter("cuit");
         String dni                   = request.getParameter("dni");
         String nombre_comercial      = request.getParameter("nombre_comercial");
@@ -80,6 +80,7 @@ public class ProveedorEdit extends HttpServlet {
         String telefono              = request.getParameter("telefono");
         String celular               = request.getParameter("celular");
         String contacto              = request.getParameter("contacto");
+        String email                 = request.getParameter("email");
         String observaciones         = request.getParameter("observaciones");
         
         String id_estado             = request.getParameter("id_estado");
@@ -99,10 +100,13 @@ public class ProveedorEdit extends HttpServlet {
         String vehiculos             = request.getParameter("vehiculos");
         String dominios              = request.getParameter("dominios");
         String dni_conductor         = request.getParameter("dni_conductor");
+        String nombre_transportista  = request.getParameter("nombre_transportista");
+        String vencimiento_carnet    = TFecha.formatearFechaVistaBd(request.getParameter("vencimiento_carnet"));
         boolean todoOk;
         
         TProveedor tp = new TProveedor();
         Proveedor proveedor;
+        Proveedor byCuit;
         boolean nuevo = false;
         try{
 
@@ -113,7 +117,13 @@ public class ProveedorEdit extends HttpServlet {
                 proveedor = new Proveedor();
                 nuevo = true;
             }
-            proveedor.setNombre(nombre);
+            byCuit = tp.getByCuit(cuit);
+            if(cuit!=null && !"".equals(cuit)) {
+                if(byCuit!=null && byCuit.getId()!=proveedor.getId()){
+                    throw new BaseException("ERROR","Ya existe un proveedor con ese C.U.I.T");
+                }
+            }
+            proveedor.setRazon_social(razon_social);
             proveedor.setCuit(cuit);
             proveedor.setDni(dni);
             proveedor.setNombre_comercial(nombre_comercial);
@@ -126,6 +136,7 @@ public class ProveedorEdit extends HttpServlet {
             proveedor.setTelefono(telefono);
             proveedor.setCelular(celular);
             proveedor.setContacto(contacto);
+            proveedor.setEmail(email);
             proveedor.setObservaciones(observaciones);
             if(id_estado!=null)
                 proveedor.setId_estado(1);
@@ -145,13 +156,18 @@ public class ProveedorEdit extends HttpServlet {
             proveedor.setVehiculos(vehiculos);
             proveedor.setDominios(dominios);
             proveedor.setDni_conductor(dni_conductor);
+            proveedor.setNombre_transportista(nombre_transportista);
+            if(vencimiento_carnet!=null && !"".equals(vencimiento_carnet))
+                proveedor.setVencimiento_carnet(vencimiento_carnet);
+            else proveedor.setVencimiento_carnet("2099-12-31");
+            
+            proveedor.setDni_conductor(dni_conductor);
             if(nuevo) proveedor.setFecha_alta(TFecha.ahora(TFecha.formatoBD ));
             if (!request.getParameter("id_provincia").equals(""))
                 proveedor.setId_provincia(Integer.parseInt(request.getParameter("id_provincia")));
             if (!request.getParameter("id_localidad").equals(""))
                 proveedor.setId_localidad(Integer.parseInt(request.getParameter("id_localidad")));
 
-            System.out.println(nuevo);
             if(nuevo){
                 id = tp.alta(proveedor);
                 todoOk = id!=0;

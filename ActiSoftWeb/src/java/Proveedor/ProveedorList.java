@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
@@ -38,6 +39,9 @@ public class ProveedorList extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String pagNro = request.getParameter("pagNro");
+        String razon_social = request.getParameter("razon_social");
+        String contacto = request.getParameter("contacto");
+        
         mapProvincias = new TProvincia().getMap();
         mapLocalidades = new TLocalidad().getMap();
         
@@ -45,8 +49,13 @@ public class ProveedorList extends HttpServlet {
          
         try {
             JsonRespuesta jr = new JsonRespuesta();           
+            HashMap<String,String> mapFiltro = new HashMap<String,String>();
+            if(razon_social!=null&&!"".equals(razon_social)) mapFiltro.put("razon_social",razon_social);
+            if(contacto!=null && !"".equals(contacto)) mapFiltro.put("contacto",contacto);
+            TProveedor tp = new TProveedor(); 
+            tp.setOrderBy("razon_social");
+            List<Proveedor> lista = tp.getListFiltro(mapFiltro);
             
-            List<Proveedor> lista = new TProveedor().getList();
             List<ProveedorDet> listaDet = new ArrayList();            
             for(Proveedor c:lista) listaDet.add(new ProveedorDet(c));
             

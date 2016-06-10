@@ -58,14 +58,9 @@ public class PreticketEdit extends HttpServlet {
              Remito remito_cierre = null;
              Remito remito_inicio;
              TRemito tr           = new TRemito();
-             TRemito_contrato trc = new TRemito_contrato();
-             String idPreticket = request.getParameter("id");
-             Integer id_preticket = 0;
-             try{ 
-                 id_preticket = Integer.parseInt(idPreticket);
-             } catch(NumberFormatException ex){
-                 id_preticket = 0;
-             }
+             TRemito_contrato trc = new TRemito_contrato();             
+             Integer id_preticket = Parser.parseInt(request.getParameter("id"));
+             
              Preticket preticket = new TPreticket().getById(id_preticket);
              if(preticket!=null){
                  request.setAttribute("preticket",preticket);
@@ -74,12 +69,10 @@ public class PreticketEdit extends HttpServlet {
              }
              
              if(request.getParameter("id_remito")==null) throw new BaseException( "Error","Debe seleccionar un remito");
-             try{
-                 Integer id_remito = Integer.parseInt(request.getParameter("id_remito"));
-                 remito_cierre = tr.getById(id_remito);                     
-             } catch (NumberFormatException ex){
-                 throw new BaseException( "Error","No se ha encontrado el remito");
-             }                        
+             
+             Integer id_remito = Parser.parseInt(request.getParameter("id_remito"));
+             remito_cierre = tr.getById(id_remito);                     
+
              if (remito_cierre==null) throw new BaseException("Error", "No se ha encontrado el remito");             
              if(remito_cierre.getFacturado()!=0) throw new BaseException("ERROR","El remito ya fu&eacute; facturado");
              

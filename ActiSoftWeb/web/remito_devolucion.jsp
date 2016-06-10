@@ -269,7 +269,7 @@
             });
             $('#mdlActivo').on('shown.bs.modal',showModal);
             $('#mdlActivo').on('hide.bs.modal', hideModal);
-            $('#btnSelActivos').click(selActivos);
+            $('#btnSelActivos').click(selActivoTransporte);
         });
         function radioChange(){
 //            $('#rdTotal').change(radioChange);
@@ -423,23 +423,31 @@
                $invoker.parent().find('input').focus();    
 
         }
+        function selActivoTransporte(){           
+            var $arr = $('input.chkSelActivo:checked');
+            for(var i = 0;i<$arr.length;i++){
+                var $codigo = $($arr[i]).data('codigo'); 
+                var $descripcion = $($arr[i]).data('descripcion'); 
+                var $pos = $($arr[i]).data('pos'); 
+                var $cant = $($arr[i]).data('cant');                 
+                
+                $('#id_activo_transporte').val($codigo);
+                $('#pos_activo_transporte').val($pos);
+                $('#activo_transporte').val($descripcion);
+                $('#mdlActivo').modal('hide');     
+                break;
+            }
+        }
          function selActivos(){           
             var $arr = $('input.chkSelActivo:checked');
             for(var i = 0;i<$arr.length;i++){
                 var $codigo = $($arr[i]).data('codigo'); 
                 var $descripcion = $($arr[i]).data('descripcion'); 
                 var $pos = $($arr[i]).data('pos'); 
-                var $cant = $tr.find('input[name="cantActivo"]');
-                if ($cant.val()==="") $cant.val(1);
-                
-            $('#id_activo_transporte').val($codigo);
-            $('#pos_activo_transporte').val($pos);
-            $('#activo_transporte').val($descripcion);
-            
-            return;
-            var html = generarHtml({codigo:$codigo,pos:$pos ,cant:$cant.val(),descripcion:$descripcion,disabled:true});
+                var $cant = $($arr[i]).data('cant');                                           
+                var html = generarHtml({codigo:$codigo,pos:$pos ,cant:$cant,descripcion:$descripcion,disabled:true});
                 //$tr.after(html);
-                //$('#tblRemito').append(html);
+                $('#tblRemito').append(html);
                 //agregarActivo({codigo:$codigo,pos:$pos.val(),cant:$cant.val(),descripcion:$descripcion});
             }
             //$tr.remove();
