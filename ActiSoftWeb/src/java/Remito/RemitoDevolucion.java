@@ -129,8 +129,8 @@ public class RemitoDevolucion extends HttpServlet {
            Integer numeroDev = Parser.parseInt(numRemitoDev);
            Integer numeroEnt = 0;
            
-           if( new TRemito().getByNumero(numeroDev)!=null) 
-                throw new BaseException("ERROR","Ya existe un remito con ese n&uacute;mero");
+//           if( new TRemito().getByNumero(numeroDev)!=null) 
+//                throw new BaseException("ERROR","Ya existe un remito con ese n&uacute;mero");
                         
             
            if(transitorio) {
@@ -138,8 +138,8 @@ public class RemitoDevolucion extends HttpServlet {
                if(numeroEnt==0)
                     throw new BaseException("ERROR","Debe ingresar el n&uacute;mero del nuevo remito de entrega");
                
-               if( new TRemito().getByNumero(numeroEnt)!=null) 
-                throw new BaseException("ERROR","Ya existe un remito con ese n&uacute;mero");
+//               if( new TRemito().getByNumero(numeroEnt)!=null) 
+//                throw new BaseException("ERROR","Ya existe un remito con ese n&uacute;mero");
            }
            
            //Creo el remito de devolución como una copia del remito original
