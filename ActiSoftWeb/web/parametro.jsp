@@ -125,8 +125,8 @@
             html += wrapTag('td',d.codigo,'');
             html += wrapTag('td',d.nombre,'');
             html += wrapTag('td',d.valor,'');            
-           var htmlEdit = "<span href='<%= PathCfg.PARAMETRO_EDIT%>?id="+ d.id +"' data-codigo='" + d.codigo + "' data-nombre='"+ d.nombre +" ' data-valor='"+ d.valor +"' class='btn btn-xs btn-circle  btn-warning  btn-edit'><span class='fa fa-edit fw'></span></span> ";
-           var htmlDel = "<span href='' data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span>";
+           var htmlEdit = "<span href='' data-index='"+ d.id + "' data-nombre='"+ d.nombre +" ' data-valor='"+ d.valor +"' class='btn btn-xs btn-circle  btn-warning  btn-edit'><span class='fa fa-edit fw'></span></span> ";
+           var htmlDel  = "<span href='' data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span>";
            html +=wrapTag('td',htmlEdit + htmlDel,'');
            html +="</tr>";
        }
@@ -141,7 +141,7 @@
         agregarParametro({codigo:codigo,nombre:nombre,id:index,valor:valor,activo:activo});
     }
     function agregarParametro(data){
-        
+        console.log(data);
         //var checked = (data.activo)?"checked":"";
         bootbox.dialog({
                 title: "Configuraci&oacute;n de par&aacute;metro",
@@ -161,7 +161,7 @@
                      '</div>' + 
 //                    '</div>'+
                     '<div class="form-group"> ' +
-                        '<label class="col-md-4 control-label" for="valor">Email:</label>' +
+                        '<label class="col-md-4 control-label" for="valor">Valor: </label>' +
                         '<div class="col-md-8"> ' +
                         '<input id="valor" name="valor" type="text" class="form-control input-md" value="' + data.valor + '"> ' +
                         '</div> ' + 
@@ -184,10 +184,10 @@
                         callback: function () {
                             var id     = $('#id').val();                        
                             var nombre = $('#nombre').val();
-                            var codigo = $('#nombre').val();
-                            var valor = $('#email').val();                            
+                            var codigo = $('#codigo').val();
+                            var valor  = $('#valor').val();                            
                             var activo = $('#activo').prop('checked')?'1':'';
-                            
+                            activo = 1;
                             $.ajax({
                                 url:'<%= PathCfg.PARAMETRO_EDIT%>',
                                 data: {id:id,codigo:codigo,nombre:nombre,valor:valor,activo:activo},

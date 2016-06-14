@@ -4,12 +4,18 @@
  */
 package Parametro;
 
+import bd.Parametro;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import transaccion.TParametro;
+import utils.BaseException;
+import utils.JsonRespuesta;
+import utils.Parser;
 
 /**
  *
@@ -75,7 +81,48 @@ public class ParametroEdit extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         response.setContentType("application/json;charset=UTF-8");
+         PrintWriter out = response.getWriter();
          
+         Integer id = Parser.parseInt(request.getParameter("id"));
+         String codigo = request.getParameter("codigo");
+         String nombre = request.getParameter("nombre");
+         String valor  = request.getParameter("valor");
+         String activo = request.getParameter("activo");
+         JsonRespuesta jr = new JsonRespuesta();
+         try {
+            TParametro tp = new TParametro();
+            Parametro p = tp.getById(id);
+            boolean nuevo = false;
+            if (p==null){
+                p = new Parametro();
+                nuevo = true;
+            }
+            if(codigo ==null) throw new BaseException("ERROR","Ingrese el c&oacute;digo del par&aacute;metro");
+            
+            p.setCodigo(codigo);
+            p.setNombre(nombre);
+            p.setValor(valor);
+   //         if(activo!=null && !"".equals(activo))
+   //             p.setActivo(1);
+   //         else p.setActivo(0);
+            boolean todoOk;
+            if(nuevo){
+                id = tp.alta(p);
+                p.setId(id);
+                todoOk = id!=0;
+            } else todoOk = tp.actualizar(p);
+            if (todoOk) {
+                jr.setResult("OK");
+                jr.setRecord(p);
+            } else throw new BaseException("ERROR","Ocurri&oacute; un error al guardar el par&aacute;metro");
+         } catch(BaseException ex){
+             
+         } finally{
+            String jsonResult = new Gson().toJson(jr);
+            out.print(jsonResult);
+            out.close();
+         }
     }
 
     /**
