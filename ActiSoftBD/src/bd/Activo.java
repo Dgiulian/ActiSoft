@@ -22,6 +22,8 @@ public class Activo {
     public String desc_larga    = "";
     public String desc_opcional = "";
     public Integer stock_minimo = 0;
+    public Float  extension     = 0f;
+
     public String anillo        = "";
     public Float peso           = 0f;
     public Float alto           = 0f;
@@ -396,5 +398,13 @@ public Activo(){}
     public Activo setArchivo_3_url(String archivo_3_url) {
         this.archivo_3_url = archivo_3_url;
         return this;
+    }
+    
+    public Float getExtension() {
+        return extension;
+    }
+
+    public void setExtension(Float extension) {
+        this.extension = extension;
     }
 }

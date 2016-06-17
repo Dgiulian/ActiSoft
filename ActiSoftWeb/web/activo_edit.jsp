@@ -236,7 +236,10 @@
                                             <label for="longitud">Longitud</label>
                                             <input name="longitud" id="longitud" class="form-control"  value='<%= activo.getLongitud()%>'>
                                         </div>
-                                        
+                                        <div class="form-group">
+                                            <label for="extension">Extensi&oacute;n (mts)</label>
+                                            <input name="extension" id="extension" class="form-control"  value='<%= activo.getExtension()%>'>
+                                        </div>
                                     </fieldset>
                                     </div>
                                 </div>

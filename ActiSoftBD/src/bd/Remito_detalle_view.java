@@ -14,6 +14,8 @@ public class Remito_detalle_view extends Remito_detalle{
     private String desc_corta          = "";
     private String desc_larga          = "";
     private String longitud            = "";
+    private Float extension            = 0f;
+
     private String desc_opcional       = "";
     private String rubro_opcional      = "";
     private String subrubro_opcional   = "";
@@ -104,5 +106,13 @@ public class Remito_detalle_view extends Remito_detalle{
     public Remito_detalle_view setLongitud (String longitud){
         this.longitud = longitud; 
         return this;
+    }
+    
+    public Float getExtension() {
+        return extension;
+    }
+
+    public void setExtension(Float extension) {
+        this.extension = extension;
     }
 }

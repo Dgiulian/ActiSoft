@@ -115,7 +115,8 @@ public class ActivoEdit extends HttpServlet {
         Integer id_rubro       = 0;
         Integer id_subrubro    = 0;
         Integer stock_minimo   = 0;
-        Float stock           = 0f;
+        Float   extension      = 0f;
+        Float stock            = 0f;
     try{
         Integer id_usuario = 0;
         Integer id_tipo_usuario = 0;
@@ -190,6 +191,7 @@ public class ActivoEdit extends HttpServlet {
                 if(fieldName.equalsIgnoreCase("aplica_stock"))   aplicaStock     = fieldValue;
                 if(fieldName.equalsIgnoreCase("aplica_compra"))  aplicaCompra    = fieldValue;
                 if(fieldName.equalsIgnoreCase("sock"))           stock           = Parser.parseFloat(fieldValue);
+                if(fieldName.equalsIgnoreCase("extension"))      extension       = Parser.parseFloat(fieldValue);
             } else {
                 // Process form file field (input type="file").
                 String fieldName = item.getFieldName();
@@ -291,6 +293,7 @@ public class ActivoEdit extends HttpServlet {
         activo.setCodigo_aduana(codigo_aduana);
         activo.setAnillo(anillo);
         activo.setPrecio(Float.parseFloat(precio));
+        activo.setExtension(extension);
         
         Integer aplica_stock  = (aplicaStock !=null && !aplicaStock.equals(""))?1:0;
         Integer aplica_compra = (aplicaCompra!=null && !aplicaCompra.equals(""))?1:0;

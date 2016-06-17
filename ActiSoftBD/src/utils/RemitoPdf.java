@@ -263,7 +263,7 @@ public class RemitoPdf extends BasePdf {
                 if (d.getLongitud().equals("")) {
                     o[1] = d.getCantidad();
                 } else {
-                    o[1] =  d.getCantidad() * parsearLongitud(d.getLongitud()); 
+                    o[1] =  d.getCantidad() * d.getExtension(); 
                 }
                 mapa.put(id_subrubro, o);
              }
@@ -272,7 +272,7 @@ public class RemitoPdf extends BasePdf {
                 if(d.getLongitud().equals(""))
                     value[1] = cant + d.getCantidad();
                 else 
-                    value[1] = cant +  d.getCantidad() * parsearLongitud(d.getLongitud());
+                    value[1] = cant +  d.getCantidad() * d.getExtension();
                 mapa.put(id_subrubro,value);
              }
          }
@@ -283,38 +283,38 @@ public class RemitoPdf extends BasePdf {
          for(Remito_detalle_view d:detalle){             
              Integer posicion = d.getPosicion();             
              Object [] value = mapa.get(posicion);
-             if(value==null) {
+             if(value==null) { // Si es nuevo
                 Object[] o = new Object[2];
                 o[0] = d.getPosicion();
                 if (d.getLongitud().equals("")) {
                     o[1] = d.getCantidad();
                 } else {
-                    o[1] =  d.getCantidad() * parsearLongitud(d.getLongitud()); 
+                    o[1] =  d.getCantidad() * d.getExtension(); 
                 }
                 mapa.put(posicion, o);
              }
              else {
                 Float cant = (Float) value[1];
-                if(d.getLongitud().equals(""))
+                if(d.getExtension()==0)
                     value[1] = cant + d.getCantidad();
                 else 
-                    value[1] = cant +  d.getCantidad() * parsearLongitud(d.getLongitud());
+                    value[1] = cant +  d.getCantidad() * d.getExtension();
                 mapa.put(posicion,value);
              }
          }
          return mapa;
      }
-     private Float parsearLongitud(String longitud){
-        Float lng = 0f;
-        Pattern pattern = Pattern.compile("(\\d+,?\\d*) MTS"); //this clearly will find 13 consecutive numbers, but I need it to ignore the "-" character
-        Matcher matcher = pattern.matcher(longitud); 
-        
-        if(matcher.find()){            
-            lng = Parser.parseFloat(matcher.group(matcher.groupCount()).replace(",", "."));
-        }
-         //System.out.println(lng);
-        return lng;
-     }
+//     private Float parsearLongitud(String longitud){
+//        Float lng = 0f;
+//        Pattern pattern = Pattern.compile("(\\d+,?\\d*) MTS"); //this clearly will find 13 consecutive numbers, but I need it to ignore the "-" character
+//        Matcher matcher = pattern.matcher(longitud); 
+//        
+//        if(matcher.find()){            
+//            lng = Parser.parseFloat(matcher.group(matcher.groupCount()).replace(",", "."));
+//        }
+//         //System.out.println(lng);
+//        return lng;
+//     }
     public static void main(String[] args){
         
 //        Remito remito = new TRemito().getById(99);
