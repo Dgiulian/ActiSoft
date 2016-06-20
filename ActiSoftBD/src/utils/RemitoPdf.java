@@ -4,11 +4,15 @@
  */
 package utils;
 
+import bd.Activo;
 import bd.Cliente;
 import bd.Contrato;
 import bd.Contrato_detalle;
+import bd.Kit;
+import bd.Kit_detalle;
 import bd.Parametro;
 import bd.Remito;
+import bd.Remito_detalle;
 import bd.Remito_detalle_view;
 import bd.Site;
 import bd.Subrubro;
@@ -17,6 +21,7 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfContentByte;
+import java.sql.Array;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -31,8 +36,11 @@ import transaccion.TActivo;
 import transaccion.TCliente;
 import transaccion.TContrato;
 import transaccion.TContrato_detalle;
+import transaccion.TKit;
+import transaccion.TKit_detalle;
 import transaccion.TParametro;
 import transaccion.TRemito;
+import transaccion.TRemito_detalle;
 import transaccion.TRemito_detalle_view;
 import transaccion.TSite;
 import transaccion.TSubrubro;
@@ -46,10 +54,10 @@ public class RemitoPdf extends BasePdf {
      private Cliente cliente;
      private Contrato contrato; 
      private List<Contrato_detalle> contrato_detalle;
-     
+     private List<Remito_detalle> remito_detalle;
      private Site site;
-     List<Remito_detalle_view> detalle;
-     
+     private List<Remito_detalle_view> detalle;
+     private HashMap<Integer,Activo> mapActivos;
      public RemitoPdf(Remito remito){
          this.remito = remito;
          this.cliente = new TCliente().getById(remito.getId_cliente());
@@ -57,6 +65,9 @@ public class RemitoPdf extends BasePdf {
          this.contrato_detalle = new TContrato_detalle().getByContratoId(remito.getId_contrato());
          this.detalle = new TRemito_detalle_view().setOrderBy(" order by remito_detalle_view.posicion ").getByRemitoId(remito.getId());
          this.site    = new TSite().getById(remito.getId_site());
+         
+         this.remito_detalle = new TRemito_detalle().getByRemitoId(remito.getId());
+         mapActivos = new HashMap<Integer,Activo>();
      }
      
      @Override
@@ -74,26 +85,24 @@ public class RemitoPdf extends BasePdf {
            start = 577;
            Float lineHeight = 16f;
            Integer i = 0;
-//           TActivo ta = new TActivo();
-//           Activo a ;
+           TKit tk = new TKit();
            HashMap<Integer, Object[]> agrupado = groupByPosicion(detalle);
            HashMap<Integer, Subrubro> mapSubrubro = new TSubrubro().getMap();
            HashMap<Integer,Contrato_detalle> mapPosicion = new HashMap();
+           HashMap<Integer,Kit> mapKit = new HashMap<Integer,Kit>();
            for(Contrato_detalle cd:this.contrato_detalle){
                mapPosicion.put(cd.getPosicion(),cd);
            }
            Set<Integer> posiciones = new TreeSet<>(agrupado.keySet());
-           //Set<Integer> posiciones = agrupado.keySet();
            for(Integer s:posiciones){
                Object[] value = agrupado.get(s);
                if(value==null) continue;
                Integer pos = (Integer) value[0];
-               Float cant = (Float) value[1];
+               Float cant  = (Float)   value[1];
                
                Subrubro subrubro = mapSubrubro.get(s);
                Contrato_detalle d = mapPosicion.get(pos);
                
-//               addText(cb,45,start - lineHeight * i ,pos.toString());
                addText(cb,80,start - lineHeight * i ,pos.toString());
                if(d!=null){
                 addText(cb,134,start - lineHeight * i ,d.getDescripcion());
@@ -101,6 +110,21 @@ public class RemitoPdf extends BasePdf {
                addText(cb,514,start - lineHeight * i,String.format("%.2f",cant));
                i++;
              }
+           
+           
+           for(Remito_detalle rd:this.remito_detalle){
+               if (rd.getId_kit()==0) continue;
+               
+               Kit kit = tk.getById(rd.getId_kit());
+               if(kit==null) continue;
+               
+               mapKit.put(kit.getId(),kit);
+               addText(cb,80,start  - lineHeight * i,rd.getPosicion().toString());
+               addText(cb,134,start - lineHeight * i,kit.getNombre());               
+               addText(cb,514,start - lineHeight * i,String.format("%.2f",rd.getCantidad()));
+               i++;
+           }
+           //
             printFooter(cb,225);
            
             // Segunda Hoja
@@ -129,6 +153,7 @@ public class RemitoPdf extends BasePdf {
                    ;
            i = 0;
            List<Remito_detalle_view> listaOpcional = new ArrayList();
+           String descripcion = "";
            for(Remito_detalle_view dm:this.detalle){
 //            a = ta.getById(dm.getId_activo());
             addText(cb,30,start - lineHeight * i ,dm.getPosicion().toString());
@@ -138,17 +163,28 @@ public class RemitoPdf extends BasePdf {
                 !dm.getRubro_opcional().equals("") )
             {
                 
-                listaOpcional.add(dm);             
+                listaOpcional.add(dm);
                 if(!dm.getDesc_opcional().equals(""))
-                   addText(cb,130,start - lineHeight * i ,dm.getDesc_opcional());
+                   descripcion = dm.getDesc_opcional();
                 else if(!dm.getSubrubro_opcional().equals(""))
-                    addText(cb,130,start - lineHeight * i ,dm.getSubrubro_opcional());
+                    descripcion = dm.getSubrubro_opcional();
                 else if(!dm.getRubro_opcional().equals("") )
-                    addText(cb,130,start - lineHeight * i ,dm.getRubro_opcional());
+                   descripcion = dm.getRubro_opcional();
                  
-            } else {addText(cb,130,start - lineHeight * i ,dm.getDesc_larga());}
-            
+            } else {descripcion = dm.getDesc_larga();}
+            addText(cb,130,start - lineHeight * i ,descripcion);
             addText(cb,520,start - lineHeight * i,dm.getCantidad().toString());
+            i++;
+
+           }
+           for(Remito_detalle rd:this.remito_detalle){
+               if (rd.getId_kit()==0) continue;
+               Kit kit = mapKit.get(rd.getId_kit());
+               if(kit==null) continue;
+               addText(cb,30, start - lineHeight * i, rd.getPosicion().toString());
+               addText(cb,73, start - lineHeight * i, kit.getCodigo());
+               addText(cb,130,start - lineHeight * i, getCodigos_detalle(kit));
+               addText(cb,520,start - lineHeight * i, rd.getCantidad().toString());
             i++;
 
            }
@@ -198,23 +234,6 @@ public class RemitoPdf extends BasePdf {
     
      private void printHeader(PdfContentByte cb,Integer start)    {
          String IMAGE = "";
-            
-//         Image image;
-//         try {
-//             image = Image.getInstance(IMAGE);
-////             image.setWidthPercentage(100);
-//             image.scaleAbsolute(PageSize.A4);
-//             image.setAbsolutePosition(0, 0);
-//            // cb.addImage(image);
-//         } catch (BadElementException ex) {
-//             Logger.getLogger(RemitoPdf.class.getName()).log(Level.SEVERE, null, ex);
-//         } catch (MalformedURLException ex) {
-//             Logger.getLogger(RemitoPdf.class.getName()).log(Level.SEVERE, null, ex);
-//         } catch (IOException ex) {
-//             Logger.getLogger(RemitoPdf.class.getName()).log(Level.SEVERE, null, ex);
-//         } catch (DocumentException ex) {
-//             Logger.getLogger(RemitoPdf.class.getName()).log(Level.SEVERE, null, ex);
-//         }
         //Integer start = 678;
         Integer lineHeight = 15;
         if(this.cliente!=null) {
@@ -249,8 +268,22 @@ public class RemitoPdf extends BasePdf {
              Remito referencia = new TRemito().getById(this.remito.getId_referencia());              
             addText(cb,100,start - 17,String.format("Remito diario creado a partir del remito %s",referencia.getNumero()));
            }
-           addText(cb,100,start - 27,remito.getObservaciones());
+           //addText(cb,100,start - 27,remito.getObservaciones());
+           imprimirObservaciones(cb, start - 27,remito.getObservaciones());
            
+     }
+     
+     public void imprimirObservaciones(PdfContentByte cb,Integer start,String observaciones){
+         Integer lineHeight = 10;
+         Integer lineWidth = 170;
+         Integer startIndex = 0;
+         Integer lines = observaciones.length() / lineWidth;
+         for(int i = 0;i<=lines;i++){
+             
+             startIndex = lineWidth * i;
+             Integer endIndex = Math.min(startIndex + lineWidth,observaciones.length());
+             addText(cb,30,start - i * lineHeight,observaciones.substring(startIndex,endIndex));
+         }
      }
   private HashMap<Integer,Object[]> groupBySubrubro(List<Remito_detalle_view> detalle){
          HashMap<Integer,Object[]> mapa = new HashMap<>();
@@ -304,6 +337,25 @@ public class RemitoPdf extends BasePdf {
          }
          return mapa;
      }
+     private String getCodigos_detalle(Kit kit){
+         String codigos = "";
+         TKit_detalle tkd = new TKit_detalle();
+         List<Kit_detalle> detalle_kit = tkd.getByKitId(kit.getId());
+         if(detalle_kit==null) return codigos;
+         TActivo ta = new TActivo();
+         
+         for(Kit_detalle kd:detalle_kit){
+            Activo activo = mapActivos.get(kd.getId_activo());
+            if (activo == null){
+                 activo = ta.getById(kd.getId_activo());
+                 if (activo==null) continue;
+                 mapActivos.put(kd.getId_activo(),activo);
+            }              
+            codigos += activo.getCodigo()  + " - ";
+         } 
+         if(codigos.length()>0) codigos = codigos.substring(0, codigos.length()-3);
+         return codigos;
+     }
 //     private Float parsearLongitud(String longitud){
 //        Float lng = 0f;
 //        Pattern pattern = Pattern.compile("(\\d+,?\\d*) MTS"); //this clearly will find 13 consecutive numbers, but I need it to ignore the "-" character
@@ -316,21 +368,22 @@ public class RemitoPdf extends BasePdf {
 //        return lng;
 //     }
     public static void main(String[] args){
-        
-//        Remito remito = new TRemito().getById(99);
-//        String fileName = String.format("c:\\remito_%d.pdf",remito.getNumero());
-//        RemitoPdf rm = new RemitoPdf(remito);
-//        rm.createPdf(fileName);
-//        System.out.println("Imprimiendo documento");
-//        rm.abrir(fileName);
+       
+        Remito remito = new TRemito().getById(194);
+        String fileName = String.format("c:\\remito_%d.pdf",remito.getNumero());
+        RemitoPdf rm = new RemitoPdf(remito);
+        rm.createPdf(fileName);
+        System.out.println("Imprimiendo documento");
+        rm.abrir(fileName);
 //        rm.imprimir(fileName);
 
-TActivo ta = new TActivo();
-    System.out.println(ta.getList("select * from activo").size());
-    System.out.println(ta.getList("select * from activo where activo.bloqueado = 0").size());
-    
-    HashMap<String,String> lstFiltro = new HashMap<String,String>();
-    lstFiltro.put("bloqueado","0");
-        System.out.println(ta.getListFiltro(lstFiltro).size());
+//TActivo ta = new TActivo();
+//    System.out.println(ta.getList("select * from activo").size());
+//    System.out.println(ta.getList("select * from activo where activo.bloqueado = 0").size());
+//    
+//    HashMap<String,String> lstFiltro = new HashMap<String,String>();
+//    lstFiltro.put("bloqueado","0");
+//        System.out.println(ta.getListFiltro(lstFiltro).size());
     }
+    
 }
