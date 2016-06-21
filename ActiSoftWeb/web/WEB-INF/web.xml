@@ -28,6 +28,7 @@
         <url-pattern>/UsuarioDel</url-pattern>
         <url-pattern>/CorrectivoDel</url-pattern>
         <url-pattern>/KitDel</url-pattern>
+        <url-pattern>/TransportistaDel</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
     <filter-mapping>
@@ -46,6 +47,7 @@
         <url-pattern>/UsuarioEdit</url-pattern>
         <url-pattern>/CorrectivoEdit</url-pattern>
         <url-pattern>/KitEdit</url-pattern>
+        <url-pattern>/TransportistaEdit</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
     <filter-mapping>
@@ -128,6 +130,10 @@
         <url-pattern>/KitList</url-pattern>
         <url-pattern>/KitEdit</url-pattern>
         <url-pattern>/KitContratoList</url-pattern>
+        <url-pattern>/TransportistaList</url-pattern>
+        <url-pattern>/Transportista</url-pattern>
+        <url-pattern>/TransportistaEdit</url-pattern>
+        <url-pattern>/TransportistaDel</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
     <servlet>
@@ -546,6 +552,38 @@
         <servlet-name>RemitoContratoList</servlet-name>
         <servlet-class>RemitoContrato.RemitoContratoList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TransportistaServlet</servlet-name>
+        <servlet-class>Transportista.TransportistaServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TransportistaList</servlet-name>
+        <servlet-class>Transportista.TransportistaList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TransportistaEdit</servlet-name>
+        <servlet-class>Transportista.TransportistaEdit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TransportistaDel</servlet-name>
+        <servlet-class>Transportista.TransportistaDel</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VehiculoServlet</servlet-name>
+        <servlet-class>Vehiculo.VehiculoServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VehiculoList</servlet-name>
+        <servlet-class>Vehiculo.VehiculoList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VehiculoEdit</servlet-name>
+        <servlet-class>Vehiculo.VehiculoEdit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VehiculoDel</servlet-name>
+        <servlet-class>Vehiculo.VehiculoDel</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ActivoServlet</servlet-name>
         <url-pattern>/Activo</url-pattern>
@@ -961,6 +999,38 @@
     <servlet-mapping>
         <servlet-name>RemitoContratoList</servlet-name>
         <url-pattern>/RemitoContratoList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TransportistaServlet</servlet-name>
+        <url-pattern>/Transportista</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TransportistaList</servlet-name>
+        <url-pattern>/TransportistaList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TransportistaEdit</servlet-name>
+        <url-pattern>/TransportistaEdit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TransportistaDel</servlet-name>
+        <url-pattern>/TransportistaDel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VehiculoServlet</servlet-name>
+        <url-pattern>/Vehiculo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VehiculoList</servlet-name>
+        <url-pattern>/VehiculoList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VehiculoEdit</servlet-name>
+        <url-pattern>/VehiculoEdit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VehiculoDel</servlet-name>
+        <url-pattern>/VehiculoDel</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

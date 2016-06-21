@@ -38,10 +38,10 @@
                 <div class="col-lg-12">
                     <h1 class="page-header"><% if(nuevo) {%>Nuevo<%}else{%>Editar<%}%> Proveedor</h1>                    
                     <% if (!nuevo) {%>                     
-<!--                    <div class="button-bar" >
-                        <a   class="btn btn-info" href="<%=PathCfg.SITE %>?id_proveedor=<%= proveedor.getId()%>"><i class="fa fa-map-marker fa-fw"></i> Sites</a>
-                        <a   class="btn btn-info" href="#" data-toggle="modal" data-target="#mdlProveedorHistoria"><i class="fa fa-history fa-fw"></i> Historia</a>
-                    </div>-->
+                    <div class="button-bar" >
+                        <a class="btn btn-info" href="<%=PathCfg.TRANSPORTISTA %>?id_proveedor=<%= proveedor.getId()%>"><i class="fa fa-male fa-fw"></i> Transportistas</a>
+                        <a class="btn btn-info" href="<%=PathCfg.VEHICULO %>?id_proveedor=<%= proveedor.getId()%>"><i class="fa fa-truck fa-fw"></i> Vehiculos</a>
+                    </div>
                     <% } %>
                 </div>
                 
@@ -67,7 +67,7 @@
                            <li><a href="#tab2" data-toggle="tab">Domicilio</a></li>
                            <li><a href="#tab3" data-toggle="tab">Contacto</a></li>
                            <li><a href="#tab4" data-toggle="tab">Datos financieros</a></li>
-                           <li><a href="#tab5" data-toggle="tab">Datos transportista</a></li>
+<!--                           <li><a href="#tab5" data-toggle="tab">Datos transportista</a></li>-->
                            <li><a href="#tab6" data-toggle="tab">Observaciones</a></li>
                        </ul>
                         <div class="panel-body">
@@ -260,7 +260,7 @@
                                          
                                         </div>
                                 </div>
-                                <div class="tab-pane" id="tab5">
+<!--                                <div class="tab-pane" id="tab5">
                                     <div  class="col-lg-6">
                                      <div class="form-group">
                                           <label for="nombre_transportista">Nombre</label>
@@ -270,7 +270,7 @@
                                           <label for="vencimiento_carnet">Vencimiento carnet</label>
                                           <input class="form-control date-picker" rows="3"   name="vencimiento_carnet" id="vencimiento_carnet" value="<%= "".equals(proveedor.getVencimiento_carnet())?"":TFecha.formatearFechaBdVista(proveedor.getVencimiento_carnet())%>">
                                       </div>
-<!--                                      <div class="form-group">
+                                      <div class="form-group">
                                           <label for="vehiculos"></label>
                                           <input class="form-control" rows="3"  name="vehiculos" id="vehiculos" value="<%= proveedor.getVehiculos()%>">
                                       </div>
@@ -281,9 +281,9 @@
                                       <div class="form-group">
                                           <label for="dni_conductor"></label>
                                           <input class="form-control" rows="3"  name="dni_conductor" id="dni_conductor" value="<%= proveedor.getDni_conductor()%>">
-                                      </div>-->
+                                      </div>
                                     </div>
-                                </div>
+                                </div>-->
                                   <div class="tab-pane" id="tab6">
                                       <div  class="col-lg-12">
                                        <div class="form-group">
