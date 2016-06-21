@@ -139,6 +139,19 @@ public class PathCfg {
     public static final String AGENDA_DEL    = AGENDA + "Del";    
     public static final String AGENDA_SEARCH = AGENDA + "Search";
     
+    public static final String TRANSPORTISTA        = "Transportista";
+    public static final String TRANSPORTISTA_LIST   = TRANSPORTISTA + "List";
+    public static final String TRANSPORTISTA_EDIT   = TRANSPORTISTA + "Edit";
+    public static final String TRANSPORTISTA_DEL    = TRANSPORTISTA + "Del";    
+    public static final String TRANSPORTISTA_SEARCH = TRANSPORTISTA + "Search";
+    
+    public static final String VEHICULO        = "Vehiculo";
+    public static final String VEHICULO_LIST   = VEHICULO + "List";
+    public static final String VEHICULO_EDIT   = VEHICULO + "Edit";
+    public static final String VEHICULO_DEL    = VEHICULO + "Del";    
+    public static final String VEHICULO_SEARCH = VEHICULO + "Search";
+
+    
     public static final String AUDITORIA      = "Auditoria";
     public static final String AUDITORIA_LIST = AUDITORIA + "List";
     
