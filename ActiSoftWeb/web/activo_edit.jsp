@@ -59,7 +59,7 @@
                        <% if(activo.getAplica_compra()!=0) {%>
                             <a  class="btn btn-success" href="<%=PathCfg.COMPRA %>?id_activo=<%= activo.getId()%>"><i class="fa fa-money fa-fw"></i> Compras</a>
                         <% } %>
-                        <a  class="btn btn-success" href="<%=PathCfg.CORRECTIVO %>?id_activo=<%= activo.getId()%>"><i class="fa  fa-stethoscope fa-fw"></i> Correctivo</a>
+                        <a  class="btn btn-success" href="<%=PathCfg.CORRECTIVO %>?id_activo=<%= activo.getId()%>"><i class="fa  fa-wrench fa-fw"></i> Correctivo</a>
                        
                     </div>
                     <% } %>
