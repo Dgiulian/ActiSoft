@@ -26,6 +26,39 @@ import utils.TFecha;
  */
 public class TransportistaEdit extends HttpServlet {
 
+<<<<<<< HEAD
+=======
+    /**
+     * Processes requests for both HTTP
+     * <code>GET</code> and
+     * <code>POST</code> methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        try {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet TransporteEdit</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet TransporteEdit at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        } finally {            
+            out.close();
+        }
+    }
+
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
 
     /**
      * Handles the HTTP
@@ -52,8 +85,13 @@ public class TransportistaEdit extends HttpServlet {
             }            
         } 
          if (transportista!=null){
+<<<<<<< HEAD
             request.setAttribute("transportista", transportista);
         }
+=======
+                    request.setAttribute("transportista", transportista);
+                }
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
         request.getRequestDispatcher("transportista_edit.jsp").forward(request, response);
     }
 
@@ -74,7 +112,10 @@ public class TransportistaEdit extends HttpServlet {
         Integer id           = Parser.parseInt(request.getParameter("id"));
         Integer id_proveedor = Parser.parseInt(request.getParameter("id_proveedor"));
         String  nombre       = request.getParameter("nombre");
+<<<<<<< HEAD
         String  dni       = request.getParameter("dni");
+=======
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
         String  vencimiento_carnet = request.getParameter("vencimiento_carnet");
         String  vencimiento_seguro  =request.getParameter("vencimiento_seguro");
         TProveedor tp       = new TProveedor();
@@ -83,7 +124,11 @@ public class TransportistaEdit extends HttpServlet {
         Transportista transportista;
         JsonRespuesta jr = new JsonRespuesta();
         boolean nuevo = false;
+<<<<<<< HEAD
         boolean todoOk;
+=======
+        boolean todoOk = true;
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
         try{
             proveedor = tp.getById(id_proveedor);
             if(proveedor ==null) throw new BaseException("ERROR","No existe el proveedor");
@@ -94,7 +139,10 @@ public class TransportistaEdit extends HttpServlet {
                 nuevo = true;
             }
             transportista.setNombre(nombre);
+<<<<<<< HEAD
             transportista.setDni(dni);
+=======
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
             String carnet = TFecha.formatearFechaVistaBd(vencimiento_carnet);
             String seguro = TFecha.formatearFechaVistaBd(vencimiento_seguro);
             if(!"".equals(carnet)) transportista.setVencimiento_carnet(carnet);

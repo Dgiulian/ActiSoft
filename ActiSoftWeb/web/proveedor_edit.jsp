@@ -39,8 +39,13 @@
                     <h1 class="page-header"><% if(nuevo) {%>Nuevo<%}else{%>Editar<%}%> Proveedor</h1>                    
                     <% if (!nuevo) {%>                     
                     <div class="button-bar" >
+<<<<<<< HEAD
                         <a class="btn btn-info" href="<%=PathCfg.TRANSPORTISTA %>?id_proveedor=<%= proveedor.getId()%>"><i class="fa fa-male fa-fw"></i> Transportistas</a>
                         <a class="btn btn-info" href="<%=PathCfg.VEHICULO %>?id_proveedor=<%= proveedor.getId()%>"><i class="fa fa-truck fa-fw"></i> Vehiculos</a>
+=======
+                        <a   class="btn btn-info" href="<%=PathCfg.TRANSPORTISTA %>?id_proveedor=<%= proveedor.getId()%>"><i class="fa  fa-fw"></i> Transportistas</a>
+                        <a   class="btn btn-info" href="<%=PathCfg.VEHICULO %>?id_proveedor=<%= proveedor.getId()%>" data-toggle="modal" data-target="#mdlProveedorHistoria"><i class="fa fa-fw"></i> Vehiculos</a>
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
                     </div>
                     <% } %>
                 </div>

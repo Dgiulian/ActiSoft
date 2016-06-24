@@ -26,9 +26,15 @@
 
         <div id="page-wrapper">
             <div class="row">
+<<<<<<< HEAD
                 <div class="col-lg-12">                    
                     <h3 class="proveedor-heading">Proveedor: <%=proveedor.getNombre_comercial()%></h3>
                     <h1 class="page-header">Vehiculos <span class="btn btn-primary" id="nuevoVehiculo"><span  class="fa fa-file-o fa-fw"> </span>Nuevo</span></h1>
+=======
+                <div class="col-lg-12">
+                    <h1 class="page-header">Vehiculos <span class="btn btn-primary" id="nuevoVehiculo"><span  class="fa fa-file-o fa-fw"> </span>Nuevo</span></h1>
+                    <h3 class="proveedor-heading">Proveedor: <%=proveedor.getNombre_comercial()%></h3>
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
                 </div>
             </div>
             <!-- /.row -->
@@ -46,7 +52,11 @@
                                     <thead>
                                         <tr>
                                             <!--<th>Id</th>-->
+<<<<<<< HEAD
                                             <th>Dominio</th>
+=======
+                                            <th>Nombre</th>
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
                                             <th>Vencimiento vtc</th>
                                             <th>Seguro</th>
                                             <th>Poliza</th>

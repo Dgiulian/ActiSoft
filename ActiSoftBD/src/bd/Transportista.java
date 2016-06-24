@@ -4,9 +4,12 @@ public class Transportista {
 	public Integer id = 0;
         public Integer id_proveedor = 0;
 	public String nombre = "";
+<<<<<<< HEAD
         public String dni    = "";
 
 
+=======
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
 	public String vencimiento_carnet = "";
 	public String vencimiento_seguro = "";
 
@@ -63,6 +66,7 @@ public class Transportista {
     public void setId_proveedor(Integer id_proveedor) {
         this.id_proveedor = id_proveedor;
     }
+<<<<<<< HEAD
     public String getDni() {
         return dni;
     }
@@ -70,4 +74,6 @@ public class Transportista {
     public void setDni(String dni) {
         this.dni = dni;
     }
+=======
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
 }

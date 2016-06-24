@@ -26,9 +26,15 @@
 
         <div id="page-wrapper">
             <div class="row">
+<<<<<<< HEAD
                 <div class="col-lg-12">                    
                     <h3 class="proveedor-heading">Proveedor: <%=proveedor.getNombre_comercial()%></h3>
                     <h1 class="page-header">Transportistas <span class="btn btn-primary" id="nuevoTransportista"><span  class="fa fa-file-o fa-fw"> </span>Nuevo</span></h1>
+=======
+                <div class="col-lg-12">
+                    <h1 class="page-header">Transportistas <span class="btn btn-primary" id="nuevoTransportista"><span  class="fa fa-file-o fa-fw"> </span>Nuevo</span></h1>
+                    <h3 class="proveedor-heading">Proveedor: <%=proveedor.getNombre_comercial()%></h3>
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
                 </div>
             </div>
             <!-- /.row -->
@@ -47,7 +53,10 @@
                                         <tr>
                                             <!--<th>Id</th>-->
                                             <th>Nombre</th>
+<<<<<<< HEAD
                                             <th>DNI</th>
+=======
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
                                             <th>Vencimiento Carnet</th>
                                             <th>Vencimiento Seguro</th>                                            
                                             <th></th>
@@ -100,6 +109,7 @@
         var id_proveedor  = $('#id_proveedor').val();
         loadDataTransportista({id_proveedor:id_proveedor});
         $('#nuevoTransportista').click(function(){
+<<<<<<< HEAD
             var id_proveedor  = $('#id_proveedor').val();
             var index = 0;
             var nombre = "";
@@ -107,6 +117,14 @@
             var vencimiento_carnet = "";
             var vencimiento_seguro = "";            
             agregarTransportista({id:index,id_proveedor:id_proveedor,nombre:nombre,dni:dni,vencimiento_carnet:vencimiento_carnet,vencimiento_seguro:vencimiento_seguro});
+=======
+             var id_proveedor  = $('#id_proveedor').val();
+             var index = 0;
+            var nombre = "";
+            var vencimiento_carnet = "";
+            var vencimiento_seguro = "";            
+            agregarTransportista({id:index,id_proveedor:id_proveedor,nombre:nombre,vencimiento_carnet:vencimiento_carnet,vencimiento_seguro:vencimiento_seguro});
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
             
         });    
     });
@@ -152,12 +170,19 @@
            html +="<tr class=''>";
            d = data[i];
             html += wrapTag('td',d.nombre,'');
+<<<<<<< HEAD
             html += wrapTag('td',d.dni,'');
+=======
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
             html += wrapTag('td',convertirFecha(d.vencimiento_carnet),'');
             html += wrapTag('td',convertirFecha(d.vencimiento_seguro),'');
             
 //           var htmlEdit = "<a href='<%= PathCfg.TRANSPORTISTA_EDIT%>?id="+ d.id +"&id_proveedor="+ d.id_proveedor +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
+<<<<<<< HEAD
            var htmlEdit = "<span  data-index='"+ d.id + "' data-nombre='"+ d.nombre + "' data-dni='"+ d.dni + "' data-vencimiento_carnet='"+d.vencimiento_carnet+"' data-vencimiento_seguro='"+d.vencimiento_seguro+"' class='btn btn-xs btn-circle btn-warning btn-edit'><span class='fa fa-edit fw'></span></span>";
+=======
+           var htmlEdit = "<span  data-index='"+ d.id + "' data-nombre='"+ d.nombre + "' data-vencimiento_carnet='"+d.vencimiento_carnet+"' data-vencimiento_seguro='"+d.vencimiento_seguro+"' class='btn btn-xs btn-circle btn-warning btn-edit'><span class='fa fa-edit fw'></span></span>";
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
            var htmlDel = "<span data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span>";
            html +=wrapTag('td',htmlEdit + htmlDel,'');
            html +="</tr>";
@@ -177,10 +202,16 @@
         var index  = $(this).data('index');
         var id_proveedor  = $('#id_proveedor').val();
         var nombre = $(this).data('nombre');
+<<<<<<< HEAD
         var dni    = $(this).data('dni');
         var vencimiento_carnet = convertirFecha($(this).data('vencimiento_carnet'));
         var vencimiento_seguro = convertirFecha($(this).data('vencimiento_seguro')) ;
         agregarTransportista({id:index,id_proveedor:id_proveedor,nombre:nombre,dni:dni,vencimiento_carnet:vencimiento_carnet,vencimiento_seguro:vencimiento_seguro});
+=======
+        var vencimiento_carnet = convertirFecha($(this).data('vencimiento_carnet'));
+        var vencimiento_seguro = convertirFecha($(this).data('vencimiento_seguro')) ;
+        agregarTransportista({id:index,id_proveedor:id_proveedor,nombre:nombre,vencimiento_carnet:vencimiento_carnet,vencimiento_seguro:vencimiento_seguro});
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
     }
     function agregarTransportista(data){     
         console.log(data);
@@ -197,12 +228,16 @@
                         '<div class="col-md-8"> ' +
                         '<input id="nombre" name="nombre" type="text" class="form-control input-md" value="'+ data.nombre +'"> ' +
                      '</div>' + 
+<<<<<<< HEAD
                      '<div class="form-group"> ' +
                         '<label class="col-md-4 control-label" for="nombre">DNI:</label> ' +
                         '<div class="col-md-8"> ' +
                         '<input id="dni" name="dni" type="text" class="form-control input-md" value="'+ data.dni +'"> ' +
                      '</div>' + 
                      
+=======
+
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
                     '<div class="form-group"> ' +
                         '<label class="col-md-4 control-label" for="vencimiento_carnet">Vencimiento Carnet: </label>' +
                         '<div class="col-md-8"> ' +
@@ -227,12 +262,19 @@
                             var id     = $('#id').val();                        
                             var id_proveedor = $('#id_proveedor').val();                        
                             var nombre = $('#nombre').val();
+<<<<<<< HEAD
                             var dni    = $('#dni').val();
+=======
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
                             var vencimiento_seguro = $('#vencimiento_seguro').val();
                             var vencimiento_carnet  = $('#vencimiento_carnet').val();                            
                             //var activo = $('#activo').prop('checked')?'1':'';
                             //activo = 1;
+<<<<<<< HEAD
                             var data = {id:id,id_proveedor:id_proveedor,nombre:nombre,dni:dni,vencimiento_carnet:vencimiento_carnet,vencimiento_seguro:vencimiento_seguro};
+=======
+                            var data = {id:id,id_proveedor:id_proveedor,nombre:nombre,vencimiento_carnet:vencimiento_carnet,vencimiento_seguro:vencimiento_seguro};
+>>>>>>> f5e2778a05d4d42a4d981882bc57292ab29eb25e
                             if (!validar(data)) return;                        
                             $.ajax({
                                 url:'<%= PathCfg.TRANSPORTISTA_EDIT%>',
