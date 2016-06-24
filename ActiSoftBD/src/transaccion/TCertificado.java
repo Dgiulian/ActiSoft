@@ -31,7 +31,6 @@ public class TCertificado extends TransaccionBase<Certificado>{
         " and certificado.fecha_efectiva <= curdate()" +
         " and certificado.fecha_vigencia >= CURDATE()" +
         " and certificado.archivo_url <> '' ",id_activo,OptionsCfg.CERTIFICADO_APTO);
-        System.out.println(query);
         return super.getById(query);
     }
     public static void main(String[] args){

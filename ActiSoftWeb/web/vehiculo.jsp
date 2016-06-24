@@ -46,7 +46,7 @@
                                     <thead>
                                         <tr>
                                             <!--<th>Id</th>-->
-                                            <th>Nombre</th>
+                                            <th>Dominio</th>
                                             <th>Vencimiento vtc</th>
                                             <th>Seguro</th>
                                             <th>Poliza</th>
