@@ -122,18 +122,19 @@ public class VehiculoEdit extends HttpServlet {
             proveedor = tp.getById(id_proveedor);
             if(proveedor ==null) throw new BaseException("ERROR","No existe el proveedor");
             vehiculo = tt.getById(id);
+            
             if ( vehiculo ==null){
                 vehiculo = new Vehiculo();
                 vehiculo.setId_proveedor(id_proveedor);
                 nuevo = true;
             }
+            
             vehiculo.setDominio(dominio);
             vehiculo.setSeguro(seguro);
             vehiculo.setPoliza(poliza);
             vehiculo.setRsv(rsv);
             String vtv = TFecha.formatearFechaVistaBd(vencimiento_vtv);
             String v_poliza = TFecha.formatearFechaVistaBd(vencimiento_poliza);
-           
             if(!"".equals(vtv)) vehiculo.setVencimiento_vtv(vtv);
             if(!"".equals(v_poliza)) vehiculo.setVencimiento_poliza(v_poliza);
             

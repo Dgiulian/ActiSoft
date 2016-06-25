@@ -177,14 +177,27 @@ public class RemitoPdf extends BasePdf {
             i++;
 
            }
+           /* Imprime los códigos de Kit */
            for(Remito_detalle rd:this.remito_detalle){
                if (rd.getId_kit()==0) continue;
                Kit kit = mapKit.get(rd.getId_kit());
                if(kit==null) continue;
                addText(cb,30, start - lineHeight * i, rd.getPosicion().toString());
                addText(cb,73, start - lineHeight * i, kit.getCodigo());
-               addText(cb,130,start - lineHeight * i, getCodigos_detalle(kit));
                addText(cb,520,start - lineHeight * i, rd.getCantidad().toString());
+               String codigos = "";
+               for(String codigo: getCodigos_detalle(kit)){  
+                   if(codigos.length() + codigo.length()> 100){      
+                       codigos = codigos.substring(0, codigos.length()-3); // extraigo el - final
+                       addText(cb,130,start - lineHeight * i, codigos);
+                       codigos = "";
+                       i++;
+                       
+                   } 
+                   codigos += codigo + " - ";
+                   System.out.println(codigos.length());
+               }
+               
             i++;
 
            }
@@ -279,7 +292,6 @@ public class RemitoPdf extends BasePdf {
          Integer startIndex = 0;
          Integer lines = observaciones.length() / lineWidth;
          for(int i = 0;i<=lines;i++){
-             
              startIndex = lineWidth * i;
              Integer endIndex = Math.min(startIndex + lineWidth,observaciones.length());
              addText(cb,30,start - i * lineHeight,observaciones.substring(startIndex,endIndex));
@@ -337,11 +349,13 @@ public class RemitoPdf extends BasePdf {
          }
          return mapa;
      }
-     private String getCodigos_detalle(Kit kit){
+     private List<String> getCodigos_detalle(Kit kit){
          String codigos = "";
          TKit_detalle tkd = new TKit_detalle();
          List<Kit_detalle> detalle_kit = tkd.getByKitId(kit.getId());
-         if(detalle_kit==null) return codigos;
+         ArrayList arrCodigos = new ArrayList<String>();
+         if(detalle_kit==null) return arrCodigos ;
+         
          TActivo ta = new TActivo();
          
          for(Kit_detalle kd:detalle_kit){
@@ -350,11 +364,11 @@ public class RemitoPdf extends BasePdf {
                  activo = ta.getById(kd.getId_activo());
                  if (activo==null) continue;
                  mapActivos.put(kd.getId_activo(),activo);
-            }              
-            codigos += activo.getCodigo()  + " - ";
+            }           
+            arrCodigos.add(activo.getCodigo());            
          } 
-         if(codigos.length()>0) codigos = codigos.substring(0, codigos.length()-3);
-         return codigos;
+         
+         return arrCodigos;
      }
 //     private Float parsearLongitud(String longitud){
 //        Float lng = 0f;

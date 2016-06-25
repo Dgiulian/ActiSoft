@@ -4,6 +4,9 @@ public class Transportista {
 	public Integer id = 0;
         public Integer id_proveedor = 0;
 	public String nombre = "";
+        public String dni    = "";
+
+
 	public String vencimiento_carnet = "";
 	public String vencimiento_seguro = "";
 
@@ -59,5 +62,12 @@ public class Transportista {
 
     public void setId_proveedor(Integer id_proveedor) {
         this.id_proveedor = id_proveedor;
+    }
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 }

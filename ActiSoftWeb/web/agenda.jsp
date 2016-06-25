@@ -3,6 +3,7 @@
 
 <head>
     <%@include  file="tpl_head.jsp" %>
+    <link type="text/css" rel="stylesheet" href="bower_components/fullcalendar/fullcalendar.min.css">
 </head>
 
 <body>
@@ -136,7 +137,7 @@
 			defaultDate: moment().format("YYYY-MM-DD"),
 			editable: true,
 			eventLimit: true, // allow "more" link when too many events
-			events: function(start, end, timezone, callback) {
+			events: function(start, end, timezone, callback) {                                
                                 loadData({},callback);                             
                         }
 				

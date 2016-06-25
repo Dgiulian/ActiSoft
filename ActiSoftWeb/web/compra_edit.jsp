@@ -127,7 +127,7 @@
                                           <select name="id_proveedor" id="id_proveedor" class="form-control">
                                             <% for(Proveedor p: lstProveedores)  {
                                             String checked = p.getId()==compra.getId_proveedor()?"checked":"";%>
-                                            <option value="<%=p.getId()%>" <%= checked %>><%= p.getNombre()%></option>
+                                            <option value="<%=p.getId()%>" <%= checked %>><%= p.getNombre_comercial()%></option>
                                             <%}%>
                                           </select>
                                       </div>                                        
