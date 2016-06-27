@@ -5,6 +5,7 @@
 package transaccion;
 
 import bd.Certificado;
+import java.util.HashMap;
 import java.util.List;
 import utils.OptionsCfg;
 
@@ -32,6 +33,21 @@ public class TCertificado extends TransaccionBase<Certificado>{
         " and certificado.fecha_vigencia >= CURDATE()" +
         " and certificado.archivo_url <> '' ",id_activo,OptionsCfg.CERTIFICADO_APTO);
         return super.getById(query);
+    }
+    public HashMap<Integer,Certificado> getMapValidos(){
+        HashMap<Integer,Certificado> mapa = new HashMap<Integer,Certificado>();
+         String query = String.format("select * from certificado\n" +
+        " where certificado.id_resultado = %d " +
+        " and certificado.fecha_efectiva <= curdate()" +
+        " and certificado.fecha_vigencia >= CURDATE()" +
+        " and certificado.archivo_url <> '' ",OptionsCfg.CERTIFICADO_APTO);
+        List<Certificado> lstCertificados = this.getList(query);
+        if (lstCertificados==null) return mapa;
+        
+        for(Certificado c:lstCertificados){
+            mapa.put(c.getId_activo(), c);
+        }
+        return mapa;
     }
     public static void main(String[] args){
         Certificado certificado = new TCertificado().getById(558);

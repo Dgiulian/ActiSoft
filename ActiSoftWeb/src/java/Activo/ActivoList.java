@@ -5,6 +5,7 @@
 package Activo;
 
 import bd.Activo;
+import bd.Certificado;
 import bd.Compra;
 import bd.Subrubro;
 import bd.Rubro;
@@ -48,6 +49,7 @@ public class ActivoList extends HttpServlet {
      HashMap<Integer,Rubro> mapRubros;
      HashMap<Integer,Subrubro> mapSubrubros;
      HashMap<Integer,Option> mapEstados;
+     HashMap<Integer, Certificado> mapValidos;
      TCompra tc ;
      TCertificado  tcert;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -63,7 +65,7 @@ public class ActivoList extends HttpServlet {
         mapRubros = new TRubro().getMap();
         
         mapSubrubros = new TSubrubro().getMap();
-        
+        mapValidos = tcert.getMapValidos();
         mapEstados = new HashMap<Integer,Option>();
         for (Iterator<Option> it = OptionsCfg.getEstadoActivo().iterator(); it.hasNext();) {
              Option o = it.next();
@@ -151,7 +153,8 @@ public class ActivoList extends HttpServlet {
          
          Compra compra = tc.getPrimerCompra(activo.getId());
          if(compra!=null) this.fecha_alta = compra.getFecha();         
-         this.certificado = (tcert.getVigente(activo.getId())!=null)?"Si":"No";
+         //this.certificado = (tcert.getVigente(activo.getId())!=null)?"Si":"No";
+          this.certificado = mapValidos.get(activo.getId())!=null?"Si":"No";
      }
  }
    
