@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 
 /**
@@ -319,55 +320,47 @@ public class TransaccionRS {
         return result;
     }
 
-    public int altaObjetoAutonumerico(Object objeto) {
+        public int altaObjetoAutonumerico(Object objeto) {
 
         String clase = objeto.getClass().getSimpleName();
         String tabla = clase.toLowerCase();
-        Field[] atributos = objeto.getClass().getFields(); //DeclaredFields();
-        if (atributos.length == 0 ) atributos = objeto.getClass().getDeclaredFields();
-        StringBuffer query = new StringBuffer();
-        query.append("insert into " + tabla + " (");
-        for (int i = 0; i <= atributos.length - 1; i++) {
-            query.append(atributos[i].getName());
-            if (i != atributos.length - 1) {
-                query.append(",");
-            }
-        }
-        query.append(") values (");
+        Field[] atributos = objeto.getClass().getFields();
+        ArrayList<String> lstCampos  = new ArrayList<String>();
+        ArrayList<String> lstValores = new ArrayList<String>();
+        String query = "";
         for (int i = 0; i <= atributos.length - 1; i++) {
             try {
-                Class tipoClass = atributos[i].getType();
-                String tipo = tipoClass.getSimpleName();
+                Field field = atributos[i];
+                if (java.lang.reflect.Modifier.isStatic(field.getModifiers())) continue;
+                
+                Class tipoClass  = atributos[i].getType();
+                String tipo      = tipoClass.getSimpleName();
                 String getNombre = atributos[i].getName();
-                getNombre = getNombre.substring(0, 1).toUpperCase() + getNombre.substring(1, getNombre.length());
-                Method getter = objeto.getClass().getMethod("get" + getNombre);
-                if (tipo.equals("String") == true) {
-                    try {
-                        Object valor = getter.invoke(objeto, new Object[0]);
-                        query.append("'" + valor + "'");
-                    } catch (IllegalAccessException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (InvocationTargetException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else if (tipo.equals("Integer") == true || tipo.equals("int") == true
-                        || tipo.equals("Float") == true || tipo.equals("float") == true
-                        || tipo.equals("Double") == true || tipo.equals("double") == true) {
-                    try {
-                        Object valor = getter.invoke(objeto, new Object[0]);
-                        query.append(valor);
-                    } catch (IllegalAccessException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (InvocationTargetException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                if (i != atributos.length - 1) {
-                    query.append(",");
+                getNombre        = getNombre.substring(0, 1).toUpperCase() + getNombre.substring(1, getNombre.length());
+                Method getter    = objeto.getClass().getMethod("get" + getNombre);
+                Object valor;
+                try {
+                    valor = getter.invoke(objeto, new Object[0]);
+                    if (tipo.equals("Fecha")) {
+                        if( valor==null || "".equals(valor)) continue;
+                        // No se guarda el campo fecha si esta vacio o nulo
+                        lstCampos.add(field.getName());
+                        lstValores.add("'" + valor + "'");
+                    } else if (tipo.equals("String") == true) {
+                            lstCampos.add(field.getName());
+                            lstValores.add("'" + valor + "'");
+                    } else if (tipo.equals("Integer") == true || tipo.equals("int") == true
+                            || tipo.equals("Float") == true   || tipo.equals("float") == true
+                            || tipo.equals("Double") == true  || tipo.equals("double") == true) {
+                            lstCampos.add(field.getName());
+                            lstValores.add(valor.toString());
+                    } 
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvocationTargetException ex) {
+                    Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } catch (NoSuchMethodException ex) {
                 Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
@@ -375,8 +368,28 @@ public class TransaccionRS {
                 Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        query.append(")");
+        query = "insert into " + tabla + " (";
+        int i = 0;
+        for(String campo:lstCampos){
+            query += campo;
+            i++;
+            if (i < lstCampos.size() ) {
+                query+=",";
+            }
+            
+        }
+        query += ") values(";
+        i = 0;
+        for(String valor:lstValores){
+            query += valor;
+            i++;
+            if (i < lstValores.size()) {
+                query+=",";
+            }
+        }
+        query+=")";
         String sql = query.toString();
+        System.out.println(sql);
         Conexion conexion = new Conexion();
         conexion.conectarse();
         int result = conexion.EjecutarInsertAutonumerico(sql);
@@ -384,6 +397,7 @@ public class TransaccionRS {
 
         return result;
     }
+
 
     public boolean eliminarObjeto(Object objeto) {
 
@@ -453,60 +467,46 @@ public class TransaccionRS {
         String tabla = clase.toLowerCase();
         Field[] atributos = objeto.getClass().getDeclaredFields();
         if (atributos.length == 0 ) atributos = objeto.getClass().getFields();
-        StringBuffer query = new StringBuffer();
-        query.append("update " + tabla + " set ");
-        /*for (int i = 0; i <= atributos.length - 1; i++) {
-        query.append(atributos[i].getName());
-        if (i != atributos.length - 1) {
-        query.append(",");
-        }
-        }*/
-        //query.append(") values (");
+        String query = new String();
+        query ="update " + tabla + " set ";        
         for (int i = 0; i <= atributos.length - 1; i++) {
             try {
-
-
                 Class tipoClass = atributos[i].getType();
                 String tipo = tipoClass.getSimpleName();
-                String getNombre = atributos[i].getName();
+                Field field = atributos[i];
+                String getNombre = field.getName();
                 getNombre = getNombre.substring(0, 1).toUpperCase() + getNombre.substring(1, getNombre.length());
                 Method getter = objeto.getClass().getMethod("get" + getNombre);
-
-                if (tipo.equals("String") == true) {
-                    try {
-                        Object valor = getter.invoke(objeto, new Object[0]);
-                        query.append(atributos[i].getName() + "='" + valor + "'");
-
-                        if (campoId.equalsIgnoreCase(atributos[i].getName())) {
-                            where = campoId + "='" + valor + "'";
-                        }
-                    } catch (IllegalAccessException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (InvocationTargetException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    Object valor = getter.invoke(objeto, new Object[0]);
+                if (tipo.equals("Fecha") == true) {
+                    if(valor==null|| "".equals(valor)) continue;
+                    query+=field.getName() + "='" + valor + "'";
+                } else if (tipo.equals("String") == true) {
+                    query+=field.getName() + "='" + valor + "'";
+                    if (campoId.equalsIgnoreCase(field.getName())) {
+                        where = campoId + "='" + StringEscapeUtils.escapeJava(valor.toString()) + "'";
                     }
-                } else if (tipo.equals("Integer") == true || tipo.equals("int") == true || tipo.equalsIgnoreCase("float") == true || tipo.equals("Double") == true || tipo.equals("double") == true) {
-                    try {
-                        Object valor = getter.invoke(objeto, new Object[0]);
-                        query.append(atributos[i].getName() + "=" + valor);
+                } else if (tipo.equals("Integer") || 
+                           tipo.equals("int")  || 
+                           tipo.equalsIgnoreCase("float") ||
+                           tipo.equalsIgnoreCase("double")) {
+                           query+=field.getName() + "=" + valor;
 
-                        if (campoId.equalsIgnoreCase(atributos[i].getName())) {
+                        if (campoId.equalsIgnoreCase(field.getName())) {
                             where = campoId + "=" + valor;
                         }
-
-                    } catch (IllegalAccessException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (InvocationTargetException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                 }
                 //en el caso de incorporar mas campos a actualizar los separo con , (coma)
                 if (i != atributos.length - 1) {
-                    query.append(",");
+                    query+=",";
+                }
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvocationTargetException ex) {
+                    Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } catch (NoSuchMethodException ex) {
                 Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
@@ -516,9 +516,9 @@ public class TransaccionRS {
         }
 
 
-        query.append(" where " + where);
+        query+=" where " + where;
         String sql = query.toString();
-
+        System.out.println(sql);
         Conexion conexion = new Conexion();
         conexion.conectarse();
         boolean result = conexion.EjecutarInsert(sql);
