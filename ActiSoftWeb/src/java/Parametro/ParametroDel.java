@@ -4,12 +4,21 @@
  */
 package Parametro;
 
+import bd.Parametro;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import transaccion.TAuditoria;
+import transaccion.TParametro;
+import utils.BaseException;
+import utils.JsonRespuesta;
+import utils.OptionsCfg;
+import utils.Parser;
 
 /**
  *
@@ -47,7 +56,7 @@ public class ParametroDel extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    
     /**
      * Handles the HTTP
      * <code>GET</code> method.
@@ -75,7 +84,32 @@ public class ParametroDel extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+         response.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        JsonRespuesta jr = new JsonRespuesta();
+        try {           
+           Integer id = Parser.parseInt(request.getParameter("id"));
+           Parametro parametro = new TParametro().getById(id);            
+           if (parametro==null) throw new BaseException("ERROR","No existe el registro");
+           
+           boolean baja = new TParametro().baja(parametro);
+           if ( baja){
+               jr.setResult("OK");
+                Integer id_usuario = 0;
+                Integer id_tipo_usuario = 0;
+                HttpSession session = request.getSession();
+                id_usuario = (Integer) session.getAttribute("id_usuario");
+                id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
+                TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_CLIENTE,OptionsCfg.ACCION_BAJA,parametro.getId());
+           } else throw new BaseException("ERROR","Ocurrio un error al eliminar el registro");                     
+        }  catch (BaseException ex) {
+            jr.setResult(ex.getResult());
+            jr.setMessage(ex.getMessage());            
+        }
+        finally {
+            out.print(new Gson().toJson(jr));
+            out.close();
+        }
     }
 
     /**

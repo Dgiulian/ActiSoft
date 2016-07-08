@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-md-12">
+    <form class="form-vertical">
+      <input id="id" name="id" type="hidden" class="" value="{{id}}" >
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="dominio">Dominio:</label>
+        <div class="col-md-8">
+        <input id="dominio" name="dominio" type="text" class="form-control input-md" value="{{dominio}}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="vencimiento_vtv">Vencimiento vtv: </label>
+        <div class="col-md-8">
+        <input id="vencimiento_vtv" name="vencimiento_vtv" type="text" class="form-control input-md date-picker" value="{{vencimiento_vtv}}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="seguro">Seguro:</label>
+        <div class="col-md-8">
+        <input id="seguro" name="seguro" type="text" class="form-control input-md" value="{{seguro}}">
+     </div>
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="poliza">Poliza:</label>
+        <div class="col-md-8">
+        <input id="poliza" name="poliza" type="text" class="form-control input-md" value="{{poliza}}">
+      </div>
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="vencimiento_poliza">Vencimiento Poliza: </label>
+        <div class="col-md-8">
+        <input id="vencimiento_poliza" name="vencimiento_poliza" type="text" class="form-control input-md date-picker" value="{{vencimiento_poliza}}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="rsv">RSV:</label>
+        <div class="col-md-8">
+          <input id="rsv" name="rsv" type="text" class="form-control input-md" value="{{rsv}}">
+        </div>
+     </div>
+  </form>
+  </div>
+</div>

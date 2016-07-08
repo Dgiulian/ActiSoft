@@ -25,6 +25,8 @@ public class TParametro extends TransaccionBase<Parametro>{
     public boolean actualizar(Parametro parametro){
         return super.actualizar(parametro, "id");
     }
-    
+    public static void main(String[] args){
+        String cadena = "c:\\Program Files (x86)\\Java\\apache-tomcat-6.0.37\\webapps\\compras\\";
+    }
     
 }

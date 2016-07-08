@@ -89,6 +89,8 @@
     <script src="bower_components/datatables-plugins/sorting/date-uk.js"></script>
 
     <script src="js/bootbox.min.js"></script>
+    <script src="js/handlebars.runtime-v4.0.5.js"></script>
+    
     <script src="bower_components/jquery-mask/jquery.mask.min.js"></script>
     <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
     <script src="bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.min.js"></script>
@@ -96,6 +98,9 @@
     <script src="dist/js/sb-admin-2.js"></script>
     <script src="js/moment-with-locales.min.js"></script>
     <script src="js/invesoft.js"></script>
+    
+    <script src="js/hnd/vehiculo.list.js"></script>
+    <script src="js/hnd/vehiculo.edit.js"></script>
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
@@ -122,9 +127,7 @@
         });
     });
     function loadDataVehiculo(data){
-         var $tabla = $('#tblVehiculo');
-
-
+        var $tabla = $('#tblVehiculo');         
         $.ajax({
                url: '<%= PathCfg.VEHICULO_LIST %>',
                data: data,
@@ -137,44 +140,35 @@
                success: function(data) {
                    if(data.Result === "OK") {
                        $tabla.find('tbody').html(createTableVehiculo(data.Records));
-
                         $('.btn-del').click(borrarVehiculo);
                         $('.btn-edit').click(editarVehiculo);
-//                        $tabla.DataTable({
-//                                responsive: true,
-//                                paging:true,
-//                                ordering:false,
-//                                searching:false,
-//                                lengthChange:false,
-//                                bInfo:false,
-//                                language: {
-//                                    url:'bower_components/datatables-plugins/i18n/Spanish.json',
-//                                }
-//                        });
                    }
                }
            });
     }
 
     function createTableVehiculo(data){
-        var html = "";
-        for(var i = 0;i< data.length;i++){
-           html +="<tr class=''>";
-           d = data[i];
-            html += wrapTag('td',d.dominio,'');
-            html += wrapTag('td',convertirFecha(d.vencimiento_vtv),'');
-            html += wrapTag('td',d.seguro,'');
-            html += wrapTag('td',d.poliza,'');
-            html += wrapTag('td',convertirFecha(d.vencimiento_poliza),'');
-            html += wrapTag('td',d.rsv,'');
-
-//           var htmlEdit = "<a href='<%= PathCfg.VEHICULO_EDIT%>?id="+ d.id +"&id_proveedor="+ d.id_proveedor +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
-           var htmlEdit = "<span  data-index='"+ d.id + "' data-nombre='"+ d.nombre + "' data-dominio='"+d.dominio+"'  data-vencimiento_vtv='"+d.vencimiento_vtv+"'  data-seguro='"+d.seguro+"' data-poliza='"+d.poliza+"'  data-vencimiento_poliza='"+d.vencimiento_poliza+"'  data-rsv='"+d.rsv+"' class='btn btn-xs btn-circle btn-warning btn-edit'><span class='fa fa-edit fw'></span></span>";
-           var htmlDel = "<span data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span>";
-           html +=wrapTag('td',htmlEdit + htmlDel,'');
-           html +="</tr>";
-       }
-       return html;
+        Handlebars.registerHelper("convertirFecha",convertirFecha);
+        return Handlebars.templates['vehiculo.list']({records:data});
+        
+//        var html = "";
+//        for(var i = 0;i< data.length;i++){
+//           html +="<tr class=''>";
+//           d = data[i];
+//            html += wrapTag('td',d.dominio,'');
+//            html += wrapTag('td',convertirFecha(d.vencimiento_vtv),'');
+//            html += wrapTag('td',d.seguro,'');
+//            html += wrapTag('td',d.poliza,'');
+//            html += wrapTag('td',convertirFecha(d.vencimiento_poliza),'');
+//            html += wrapTag('td',d.rsv,'');
+//
+////           var htmlEdit = "<a href='<%= PathCfg.VEHICULO_EDIT%>?id="+ d.id +"&id_proveedor="+ d.id_proveedor +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
+//           var htmlEdit = "<span  data-index='"+ d.id + "' data-nombre='"+ d.nombre + "' data-dominio='"+d.dominio+"'  data-vencimiento_vtv='"+d.vencimiento_vtv+"'  data-seguro='"+d.seguro+"' data-poliza='"+d.poliza+"'  data-vencimiento_poliza='"+d.vencimiento_poliza+"'  data-rsv='"+d.rsv+"' class='btn btn-xs btn-circle btn-warning btn-edit'><span class='fa fa-edit fw'></span></span>";
+//           var htmlDel = "<span data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span>";
+//           html +=wrapTag('td',htmlEdit + htmlDel,'');
+//           html +="</tr>";
+//       }
+//       return html;
     }
     function borrarVehiculo(){
         var id = $(this).data('index');
@@ -202,65 +196,14 @@
         var titulo = data.id?"Editar Vehiculo":"Nuevo Vehiculo";
         bootbox.dialog({
                 title: titulo,
-                message: '<div class="row">  ' +
-                    '<div class="col-md-12"> ' +
-                    '<form class="form-vertical"> ' +
-                    '<input id="id" name="id" type="hidden" class="" value=' + data.id + ' >' +
-                     '<div class="form-group"> ' +
-                        '<label class="col-md-4 control-label" for="dominio">Dominio:</label> ' +
-                        '<div class="col-md-8"> ' +
-                        '<input id="dominio" name="dominio" type="text" class="form-control input-md" value="'+ data.dominio +'"> ' +
-                     '</div>' +
-
-                    '<div class="form-group"> ' +
-                        '<label class="col-md-4 control-label" for="vencimiento_vtv">Vencimiento vtv: </label>' +
-                        '<div class="col-md-8"> ' +
-                        '<input id="vencimiento_vtv" name="vencimiento_vtv" type="text" class="form-control input-md date-picker" value="' + data.vencimiento_vtv + '"> ' +
-                        '</div> ' +
-                    '</div>'+
-                    '<div class="form-group"> ' +
-                        '<label class="col-md-4 control-label" for="seguro">Seguro:</label> ' +
-                        '<div class="col-md-8"> ' +
-                        '<input id="seguro" name="seguro" type="text" class="form-control input-md" value="'+ data.seguro +'"> ' +
-                     '</div>' +
-                    '<div class="form-group"> ' +
-                        '<label class="col-md-4 control-label" for="poliza">Poliza:</label> ' +
-                        '<div class="col-md-8"> ' +
-                        '<input id="poliza" name="poliza" type="text" class="form-control input-md" value="'+ data.poliza +'"> ' +
-                     '</div>' +
-                     '<div class="form-group"> ' +
-                        '<label class="col-md-4 control-label" for="vencimiento_poliza">Vencimiento Poliza: </label>' +
-                        '<div class="col-md-8"> ' +
-                        '<input id="vencimiento_poliza" name="vencimiento_poliza" type="text" class="form-control input-md date-picker" value="' + data.vencimiento_poliza + '"> ' +
-                        '</div> ' +
-                    '</div>'+
-                    '<div class="form-group"> ' +
-                        '<label class="col-md-4 control-label" for="rsv">RSV:</label> ' +
-                        '<div class="col-md-8"> ' +
-                        '<input id="rsv" name="rsv" type="text" class="form-control input-md" value="'+ data.rsv +'"> ' +
-                     '</div>' +
-                      '</div> ' +
-                '</form>' +
-                '</div>'+
-                '</div>',
+                message: Handlebars.templates['vehiculo.edit'](data),
                 buttons: {
                     success: {
                         label: "Guardar",
                         className: "btn-success",
                         callback: function () {
-                            
-                            var id     = $('#id').val();
-                            var id_proveedor = $('#id_proveedor').val();
-                            var dominio = $('#dominio').val();
-                            var vencimiento_vtv = $('#vencimiento_vtv').val();
-                            var seguro = $('#seguro').val();
-                            var poliza = $('#poliza').val();                            
-                            var vencimiento_poliza  = $('#vencimiento_poliza').val();
-                            var rsv  = $('#rsv').val();
-                            //var activo = $('#activo').prop('checked')?'1':'';
-                            //activo = 1;
-                            var data = {id:id,id_proveedor:id_proveedor,dominio: dominio,vencimiento_vtv: vencimiento_vtv,seguro: seguro,poliza: poliza,vencimiento_poliza: vencimiento_poliza,rsv: rsv};
-                            if(!validar(data)) return;                        
+                            var data = recuperarCampos();
+                            if(!validar(data)) return;
                             $.ajax({
                                 url:'<%= PathCfg.VEHICULO_EDIT%>',
                                 data: data,
@@ -268,7 +211,7 @@
                                 dataType:'json',
                                 success:function(result){
                                     if(result.Result==='OK')
-                                        loadDataVehiculo({id_proveedor:id_proveedor});
+                                        loadDataVehiculo({id_proveedor:data.id_proveedor});
                                     else bootbox.alert(result.Message);
                                 }
                                 });
@@ -277,8 +220,7 @@
                     },
                     cancel: {
                         label: "Cancelar",
-                        callback: function () {
-                        }
+                        callback: function () {}
                     }
                 }
             }).init(function(){
@@ -292,6 +234,18 @@
                     });
                   }
         });
+    }
+    function recuperarCampos(){
+        var data = {};
+        data.id     = $('#id').val();
+        data.id_proveedor = $('#id_proveedor').val();
+        data.dominio = $('#dominio').val();
+        data.vencimiento_vtv = $('#vencimiento_vtv').val();
+        data.seguro = $('#seguro').val();
+        data.poliza = $('#poliza').val();                            
+        data.vencimiento_poliza  = $('#vencimiento_poliza').val();
+        data.rsv  = $('#rsv').val();
+        return data;
     }
     function validar(data){
         if(!data.dominio){

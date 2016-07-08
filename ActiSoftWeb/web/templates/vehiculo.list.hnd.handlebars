@@ -1,0 +1,21 @@
+{{#each records}}
+  <tr class="">
+      <td class="">{{dominio}}</td>
+      <td class="">{{convertirFecha vencimiento_vtv}}</td>
+      <td class="">{{seguro}}</td>
+      <td class="">{{poliza}}</td>
+      <td class="">{{convertirFecha vencimiento_poliza}}</td>
+      <td class="">{{rsv}}</td>
+      <td class="">
+          <span data-index="{{id}}" data-dominio="{{dominio}}" data-vencimiento_vtv="{{vencimiento_vtv}}" data-seguro="{{vencimiento_vtv}}" data-poliza="{{poliza}}" data-vencimiento_poliza="{{vencimiento_poliza}}" data-rsv="{{rsv}}" class="btn btn-xs btn-circle btn-warning btn-edit"><span class="fa fa-edit fw"></span></span>
+          <span data-index="{{id}}" class="btn btn-xs btn-danger btn-circle btn-del"><span class="fa fa-trash fw"></span></span>
+      </td>
+  </tr>
+{{/each}}
+
+
+
+
+
+
+

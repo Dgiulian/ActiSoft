@@ -117,7 +117,8 @@ public class ParametroEdit extends HttpServlet {
                 jr.setRecord(p);
             } else throw new BaseException("ERROR","Ocurri&oacute; un error al guardar el par&aacute;metro");
          } catch(BaseException ex){
-             
+             jr.setMessage(ex.getMessage());
+             jr.setResult(ex.getResult());
          } finally{
             String jsonResult = new Gson().toJson(jr);
             out.print(jsonResult);
