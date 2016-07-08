@@ -305,7 +305,7 @@
                                         %>                                  
                                         <div class="form-group">                            
                                             <!--<a href='<%=PathCfg.DOWNLOAD%>?type=activo&id=<%=activo.getId()%>' class="btn btn-success"><span> </span> Archivo asociado: <b><%= activo.getArchivo_1() %></b></a>-->
-                                            <a href='<%=activo.getArchivo_2_url()%>' target="_blank">
+                                            <a href='<%=activo.getArchivo_1_url()%>' target="_blank">
                                             <img src='<%=activo.getArchivo_1_url()%>' width="250" height="250" >
                                             </a>
                                              <span class="btn btn-default cambiarArchivo" data-target="selectFile1">Cambiar</span>
@@ -315,9 +315,9 @@
                                             <label for="archivo_1">Imagen 1</label>
                                             <input type="file" name="archivo_1" id="archivo_1" value="">
                                         </div>
-                                      <% if (!"".equals(activo.getArchivo_2())) { 
+                                       <% if (!"".equals(activo.getArchivo_2())) { 
                                              display2 = "style='display: none'";     
-                                        %>                                  
+                                       %>                                  
                                         <div class="form-group">
                                             
                                             <!--<a href='<%=PathCfg.DOWNLOAD%>?type=activo&id=<%=activo.getId()%>' class="btn btn-success"><span> </span> Archivo asociado: <b><%= activo.getArchivo_2() %></b></a>-->                                         

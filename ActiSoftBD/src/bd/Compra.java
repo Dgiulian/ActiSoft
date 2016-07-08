@@ -12,7 +12,9 @@ public class Compra {
 	public Integer id_accion = 0;
 	public Float stock_anterior = 0f;
 	public String factura = "";
+        public String certificado_fabricacion = "";
 
+    
 	public Compra() {
 	}
 
@@ -28,6 +30,7 @@ public class Compra {
 		this.id_accion = compra.getId_accion();
 		this.stock_anterior = compra.getStock_anterior();
 		this.factura = compra.getFactura();
+		this.certificado_fabricacion = compra.getCertificado_fabricacion();
 	}
 
 	public Integer getId() {
@@ -127,4 +130,11 @@ public class Compra {
 		this.factura = factura;
 		return this;
 	}
+        public String getCertificado_fabricacion() {
+            return certificado_fabricacion;
+        }
+
+        public void setCertificado_fabricacion(String certificado_fabricacion) {
+            this.certificado_fabricacion = certificado_fabricacion;
+        }
 }

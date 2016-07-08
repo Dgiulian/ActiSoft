@@ -40,19 +40,21 @@ public class OptionsCfg {
     public static final Integer REMITO_ESTADO_ABIERTO = 1;
     public static final Integer REMITO_ESTADO_CERRADO = 2;
     
-    public static final Integer CERTIFICADO_APTO = 1;
-    public static final Integer CERTIFICADO_NO_APTO=2;
+    public static final Integer CERTIFICADO_APTO    = 1;
+    public static final Integer CERTIFICADO_NO_APTO = 2;
     public static final Integer CERTIFICADO_REPARAR = 3;
+    public static final Integer CERTIFICADO_VENCIDO = 4;
 
     public static final Integer CERTIFICADO_PATH = 1;
     public static final Integer REMITO_PATH = 2;
     
     public static final Integer ACTIVO_PATH = 3;
     public static final Integer ACTIVO_URL = 4;
-    
+    public static final String  COMPRA_PATH = "compra_path";
+    public static final String  COMPRA_URL  = "compra_url";
     public static final Integer PRETICKET_IMAGE = 5;
-    public static final String ETIQUETA_IMAGE = "fondo_etiqueta";
-    public static final String REMITO_IMAGE = "fondo_remito";
+    public static final String  ETIQUETA_IMAGE = "fondo_etiqueta";
+    public static final String  REMITO_IMAGE = "fondo_remito";
     
     public static final Integer UNIDAD_DIAS = 1;
     public static final Integer UNIDAD_HORAS = 2;
@@ -86,7 +88,11 @@ public class OptionsCfg {
     public static final Integer MODULO_CORRECTIVO     = 18;
     public static final Integer MODULO_AGENDA         = 19;
     
-    public static final Integer MODULO_KIT     = 19;
+    public static final Integer MODULO_KIT            = 20;
+    public static final Integer MODULO_TRANSPORTISTA  = 21;
+    public static final Integer MODULO_VEHICULO       = 22;
+    
+    public static final Integer MODULO_PARAMETRO      = 25;
     
     public static final Integer ACTIVIDAD_ENTREGA       = 1;
     public static final Integer ACTIVIDAD_DEVOLUCIÓN    = 2;
@@ -164,7 +170,8 @@ public class OptionsCfg {
         ArrayList<Option> lista = new ArrayList();
         lista.add(new Option(CERTIFICADO_APTO,String.format("%03d",CERTIFICADO_APTO),"Apto"));
         lista.add(new Option(CERTIFICADO_NO_APTO,String.format("%03d",CERTIFICADO_NO_APTO),"No Apto"));
-        lista.add(new Option(CERTIFICADO_REPARAR,String.format("%03d",CERTIFICADO_REPARAR),"Reparar"));                
+//        lista.add(new Option(CERTIFICADO_REPARAR,String.format("%03d",CERTIFICADO_REPARAR),"Reparar"));                
+        lista.add(new Option(CERTIFICADO_VENCIDO,String.format("%03d",CERTIFICADO_VENCIDO),"Vencido"));                
         return lista;
     }
      

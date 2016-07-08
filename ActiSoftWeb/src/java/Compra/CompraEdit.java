@@ -6,16 +6,25 @@ package Compra;
 
 import bd.Activo;
 import bd.Compra;
+import bd.Parametro;
 import bd.Rubro;
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FilenameUtils;
 import transaccion.TActivo;
 import transaccion.TAuditoria;
 import transaccion.TCompra;
+import transaccion.TParametro;
 import transaccion.TRubro;
 import utils.BaseException;
 import utils.OptionsCfg;
@@ -93,7 +102,10 @@ public class CompraEdit extends HttpServlet {
             request.getRequestDispatcher("message.jsp").forward(request,response);
         }
     }
-
+    private static final String DATA_DIRECTORY  = "data";
+    private static final int   MAX_MEMORY_SIZE  = 1024 * 1024 * 2;
+    private static final int   MAX_REQUEST_SIZE = 1024 * 1024 * 2;
+    
     /**
      * Handles the HTTP
      * <code>POST</code> method.
@@ -106,35 +118,88 @@ public class CompraEdit extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String idCompra     = request.getParameter("id");
-        String idActivo     = request.getParameter("id_activo");        
-        String fecha        = request.getParameter("fecha");
-        String id_divisa    = request.getParameter("id_divisa");
-        String cantidad     = request.getParameter("cantidad");
-        String precio_unit  = request.getParameter("precio_unit");
-        String precio_tot   = request.getParameter("precio_tot");
-        String id_proveedor = request.getParameter("id_proveedor");
-        String factura      = request.getParameter("factura");
-        Integer id_accion   = Parser.parseInt(request.getParameter("id_accion"));        
+        String idCompra               = "";
+        String idActivo               = "";
+        String fecha                  = "";
+        String id_divisa              = "";
+        String cantidad               = "";
+        String precio_unit            = "";
+        String precio_tot             = "";
+        String id_proveedor           = "";
+        String factura                = "";
+        Integer id_accion             = 0;
+        String cetificado_fabricacion = "";
+        boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+        FileItem archivo1 = null;
         try{
-            Integer id_activo;
-            Integer  id_compra;
-            try{
-                id_activo = Integer.parseInt(idActivo);                
-            } catch (NumberFormatException ex){
-                id_activo = 0;
+            if (!isMultipart) 
+                throw new BaseException("ERROR","El formulario no es multiparte. <br> No se pueden subir archivos");
+        
+            // Create a factory for disk-based file items
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+
+            // Sets the size threshold beyond which files are written directly to disk.
+            factory.setSizeThreshold(MAX_MEMORY_SIZE);
+
+            // Sets the directory used to temporarily store files that are larger
+            // than the configured size threshold. We use temporary directory for
+            // java
+            factory.setRepository(new File(System.getProperty("java.io.tmpdir")));            
+            Parametro compra_path = new TParametro().getByCodigo(OptionsCfg.COMPRA_PATH);
+
+            // constructs the folder where uploaded file will be stored
+            String uploadFolder = null;
+            if (compra_path!=null) uploadFolder = compra_path.getValor();
+            else uploadFolder = getServletContext().getRealPath("") + File.separator + DATA_DIRECTORY;
+
+            System.out.println(uploadFolder);
+
+            // Create a new file upload handler
+            ServletFileUpload upload = new ServletFileUpload(factory);
+
+            // Set overall request size constraint
+            upload.setSizeMax(MAX_REQUEST_SIZE);            
+            
+            try {
+                List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+                for (FileItem item : items) {
+                    String fieldName = item.getFieldName();
+                    if (item.isFormField()) {
+                    // Process regular form field (input type="text|radio|checkbox|etc", select, etc).                        
+                        String fieldValue = item.getString();
+                         if(fieldName.equalsIgnoreCase("id"))           idCompra      = fieldValue;
+                         if(fieldName.equalsIgnoreCase("id_activo"))    idActivo      = fieldValue;
+                         if(fieldName.equalsIgnoreCase("fecha"))        fecha         = fieldValue;
+                         if(fieldName.equalsIgnoreCase("id_divisa"))    id_divisa     = fieldValue;
+                         if(fieldName.equalsIgnoreCase("cantidad"))     cantidad      = fieldValue;
+                         if(fieldName.equalsIgnoreCase("precio_unit"))  precio_unit   = fieldValue;
+                         if(fieldName.equalsIgnoreCase("precio_tot"))   precio_tot    = fieldValue;
+                         if(fieldName.equalsIgnoreCase("id_proveedor")) id_proveedor  = fieldValue;
+                         if(fieldName.equalsIgnoreCase("factura"))      factura       = fieldValue;
+                         if(fieldName.equalsIgnoreCase("id_accion"))    id_accion     = Parser.parseInt(fieldValue);
+                         
+                    }else {
+                        // Process form file field (input type="file").                  
+                        if(fieldName.equalsIgnoreCase("certificado_fabricacion")) {
+                            archivo1 = item;                    
+                            cetificado_fabricacion = FilenameUtils.getName(item.getName());
+                        }
+                    }
+                };           
+            } catch (FileUploadException ex) {
+                throw new BaseException("ERROR","Ocurrió un error al subir el archivo");
             }
+            Integer id_activo = Parser.parseInt(idActivo);;
+            Integer id_compra = Parser.parseInt(idCompra);;           
             
             Activo activo = new TActivo().getById(id_activo);
             if (activo == null) throw new BaseException("Activo inexistente", "No se encontr&oacute; el activo");
             
             Compra compra;
             TCompra tc = new TCompra();
-            boolean nuevo = false;
-            try{
-                id_compra = Integer.parseInt(idCompra);
-                compra = tc.getById(id_compra);
-            } catch (NumberFormatException ex){
+            boolean nuevo = false;            
+            compra = tc.getById(id_compra);
+            if(compra==null) {             
                 compra = new Compra();
                 nuevo = true;
             }            
@@ -153,6 +218,18 @@ public class CompraEdit extends HttpServlet {
             compra.setPrecio_tot(Parser.parseFloat(precio_tot));
             compra.setId_proveedor(Parser.parseInt(id_proveedor));
             compra.setFactura(factura);
+            if(archivo1!=null && !"".equals(cetificado_fabricacion)) {
+                String filePath = uploadFolder + File.separator + cetificado_fabricacion;
+                //String fileUrl =  activo_url.getValor() + File.separator + cetificado_fabricacion ;
+                File uploadedFile = new File(filePath);
+                try {
+                    archivo1.write(uploadedFile);
+                    compra.setCertificado_fabricacion(cetificado_fabricacion);
+                    
+                } catch (Exception ex) {
+                    throw new BaseException("ERROR","Ocurrió un error al cargar el archivo");
+                }                            
+            }            
             boolean todoOk = true;
             if(nuevo) {
                 compra.setCantidad(Parser.parseFloat(cantidad)); 

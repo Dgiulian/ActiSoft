@@ -1,3 +1,7 @@
+<%@page import="java.io.File"%>
+<%@page import="transaccion.TParametro"%>
+<%@page import="bd.Parametro"%>
+<%@page import="bd.Parametro"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="transaccion.TProveedor"%>
 <%@page import="bd.Proveedor"%>
@@ -24,6 +28,9 @@
     nuevo = compra.getId()==0;
     List<Proveedor> lstProveedores = new TProveedor().getList();
     if ( lstProveedores==null) lstProveedores = new ArrayList<Proveedor>();
+    Parametro parametro = new TParametro().getByCodigo(OptionsCfg.COMPRA_URL);
+    String compra_url = "/compra/";
+    if (parametro!=null) compra_url = parametro.getValor() ;
             
 %>
 <!DOCTYPE html>
@@ -53,7 +60,7 @@
                     action += (!nuevo)?"&id="+compra.getId():"";
                     String disabled=nuevo?"":"disabled";
                 %>
-                <form role="form" method="POST" action="<%=action%>" >
+                <form role="form" method="POST" action="<%=action%>" enctype="multipart/form-data" >
                     
                 <div class="col-lg-12">
                     <div class="panel panel-default">
@@ -63,7 +70,7 @@
                         <div class="col-lg-12 " >
                             <h3 class="">Compra</h3>
                             <fieldset>
-                                <input type="hidden" name="id_activo" value="<%= compra.getId_activo()%>">
+                                <input type="hidden" name="id_activo" value="<%= activo.getId()%>">
                                 <!--<input type="hidden" name="id_proveedor" value="<%= compra.getId_proveedor()%>">-->
                                 <% if (!nuevo) {%>
                                     <input type="hidden" name="id" value="<%= compra.getId()%>">                                    
@@ -138,6 +145,27 @@
                                           <input class="form-control" name="factura" id="factura" value="<%= compra.getFactura() %>">
                                       </div>                                        
                                  </div>
+                                      <div class="col-lg-12 " >
+                                          <% String display1 = ""; %>
+                                          <div class="form-group"  >
+                                            <label for="certificado_fabricacion">Certificado de fabricaci&oacute;n</label>
+                                    <%
+                                        if (!"".equals(compra.getCertificado_fabricacion())) { 
+                                             display1 = "style='display: none'";     
+                                    %>                                  
+                                        <div class="form-group">                            
+                                            <!--<a href='<%=PathCfg.DOWNLOAD%>?type=activo&id=<%=activo.getId()%>' class="btn btn-success"><span> </span> Archivo asociado: <b><%= activo.getArchivo_1() %></b></a>-->
+                                            <a href='<%=compra.getCertificado_fabricacion()%>' target="_blank">
+                                            <a href='<%=compra_url + File.separator + compra.getCertificado_fabricacion()%>' ><%=compra.getCertificado_fabricacion()%></a>
+                                            </a>
+                                             <span class="btn btn-default cambiarArchivo" data-target="selectFile1">Cambiar</span>
+                                        </div>
+                                        <% }  %>
+                                        <div  <%=display1 %>  id="selectFile1">
+                                            <input type="file" name="certificado_fabricacion" id="certificado_fabricacion" value="">
+                                        </div>
+                                        </div>
+                                    </div>
                                <!--</div>-->
                             </fieldset>
                         </div>
@@ -195,6 +223,11 @@
         $('#cantidad').change(completarTotal);
         $('#precio_unit').change(completarTotal);
         $('#btnSubmit').click(submitForm);
+         $('.cambiarArchivo').click(function(){
+            target = $(this).data('target');
+            if(target!==undefined)
+                $('#' + target).slideDown();
+        });
     });
     function completarTotal(){
         var $cant = $('#cantidad');
