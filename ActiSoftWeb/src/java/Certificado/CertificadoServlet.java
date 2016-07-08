@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TActivo;
+import transaccion.TCertificado;
 import utils.BaseException;
 
 /**
@@ -32,6 +33,9 @@ public class CertificadoServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        /* Modificamos el resultado de los certificados que ya vencieron*/
+        new TCertificado().vencerCertificados();
+        
         String idActivo = request.getParameter("id_activo");
         try{
             Integer id_activo;

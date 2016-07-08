@@ -55,7 +55,7 @@ public class ActivoEdit extends HttpServlet {
             throws ServletException, IOException {
         Activo activo = null;
         if(request.getParameter("id")!=null) {
-            try{
+            try {
                 Integer id = Integer.parseInt(request.getParameter("id"));
                 activo = new TActivo().getById(id);
             } catch (NumberFormatException ex){

@@ -12,8 +12,8 @@ public class Certificado {
     public Integer id = 0;
     public Integer id_activo = 0;
     public String  fecha = "";
-    public String  fecha_vigencia = "";
-    public String  fecha_efectiva  = "";
+    public String  fecha_desde  = "";
+    public String  fecha_hasta = "";
     public String  codigo = "";
     public String  precinto = "";
     public Integer id_resultado = 0;
@@ -42,8 +42,8 @@ public class Certificado {
         this.id = certificado.getId();        
         this.id_activo = certificado.getId_activo();
         this.fecha = certificado.getFecha();
-        this.fecha_vigencia = certificado.getFecha_vigencia();
-        this.fecha_efectiva = certificado.getFecha_efectiva();
+        this.fecha_desde = certificado.getFecha_desde();
+        this.fecha_hasta = certificado.getFecha_hasta();
         this.codigo = certificado.getCodigo();
         this.precinto = certificado.getPrecinto();
         this.id_resultado = certificado.getId_resultado();
@@ -63,11 +63,11 @@ public class Certificado {
     public String  getFecha(){
         return this.fecha;
     }
-    public String getFecha_vigencia() {
-        return this.fecha_vigencia;
+    public String getFecha_hasta() {
+        return this.fecha_hasta;
     }
-    public String getFecha_efectiva () {
-        return this.fecha_efectiva ;
+    public String getFecha_desde () {
+        return this.fecha_desde ;
     }
     public String getNombre_proveedor() {
         return this.nombre_proveedor;
@@ -109,12 +109,12 @@ public class Certificado {
         this.fecha = fecha; 
         return this;
     }
-    public Certificado setFecha_vigencia(String fecha_vigencia) {
-        this.fecha_vigencia = fecha_vigencia;
+    public Certificado setFecha_hasta(String fecha_hasta) {
+        this.fecha_hasta = fecha_hasta;
         return this;
     }
-    public Certificado setFecha_efectiva (String fecha_efectiva ) {
-        this.fecha_efectiva  = fecha_efectiva ;
+    public Certificado setFecha_desde (String fecha_desde ) {
+        this.fecha_desde  = fecha_desde ;
         return this;
     }
     public Certificado setCodigo (String  codigo){

@@ -154,7 +154,7 @@ public class ActivoList extends HttpServlet {
          Compra compra = tc.getPrimerCompra(activo.getId());
          if(compra!=null) this.fecha_alta = compra.getFecha();         
          //this.certificado = (tcert.getVigente(activo.getId())!=null)?"Si":"No";
-          this.certificado = mapValidos.get(activo.getId())!=null?"Si":"No";
+          this.certificado = mapValidos.get(activo.getId())!=null?"Si":"Vencido";
      }
  }
    

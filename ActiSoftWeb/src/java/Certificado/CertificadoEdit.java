@@ -133,8 +133,8 @@ public class CertificadoEdit extends HttpServlet {
         String codigo = "";
         String precinto = "";
         String fecha = "";
-        String fecha_vigencia = "";
-        String fecha_efectiva = "";
+        String fecha_hasta = "";
+        String fecha_desde = "";
         String nombre_proveedor = "";
         String idResult = "";
         String observaciones = "";
@@ -201,8 +201,8 @@ public class CertificadoEdit extends HttpServlet {
                if (fieldName.equalsIgnoreCase("codigo"))                   codigo = fieldValue;
                if (fieldName.equalsIgnoreCase("precinto"))                 precinto = fieldValue;
                if (fieldName.equalsIgnoreCase("fecha"))                    fecha = fieldValue;
-               if (fieldName.equalsIgnoreCase("fecha_vigencia"))           fecha_vigencia = fieldValue;
-               if (fieldName.equalsIgnoreCase("fecha_efectiva"))           fecha_efectiva = fieldValue;
+               if (fieldName.equalsIgnoreCase("fecha_desde"))              fecha_desde = fieldValue;
+               if (fieldName.equalsIgnoreCase("fecha_hasta"))              fecha_hasta = fieldValue;               
                if (fieldName.equalsIgnoreCase("nombre_proveedor"))         nombre_proveedor = fieldValue;
                if (fieldName.equalsIgnoreCase("id_resultado"))             idResult = fieldValue;
                if (fieldName.equalsIgnoreCase("observaciones"))            observaciones = fieldValue;
@@ -260,8 +260,8 @@ public class CertificadoEdit extends HttpServlet {
             }            
             certificado.setId_activo(id_activo);
             certificado.setFecha(TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));
-            certificado.setFecha_vigencia(TFecha.formatearFecha(fecha_vigencia, TFecha.formatoVista, TFecha.formatoBD));
-            certificado.setFecha_efectiva(TFecha.formatearFecha(fecha_efectiva, TFecha.formatoVista, TFecha.formatoBD));
+            certificado.setFecha_hasta(TFecha.formatearFecha(fecha_hasta, TFecha.formatoVista, TFecha.formatoBD));
+            certificado.setFecha_desde(TFecha.formatearFecha(fecha_desde, TFecha.formatoVista, TFecha.formatoBD));
             certificado.setCodigo(codigo);
             certificado.setNombre_proveedor(nombre_proveedor);
             certificado.setPrecinto(precinto);

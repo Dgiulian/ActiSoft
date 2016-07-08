@@ -81,14 +81,14 @@
                                 </div>   
                                 <div class="col-lg-4 " >
                                     <div class="form-group">
-                                        <label for="fecha_efectiva">Fecha desde</label>
-                                        <input class="form-control date-picker" name="fecha_efectiva" id="fecha_efectiva" size="0"  value="<%=TFecha.formatearFechaBdVista(certificado.getFecha_efectiva()) %>">
+                                        <label for="fecha_desde">Fecha desde</label>
+                                        <input class="form-control date-picker" name="fecha_desde" id="fecha_desde" size="0"  value="<%=TFecha.formatearFechaBdVista(certificado.getFecha_desde()) %>">
                                     </div>
                                 </div>     
                                 <div class="col-lg-4 " >
                                     <div class="form-group">
-                                        <label for="fecha_vigencia">Fecha hasta</label>
-                                        <input class="form-control date-picker" name="fecha_vigencia" id="fecha_vigencia" size="0"  value="<%=TFecha.formatearFechaBdVista(certificado.getFecha_vigencia()) %>">
+                                        <label for="fecha_hasta">Fecha hasta</label>
+                                        <input class="form-control date-picker" name="fecha_hasta" id="fecha_hasta" size="0"  value="<%=TFecha.formatearFechaBdVista(certificado.getFecha_hasta()) %>">
                                     </div>
                                 </div>  
                                  
@@ -113,7 +113,7 @@
                                     </div>-->
                                 <!--</div>-->
                                <!--<div class="form-group col-lg-12 " >-->
-                                   <div class="col-lg-3 " >
+                                   <div class="col-lg-4 " >
                                         <div class="form-group " >
                                              <label for="id_resultado">Resultado</label>
                                              <select class="form-control" name="id_resultado" id="id_resultado" >
@@ -126,7 +126,7 @@
                                              </select>
                                         </div>
                                    </div>
-                                    <div class="col-lg-3 " >   
+                                    <div class="col-lg-2 " >   
                                      <div class="form-group " >
                                          <div class="checkbox">
                                             <label for="externo">
@@ -294,8 +294,8 @@
         });
         function validar(){
             var $fecha = $('#fecha');
-            var $fecha_vigencia = $('#fecha_vigencia');
-            var $fecha_efectiva = $('#fecha_efectiva');
+            var $fecha_hasta = $('#fecha_hasta');
+            var $fecha_desde = $('#fecha_desde');
             
             if($fecha===undefined || $fecha.val()==="" || !validarFecha($fecha.val())){
                 bootbox.alert("Debe ingresar la fecha del certificado");
@@ -303,17 +303,17 @@
                 return false;
             } else $fecha.parent().removeClass("has-error");
             
-            if($fecha_vigencia===undefined || $fecha_vigencia.val()==="" || !validarFecha($fecha_vigencia.val())){
-                bootbox.alert("Debe ingresar la fecha de vigencia del certificado");
-                $fecha_vigencia.parent().addClass("has-error");
+            if($fecha_hasta===undefined || $fecha_hasta.val()==="" || !validarFecha($fecha_hasta.val())){
+                bootbox.alert("Debe ingresar la fecha hasta del certificado");
+                $fecha_hasta.parent().addClass("has-error");
                 return false;
-            } else $fecha_vigencia.parent().removeClass("has-error");
+            } else $fecha_hasta.parent().removeClass("has-error");
             
-            if($fecha_efectiva===undefined || $fecha_efectiva.val()==="" || !validarFecha($fecha_efectiva.val())){
-                bootbox.alert("Debe ingresar la fecha efectiva del certificado");
-                $fecha_efectiva.parent().addClass("has-error");
+            if($fecha_desde===undefined || $fecha_desde.val()==="" || !validarFecha($fecha_desde.val())){
+                bootbox.alert("Debe ingresar la fecha desde del certificado");
+                $fecha_desde.parent().addClass("has-error");
                 return false;
-            } else $fecha_efectiva.parent().removeClass("has-error");
+            } else $fecha_desde.parent().removeClass("has-error");
             
             return true;
         }
