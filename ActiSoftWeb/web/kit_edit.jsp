@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="bd.Kit_detalle"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.HashMap"%>

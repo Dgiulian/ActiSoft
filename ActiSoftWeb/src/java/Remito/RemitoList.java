@@ -7,6 +7,7 @@ package Remito;
 import bd.Cliente;
 import bd.Contrato;
 import bd.Remito;
+import bd.Site;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import transaccion.TCliente;
 import transaccion.TContrato;
 import transaccion.TRemito;
+import transaccion.TSite;
 import utils.JsonRespuesta;
 import utils.OptionsCfg;
 import utils.OptionsCfg.Option;
@@ -44,7 +46,7 @@ public class RemitoList extends HttpServlet {
      HashMap<Integer,Option> mapEstados;
      HashMap<Integer,Contrato> mapContratos;
      HashMap<Integer,Cliente> mapClientes;
-     
+     HashMap<Integer,Site> mapSites;
      
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -52,22 +54,19 @@ public class RemitoList extends HttpServlet {
         PrintWriter out = response.getWriter();
         String pagNro = request.getParameter("pagNro");
         
-        mapTipos = new HashMap<Integer,Option>();
-        for(Option o: OptionsCfg.getTipoRemitos()){
-            mapTipos.put(o.getId(),o);
-        }
-        mapEstados = new HashMap<Integer,Option>();
-        for(Option o:OptionsCfg.getEstadoRemitos()){
-            mapEstados.put(o.getId(), o);
-        }
-        mapContratos = new HashMap<Integer,Contrato>();
-        for(Contrato c: new TContrato().getList()){
-            mapContratos.put(c.getId(), c);
-        }
-         mapClientes = new HashMap<Integer,Cliente>();
-        for(Cliente cli:new TCliente().getList()){
-            mapClientes.put(cli.getId(), cli);
-        }
+        mapTipos = OptionsCfg.getMap(OptionsCfg.getTipoRemitos());
+        mapEstados = OptionsCfg.getMap(OptionsCfg.getEstadoRemitos());
+        mapContratos = new TContrato().getMap();
+        mapClientes = new TCliente().getMap();
+        mapSites = new TSite().getMap();
+//        mapTipos = new HashMap<Integer,Option>();
+//        for(Option o: OptionsCfg.getTipoRemitos()){ mapTipos.put(o.getId(),o); }
+//        mapEstados = new HashMap<Integer,Option>();
+//        for(Option o:OptionsCfg.getEstadoRemitos()){ mapEstados.put(o.getId(), o); }
+//        mapContratos = new HashMap<Integer,Contrato>();
+//        for(Contrato c: new TContrato().getList()){ mapContratos.put(c.getId(), c); }
+//        mapClientes = new HashMap<Integer,Cliente>();
+//        for(Cliente cli:new TCliente().getList()){ mapClientes.put(cli.getId(), cli); }
         
         Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
         JsonRespuesta jr = new JsonRespuesta();
@@ -126,6 +125,8 @@ public class RemitoList extends HttpServlet {
      public String estado;
      public String cliente;
      public String contrato;
+     public String site;
+     public String equipo;
      public boolean tiene_devolucion = false;
      
      public RemitoDet(Remito remito){
@@ -135,8 +136,9 @@ public class RemitoList extends HttpServlet {
          this.estado = remito.getId_estado().toString();
          this.contrato = remito.getId_contrato().toString();
          this.cliente = remito.getId_cliente().toString();
-         
-         Option o = mapTipos.get(remito.getId_tipo_remito());
+         this.site    = remito.getId_site().toString();
+         this.equipo  = "";
+         Option o     = mapTipos.get(remito.getId_tipo_remito());
          if(o!=null)
              this.tipo_remito = o.getDescripcion();
          
@@ -152,6 +154,11 @@ public class RemitoList extends HttpServlet {
              this.cliente = cli.getNombre();
          if(remito.getId_tipo_remito()==OptionsCfg.REMITO_ENTREGA){
              this.tiene_devolucion = new TRemito().tieneDevolucion(remito);
+         }
+         Site s = mapSites.get(remito.getId_site());
+         if(s!=null){
+             this.site = s.getNombre();
+             this.equipo =  s.getEquipo();
          }
      }
  }

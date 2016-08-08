@@ -39,7 +39,8 @@ public class CertificadoList extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("application/json;charset=UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         String pagNro = request.getParameter("pagNro");
         String idActivo = request.getParameter("id_activo");
@@ -56,6 +57,7 @@ public class CertificadoList extends HttpServlet {
         try {
             List<Certificado> lista;
             TCertificado tr = new TCertificado();
+            tr.setOrderBy("fecha desc ");
             if(id_activo==0) throw new BaseException("ERROR", "Debe seleccionar el cliente");
             mapFiltro.put("id_activo",id_activo.toString());
             lista = tr.getListFiltro(mapFiltro);

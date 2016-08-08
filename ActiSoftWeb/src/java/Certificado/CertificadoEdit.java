@@ -67,8 +67,7 @@ public class CertificadoEdit extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
+            throws ServletException, IOException {        
         String idCertif = request.getParameter("id");        
         String idActivo = request.getParameter("id_activo");
         Integer  id_certif;
@@ -127,7 +126,8 @@ public class CertificadoEdit extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        //request.setCharacterEncoding("UTF-8");
+        System.out.println(request.getCharacterEncoding());
         String idActivo = "";
         String idCertif = "";
         String codigo = "";
@@ -153,6 +153,7 @@ public class CertificadoEdit extends HttpServlet {
         Integer anillo_segmento          = 0;
         Integer segmentos                = 0;
         Integer tuerca                   = 0;
+        Integer estado_anterior  = 0;
         try {
           
               // Check that we have a file upload request
@@ -173,7 +174,7 @@ public class CertificadoEdit extends HttpServlet {
         factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
         
         
-        Parametro parametro = new TParametro().getByNumero(OptionsCfg.CERTIFICADO_PATH);
+        Parametro parametro = new TParametro().getByCodigo(OptionsCfg.CERTIFICADO_PATH);
         
         // constructs the folder where uploaded file will be stored
         String uploadFolder = null;
@@ -195,7 +196,7 @@ public class CertificadoEdit extends HttpServlet {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
                 String fieldName = item.getFieldName();
-                String fieldValue = item.getString();
+                String fieldValue = item.getString("UTF-8");
                if (fieldName.equalsIgnoreCase("id_activo"))                idActivo = fieldValue;
                if (fieldName.equalsIgnoreCase("id"))                       idCertif = fieldValue;
                if (fieldName.equalsIgnoreCase("codigo"))                   codigo = fieldValue;
@@ -257,7 +258,7 @@ public class CertificadoEdit extends HttpServlet {
             if(certificado==null){
                 certificado = new Certificado();
                 nuevo = true;
-            }            
+            }                        
             certificado.setId_activo(id_activo);
             certificado.setFecha(TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));
             certificado.setFecha_hasta(TFecha.formatearFecha(fecha_hasta, TFecha.formatoVista, TFecha.formatoBD));
@@ -265,7 +266,9 @@ public class CertificadoEdit extends HttpServlet {
             certificado.setCodigo(codigo);
             certificado.setNombre_proveedor(nombre_proveedor);
             certificado.setPrecinto(precinto);
-            certificado.setId_resultado(Integer.parseInt(idResult));
+            Integer id_resultado = Integer.parseInt(idResult);
+            certificado.setId_resultado(id_resultado);
+            
             certificado.setObservaciones(observaciones);
             boolean externo = strExterno!=null && !strExterno.equals("");
             certificado.setExterno(externo);
@@ -293,6 +296,12 @@ public class CertificadoEdit extends HttpServlet {
                 certificado.setArchivo(fileName);
             }
             
+            
+            
+            //Recalculo el id_resultado.
+            id_resultado  = tc.calcularId_resultado(certificado);
+            certificado.setId_resultado(id_resultado);
+            
             boolean todoOk = true;
             if(nuevo) { 
                 id_certif = tc.alta(certificado);
@@ -309,9 +318,11 @@ public class CertificadoEdit extends HttpServlet {
             
             if(certificado.getId_resultado()==OptionsCfg.CERTIFICADO_NO_APTO){
                 activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_NO_APTO);
-                new TActivo().actualizar(activo);
-                TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_CERTIFICADO,OptionsCfg.ACCION_MODIFICAR,activo.getId());
+            } else {
+                activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
             }
+            new TActivo().actualizar(activo);
+            TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_CERTIFICADO,OptionsCfg.ACCION_MODIFICAR,activo.getId());
             
             TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_CERTIFICADO,nuevo?OptionsCfg.ACCION_ALTA:OptionsCfg.ACCION_MODIFICAR,certificado.getId());
             response.sendRedirect(PathCfg.CERTIFICADO + "?id_activo=" + certificado.getId_activo());

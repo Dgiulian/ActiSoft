@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="bd.Tipo_usuario"%>
 <%@page import="transaccion.TTipo_usuario"%>
 <%@page import="bd.Usuario"%>

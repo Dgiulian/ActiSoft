@@ -22,10 +22,17 @@
 
         <div id="page-wrapper">
             <div class="row">
+                 <div class="col-lg-12">
+                     <h3><span class="activo-heading">Activo: <a href="<%=PathCfg.ACTIVO_EDIT%>?id=<%=activo.getId()%>"><%= activo.getCodigo() %> - <%= activo.getDesc_larga()%></a> </span></h3>
+                 </div>
+             </div>
+            
+            <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">Compras <a href="<%= PathCfg.COMPRA_EDIT %>?id_activo=<%= activo.getId() %>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a></h1>
                 </div>
             </div>
+          
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">

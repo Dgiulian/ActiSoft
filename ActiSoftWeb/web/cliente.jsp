@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,6 +38,17 @@
                         <div class="panel-body">
                             <div class="dataTable_wrapper">
                                 <table class="table table-striped table-bordered table-hover" id="tblCliente">
+                                    <colgroup>
+                                        <col style="width:10%"></col>
+                                        <col style="width:10%"></col>
+                                        <col style=""></col>
+                                        <col style="width:10%"></col>
+                                        <col style="width:10%"></col>
+                                        <col style="width:10%"></col>
+                                        <col style="width:13%"></col>
+                                        <col style="width:10%"></col>
+                                        
+                                    </colgroup>
                                     <thead>
                                         <tr>
                                            <!--<th>Id</th>-->

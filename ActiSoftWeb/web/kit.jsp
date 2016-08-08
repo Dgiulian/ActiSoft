@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="utils.OptionsCfg.Option"%>
 <%@page import="utils.OptionsCfg"%>
 <%@page import="bd.Kit"%>

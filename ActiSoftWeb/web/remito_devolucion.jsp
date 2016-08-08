@@ -1,4 +1,4 @@
-
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="bd.Kit"%>
 <%@page import="transaccion.TKit"%>
 <%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
@@ -29,7 +29,7 @@
     
     Cliente cliente = new TCliente().getById(remito.getId_cliente());
     if(cliente==null) cliente = new Cliente();
-    String tipoRemito="devolución";
+    String tipoRemito="devoluciÃ³n";
 //    for(Option o:OptionsCfg.getTipoRemitos()) {
 //        if (o.getId()==remito.getId_tipo_remito()) {tipoRemito=o.getDescripcion();
 //            break;

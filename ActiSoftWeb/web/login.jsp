@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="transaccion.TParametro"%>
 <%@page import="bd.Parametro"%>
 <%@page import="utils.PathCfg"%>

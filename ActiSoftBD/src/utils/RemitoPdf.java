@@ -5,6 +5,7 @@
 package utils;
 
 import bd.Activo;
+import bd.Certificado;
 import bd.Cliente;
 import bd.Contrato;
 import bd.Contrato_detalle;
@@ -21,7 +22,11 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfContentByte;
-import java.sql.Array;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfReader;
+import java.io.File;
+import java.io.IOException;
+
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -29,10 +34,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.logging.Logger; 
 import transaccion.TActivo;
+import transaccion.TCertificado;
 import transaccion.TCliente;
 import transaccion.TContrato;
 import transaccion.TContrato_detalle;
@@ -81,7 +85,6 @@ public class RemitoPdf extends BasePdf {
            printHeader(cb,start);
            printSite(cb,645);
            
-           
            start = 577;
            Float lineHeight = 16f;
            Integer i = 0;
@@ -94,7 +97,7 @@ public class RemitoPdf extends BasePdf {
                mapPosicion.put(cd.getPosicion(),cd);
            }
            Set<Integer> posiciones = new TreeSet<>(agrupado.keySet());
-           for(Integer s:posiciones){
+           for(Integer s: posiciones){
                Object[] value = agrupado.get(s);
                if(value==null) continue;
                Integer pos = (Integer) value[0];
@@ -110,21 +113,44 @@ public class RemitoPdf extends BasePdf {
                addText(cb,514,start - lineHeight * i,String.format("%.2f",cant));
                i++;
              }
-           
-           
+          // System.out.println(Charset.defaultCharset());
+        
+           List<String> lstCodigosActivos = new ArrayList<String>();
+           TActivo ta = new TActivo();
            for(Remito_detalle rd:this.remito_detalle){
-               if (rd.getId_kit()==0) continue;
+               if (rd.getId_kit()==0) {
+                   Activo activo = ta.getById(rd.getId_activo());
+                   if (activo==null) continue;
+                   lstCodigosActivos.add(activo.getCodigo());
+                   
+               } else {
+                    Kit kit = tk.getById(rd.getId_kit());
+                    if(kit==null) continue;
+                    mapKit.put(kit.getId(),kit);
+                    lstCodigosActivos.addAll(getCodigos_detalle(kit));
+                    addText(cb,80,start  - lineHeight * i,rd.getPosicion().toString());
+                    addText(cb,134,start - lineHeight * i,kit.getNombre());               
+                    addText(cb,514,start - lineHeight * i,String.format("%.2f",rd.getCantidad()));
+                    i++;
+               }
                
-               Kit kit = tk.getById(rd.getId_kit());
-               if(kit==null) continue;
-               
-               mapKit.put(kit.getId(),kit);
-               addText(cb,80,start  - lineHeight * i,rd.getPosicion().toString());
-               addText(cb,134,start - lineHeight * i,kit.getNombre());               
-               addText(cb,514,start - lineHeight * i,String.format("%.2f",rd.getCantidad()));
-               i++;
            }
-           //
+           String codigosActivos = "";
+           for(String codigo: lstCodigosActivos){
+               
+                if(codigosActivos.length() + codigo.length()> 100){
+                    codigosActivos = codigosActivos.substring(0, codigosActivos.length()-3); // extraigo el - final
+                    addText(cb,130,start - lineHeight * i, codigosActivos);
+                    codigosActivos = "";
+                    i++;                       
+                }
+                codigosActivos += codigo + " - ";
+            }
+            if(!codigosActivos.equals("")) {
+                codigosActivos = codigosActivos.substring(0, codigosActivos.length()-3); // extraigo el - final
+                    addText(cb,130,start - lineHeight * i, codigosActivos);                    
+            }
+            
             printFooter(cb,225);
            
             // Segunda Hoja
@@ -178,6 +204,7 @@ public class RemitoPdf extends BasePdf {
 
            }
            /* Imprime los códigos de Kit */
+           List<String> lstCodigosKit;
            for(Remito_detalle rd:this.remito_detalle){
                if (rd.getId_kit()==0) continue;
                Kit kit = mapKit.get(rd.getId_kit());
@@ -186,7 +213,8 @@ public class RemitoPdf extends BasePdf {
                addText(cb,73, start - lineHeight * i, kit.getCodigo());
                addText(cb,520,start - lineHeight * i, rd.getCantidad().toString());
                String codigos = "";
-               for(String codigo: getCodigos_detalle(kit)){  
+               lstCodigosKit = getCodigos_detalle(kit);
+               for(String codigo: lstCodigosKit){  
                    if(codigos.length() + codigo.length()> 100){      
                        codigos = codigos.substring(0, codigos.length()-3); // extraigo el - final
                        addText(cb,130,start - lineHeight * i, codigos);
@@ -195,8 +223,8 @@ public class RemitoPdf extends BasePdf {
                        
                    } 
                    codigos += codigo + " - ";
-                   System.out.println(codigos.length());
                }
+               if(!codigos.equals("")) addText(cb,130,start - lineHeight * i, codigos);
                
             i++;
 
@@ -234,7 +262,7 @@ public class RemitoPdf extends BasePdf {
                  i++;
      //            if(i>=2){
      //                printFooter(cb);
-     //                document.newPage();
+//                     document.newPage();
      //                printHeader(cb);
      //                i=0;
      //            }
@@ -242,7 +270,7 @@ public class RemitoPdf extends BasePdf {
                 start = 208;
                 printFooter(cb,start);     
            }
-           
+          combinarCertificados(document);
     }
     
      private void printHeader(PdfContentByte cb,Integer start)    {
@@ -349,6 +377,7 @@ public class RemitoPdf extends BasePdf {
          }
          return mapa;
      }
+    
      private List<String> getCodigos_detalle(Kit kit){
          String codigos = "";
          TKit_detalle tkd = new TKit_detalle();
@@ -370,6 +399,104 @@ public class RemitoPdf extends BasePdf {
          
          return arrCodigos;
      }
+//     public RemitoPdf combinarCertificados(String fileName){
+//         ArrayList<Activo> lstActivos = new ArrayList<Activo>();
+//         HashSet<Certificado> setCertificados = new HashSet<Certificado>();
+//         TActivo ta = new TActivo();
+//         TKit_detalle tkd = new TKit_detalle();
+//         TCertificado tc  = new TCertificado();
+//         Parametro parametro =  new TParametro().getByCodigo(OptionsCfg.CERTIFICADO_PATH);
+//         String fileDir = parametro.getValor();
+//         for(Remito_detalle d : this.remito_detalle){
+//             if(d.getId_activo()!=0){
+//                 Activo activo = ta.getById(d.getId_activo());
+//                if(activo==null) continue;
+//                lstActivos.add(activo);
+//             }else {
+//                for(Kit_detalle kd:tkd.getByKitId(d.getId_kit())){
+//                    Activo activo = ta.getById(kd.getId_activo());
+//                    if (activo==null) continue;
+//                    lstActivos.add(activo);
+//                } 
+//             }
+//             
+//         }
+//         
+//         for(Activo a:lstActivos){             
+//             Certificado certificado = tc.getValido(a.getId());
+//             if(certificado==null) continue;
+//                      
+//             setCertificados.add(certificado);
+//         }
+//         for(Certificado c:setCertificados){
+//             if(c.getArchivo().equals("")) continue;
+//             fileName = fileDir + File.separator + c.getArchivo();
+//                     
+//             if(!new File(fileName).exists()) {
+//                 Logger.getLogger(RemitoPdf.class.getName()).log(Level.SEVERE, "No existe el certificado  " + fileName);
+//                 continue;
+//             }    
+//             
+//         }         
+//         return this;
+//     }
+     private List<Certificado> getListaCertificados(){
+         ArrayList<Activo> lstActivos = new ArrayList<Activo>();
+         List<Certificado> lstCertificados = new ArrayList<Certificado>();
+         TActivo ta = new TActivo();
+         TKit_detalle tkd = new TKit_detalle();
+         TCertificado tc  = new TCertificado();
+         
+         for(Remito_detalle d : this.remito_detalle){
+             if(d.getId_activo()!=0){
+                 Activo activo = ta.getById(d.getId_activo());
+                if(activo==null) continue;
+                lstActivos.add(activo);
+             }else {
+                for(Kit_detalle kd:tkd.getByKitId(d.getId_kit())){
+                    Activo activo = ta.getById(kd.getId_activo());
+                    if (activo==null) continue;
+                    lstActivos.add(activo);
+                } 
+             }
+             
+         }
+         
+         for(Activo a:lstActivos){             
+             Certificado certificado = tc.getValido(a.getId());
+             if(certificado==null) continue;
+             if(lstCertificados.contains(certificado)) continue;
+             lstCertificados.add(certificado);
+         }
+                 
+         return lstCertificados;
+     }
+     public void combinarCertificados(Document document){         
+         PdfContentByte cb = docWriter.getDirectContent();
+         Parametro parametro =  new TParametro().getByCodigo(OptionsCfg.CERTIFICADO_PATH);
+         String fileDir = parametro.getValor();
+         List<Certificado> lstCertificados = getListaCertificados();
+         for(Certificado c:lstCertificados){
+             if(c.getArchivo().equals("")) continue;
+             String fileName = fileDir + File.separator + c.getArchivo();                     
+             if(!new File(fileName).exists()) {
+                 Logger.getLogger(RemitoPdf.class.getName()).log(Level.SEVERE, "No existe el certificado  " + fileName);
+                 continue;
+             }    
+             try {
+                 PdfReader reader = new PdfReader(fileName);
+                 int pagesCount = reader.getNumberOfPages();
+                 PdfImportedPage page;
+                 for (int i = 0; i < pagesCount; i++) {
+                    document.newPage();
+                    page = this.docWriter.getImportedPage(reader, i + 1); //document.getPageNumber() + 1);                    
+                    cb.addTemplate(page, 0, 0);
+                }
+             } catch (IOException ex) {
+                 Logger.getLogger(RemitoPdf.class.getName()).log(Level.SEVERE, null, ex);
+             }
+         } 
+     }
 //     private Float parsearLongitud(String longitud){
 //        Float lng = 0f;
 //        Pattern pattern = Pattern.compile("(\\d+,?\\d*) MTS"); //this clearly will find 13 consecutive numbers, but I need it to ignore the "-" character
@@ -386,7 +513,9 @@ public class RemitoPdf extends BasePdf {
         Remito remito = new TRemito().getById(194);
         String fileName = String.format("c:\\remito_%d.pdf",remito.getNumero());
         RemitoPdf rm = new RemitoPdf(remito);
+        
         rm.createPdf(fileName);
+       // rm.combinarCertificados(fileName);
         System.out.println("Imprimiendo documento");
         rm.abrir(fileName);
 //        rm.imprimir(fileName);

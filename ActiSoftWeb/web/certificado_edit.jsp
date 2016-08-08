@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="bd.Activo"%>
 <%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
 <%@page import="transaccion.TSubrubro"%>
@@ -10,6 +11,7 @@
 <%@page import="utils.OptionsCfg"%>
 <%@page import="utils.OptionsCfg"%>
 <%@page import="java.util.List"%>
+
 <% 
     Certificado certificado = (Certificado) request.getAttribute("certificado");
     Activo activo = (Activo) request.getAttribute("activo");
@@ -75,7 +77,7 @@
                                 
                                 <div class="col-lg-4 " >
                                     <div class="form-group">
-                                        <label for="fecha">Fecha carga</label>
+                                        <label for="fecha">Fecha alta</label>
                                         <input class="form-control date-picker" name="fecha" id="fecha" size="0"  value="<%=TFecha.formatearFechaBdVista(certificado.getFecha()) %>">
                                     </div>
                                 </div>   

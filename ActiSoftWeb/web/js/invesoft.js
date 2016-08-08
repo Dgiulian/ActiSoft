@@ -2,7 +2,158 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+var PathCfg = {
+    PAGE_TITLE : "ActiSoft",
+    LOGIN      : "Login",
+    LOGOUT     : "Logout",
+    FORBIDDEN  : "Forbidden",
 
+    ACTIVO                 : "Activo",
+    ACTIVO_LIST            : "ActivoList",
+    ACTIVO_EDIT            : "ActivoEdit",
+    ACTIVO_DEL             : "ActivoDel",
+    ACTIVO_SEARCH          : "ActivoSearch",
+    ACTIVO_CHECK           : "ActivoCheck",
+    ACTIVO_ETIQUETA        : "ActivoEtiqueta",
+    ACTIVO_CONTRATO_LIST   : "ActivoContratoList",
+    ACTIVO_CONTRATO_SEARCH : "ActivoContratoSearch",
+    ACTIVO_HISTORIA_LIST   : "ActivoHistoriaList",
+
+    CLIENTE         : "Cliente",
+    CLIENTE_LIST    : "ClienteList",
+    CLIENTE_EDIT    : "ClienteEdit",
+    CLIENTE_DEL     : "ClienteDel",
+    CLIENTE_SEARCH  : "ClienteSearch",
+
+    PROVEEDOR         : "Proveedor",
+    PROVEEDOR_LIST    : "ProveedorList",
+    PROVEEDOR_EDIT    : "ProveedorEdit",
+    PROVEEDOR_DEL     : "ProveedorDel",
+    PROVEEDOR_SEARCH  : "ProveedorSearch",
+
+    REMITO          : "Remito",
+    REMITO_LIST     : "RemitoList",
+    REMITO_EDIT     : "RemitoEdit",
+    REMITO_VIEW     : "RemitoView",
+    REMITO_DEL      : "RemitoDel",
+    REMITO_PRINT    : "RemitoPrint",
+    REMITO_DET_LIST : "RemitoDetList",
+    REMITO_UPLOAD   : "RemitoUpload",
+    REMITO_DETALLE  : "RemitoDetalle",
+    REMITO_DIARIO   : "RemitoDiario",
+    REMITO_DEV      : "Devolucion",
+
+    REMITO_CONTRATO_LIST : "RemitoContratoList",
+
+    LOCALIDAD        : "Localidad",
+    LOCALIDAD_LIST   : "LocalidadList",
+    LOCALIDAD_EDIT   : "LocalidadEdit",
+    LOCALIDAD_DEL    : "LocalidadDel",
+    CONTRATO         : "Contrato",
+    CONTRATO_LIST    : "ContratoList",
+    CONTRATO_EDIT    : "ContratoEdit",
+    CONTRATO_DEL     : "ContratoDel",
+    CONTRATO_SEARCH  : "ContratoSearch",
+
+    CONTRATO_DETALLE         : "ContratoDetalle",
+    CONTRATO_DETALLE_LIST    : "Contrato_detalleList",
+    CONTRATO_DETALLE_SEARCH  : "Contrato_detalleSearch",
+
+    RUBRO        : "Rubro",
+    RUBRO_LIST   : "RubroList",
+    RUBRO_EDIT   : "RubroEdit",
+    RUBRO_DEL    : "RubroDel",
+    RUBRO_SEARCH : "RubroSearch",
+
+    SUBRUBRO        : "Subrubro",
+    SUBRUBRO_LIST   : "SubrubroList",
+    SUBRUBRO_EDIT   : "SubrubroEdit",
+    SUBRUBRO_DEL    : "SubrubroDel",
+    SUBRUBRO_SEARCH : "SubrubroSearch",
+
+    CERTIFICADO        : "Certificado",
+    CERTIFICADO_LIST   : "CertificadoList",
+    CERTIFICADO_EDIT   : "CertificadoEdit",
+    CERTIFICADO_DEL    : "CertificadoDel",
+    CERTIFICADO_SEARCH : "CertificadoSearch",
+
+    COMPRA        : "Compra",
+    COMPRA_LIST   : "CompraList",
+    COMPRA_EDIT   : "CompraEdit",
+    COMPRA_DEL    : "CompraDel",
+    COMPRA_SEARCH : "CompraSearch",
+    SITE        : "Site",
+    SITE_LIST   : "SiteList",
+    SITE_EDIT   : "SiteEdit",
+    SITE_DEL    : "SiteDel",
+    SITE_SEARCH : "SiteSearch",
+
+    PRETICKET : "Preticket",
+    PRETICKET_LIST   : "PreticketList",
+    PRETICKET_EDIT   : "PreticketEdit",
+    PRETICKET_DEL    : "PreticketDel",
+    PRETICKET_SEARCH : "PreticketSearch",
+    PRETICKET_PRINT  : "PreticketPrint",
+
+    USUARIO        : "Usuario",
+    USUARIO_LIST   : "UsuarioList",
+    USUARIO_EDIT   : "UsuarioEdit",
+    USUARIO_DEL    : "UsuarioDel",
+    USUARIO_SEARCH : "UsuarioSearch",
+
+    CORRECTIVO        : "Correctivo",
+    CORRECTIVO_LIST   : "CorrectivoList",
+    CORRECTIVO_EDIT   : "CorrectivoEdit",
+    CORRECTIVO_DEL    : "CorrectivoDel",
+    CORRECTIVO_SEARCH : "CorrectivoSearch",
+
+    KIT        : "Kit",
+    KIT_LIST   : "KitList",
+    KIT_EDIT   : "KitEdit",
+    KIT_DEL    : "KitDel",
+    KIT_SEARCH : "KitSearch",
+
+    KIT_HISTORIA        : "KitHistoria",
+    KIT_HISTORIA_LIST   : "Kit_historiaList",
+    KIT_CONTRATO_LIST   : "KitContratoList",
+    KIT_CONTRATO_SEARCH : "KitContratoSearch",
+
+    AGENDA        : "Agenda",
+    AGENDA_LIST   : "AgendaList",
+    AGENDA_EDIT   : "AgendaEdit",
+    AGENDA_DEL    : "AgendaDel",
+    AGENDA_SEARCH : "AgendaSearch",
+
+    TRANSPORTISTA        : "Transportista",
+    TRANSPORTISTA_LIST   : "TransportistaList",
+    TRANSPORTISTA_EDIT   : "TransportistaEdit",
+    TRANSPORTISTA_DEL    : "TransportistaDel",
+    TRANSPORTISTA_SEARCH : "TransportistaSearch",
+
+    VEHICULO        : "Vehiculo",
+    VEHICULO_LIST   : "VehiculoList",
+    VEHICULO_EDIT   : "VehiculoEdit",
+    VEHICULO_DEL    : "VehiculoDel",
+    VEHICULO_SEARCH : "VehiculoSearch",
+
+    PARAMETRO      : "Parametro",
+    PARAMETRO_LIST : "ParametroList",
+    PARAMETRO_EDIT : "ParametroEdit",
+    PARAMETRO_DEL  : "ParametroDel",
+
+    AUDITORIA      : "Auditoria",
+    AUDITORIA_LIST : "AuditoriaList",
+
+    GRAPH_PATH : "Graph",
+    GRAPH_LIST : "GraphList",
+
+    OPTIONS  : "Options",
+    DOWNLOAD : "Download",
+    JSONOK   : "JsonOk",
+    EXCEL    : "Excel",
+    MAIL     : "Mail",
+
+};
  function siguienteHora(fecha,hora){
     if ( fecha === "" ) fecha = moment().format('DD/MM/YYYY');
     if ( hora === "" ) hora = moment().subtract(1,'hour').format('HH:mm:ss');  // Tomamos una hora antes
@@ -154,7 +305,7 @@ function rubroChange(url,data,$id_subrubro) {
         });
     }
     if (loadDataActivo) loadDataActivo(data);
-    else if (loadDataKit)    loadDataKit(data);
+    if (loadDataKit)    loadDataKit(data);
 }
 function subrubroChange() {                       
     $id_rubro = $('#id_rubro');

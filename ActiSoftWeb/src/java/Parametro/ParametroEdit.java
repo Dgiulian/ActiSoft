@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringEscapeUtils;
 import transaccion.TParametro;
 import utils.BaseException;
 import utils.JsonRespuesta;
@@ -86,6 +87,7 @@ public class ParametroEdit extends HttpServlet {
          
          Integer id = Parser.parseInt(request.getParameter("id"));
          String codigo = request.getParameter("codigo");
+         Integer numero = Parser.parseInt(request.getParameter("numero"));
          String nombre = request.getParameter("nombre");
          String valor  = request.getParameter("valor");
          String activo = request.getParameter("activo");
@@ -99,10 +101,10 @@ public class ParametroEdit extends HttpServlet {
                 nuevo = true;
             }
             if(codigo ==null) throw new BaseException("ERROR","Ingrese el c&oacute;digo del par&aacute;metro");
-            
+            p.setNumero(numero);
             p.setCodigo(codigo);
             p.setNombre(nombre);
-            p.setValor(valor);
+            p.setValor(StringEscapeUtils.escapeJava(valor));
    //         if(activo!=null && !"".equals(activo))
    //             p.setActivo(1);
    //         else p.setActivo(0);

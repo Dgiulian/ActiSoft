@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
 <%@page import="utils.OptionsCfg.Option"%>
 <%@page import="utils.OptionsCfg"%>
@@ -67,12 +68,13 @@
                                 <table class="table table-striped table-bordered table-hover" id="tblRemito">
                                     <colgroup>
                                         <col span="1" style="width: 10%; text-align: right;"> <!-- Numero -->
-                                        <col span="1" style="width: 13%;"> <!-- Tipo -->
-                                        <col span="1" style="width: 10%;"> <!-- Fecha -->
+                                        <col span="1" style="width: 10%;"> <!-- Tipo -->
+                                        <col span="1" style="width: 9%;"> <!-- Fecha -->
                                         <col span="1" style="width: 10%;text-align: center"> <!-- Cliente-->
-                                        <col span="1" style="width: 12%;"> <!-- Contrato -->
-                                        <col span="1" style="width: 11%;text-align: center">
-                                        <col span="1" style="width: 10%;text-align: center">
+                                        <col span="1" style="width: 10%;"> <!-- Contrato -->
+                                        <col span="1" style="width: 12%;"> <!-- Equipo -->
+                                        <col span="1" style="width: 9%;text-align: center">
+                                        <col span="1" style="width: 9%;text-align: center">
                                         <!--<col span="1" style="width: 24%;text-align: center">-->
                                      </colgroup>
                                     <thead>
@@ -83,6 +85,7 @@
                                             <th>Fecha</th>
                                             <th>Cliente</th>
                                             <th>Contrato</th>
+                                            <th>Equipo</th>
                                             <th>Preticket</th>
                                             <th>Estado</th>
                                             <th></th>
@@ -232,6 +235,7 @@
             var contratoLnk = '<a href="<%= PathCfg.CONTRATO_EDIT %>?id='+d.id_contrato+ '">'+ d.contrato + '</a>';
             html += wrapTag('td',clienteLnk,'');
             html += wrapTag('td',contratoLnk,'');
+            html += wrapTag('td',d.equipo,'');
             html += wrapTag('td',d.facturado!==0?"Si":"No",'');
             html += wrapTag('td',d.estado,'');
             var htmlEdit = "<a href='<%= PathCfg.REMITO_VIEW%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-info'><span class='glyphicon glyphicon-sunglasses fw'></span></a> ";

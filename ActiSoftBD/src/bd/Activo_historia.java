@@ -10,14 +10,14 @@ package bd;
  */
 
 public class Activo_historia extends Remito {
-    
-    protected Integer id_activo = 0;
-    protected Float cantidad = 0f;
-    protected String codigo       = "";
-    protected String desc_larga   = "";
+
+    public Integer id_activo = 0;
+    public Float cantidad = 0f;
+    public String codigo       = "";
+    public String desc_larga   = "";
     public Activo_historia(Activo_historia activo_historia){
         super(activo_historia);
-        
+
         this.id_activo = activo_historia.getId_activo();
         this.cantidad = activo_historia.getCantidad();
         this.codigo = activo_historia.getCodigo();
@@ -40,7 +40,7 @@ public class Activo_historia extends Remito {
         return this;
     }
     public Float getCantidad(){
-        return this.cantidad;        
+        return this.cantidad;
     }
     public Activo_historia setCantidad(Float cantidad){
         this.cantidad = cantidad;

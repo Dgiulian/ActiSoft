@@ -4,6 +4,7 @@
  */
 package transaccion;
 
+import bd.Activo;
 import bd.Kit_detalle;
 import java.util.List;
 
@@ -26,5 +27,8 @@ public class TKit_detalle extends TransaccionBase<Kit_detalle>{
     public boolean actualizar(Kit_detalle detalle){
         return super.actualizar(detalle, "id");
     }
-    
+    public List<Activo> getActivos(Integer id_kit){
+        String query = "";
+        return null;
+    }
 }

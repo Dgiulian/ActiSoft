@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="transaccion.TSubrubro"%>
 <%@page import="bd.Subrubro"%>
 <%@page import="bd.Rubro"%>

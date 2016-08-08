@@ -1,5 +1,5 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="transaccion.TLocalidad"%>
-
 <%@page import="bd.Localidad"%>
 <%@page import="bd.Provincia"%>
 <%@page import="transaccion.TProvincia"%>

@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="bd.Proveedor"%>
 <%
     Proveedor proveedor = (Proveedor) request.getAttribute("proveedor");
@@ -118,7 +119,7 @@
     function loadDataTransportista(data){
         var $tabla = $('#tblTransportista');
         $.ajax({
-               url: '<%= PathCfg.TRANSPORTISTA_LIST %>',
+               url: PathCfg.TRANSPORTISTA_LIST ,
                data: data,
                method:"POST",
                dataType: "json",
@@ -143,7 +144,7 @@
     function borrarTransportista(){
         var id = $(this).data('index');
         var $tr = $(this).parent().parent();
-        deleteData('<%= PathCfg.TRANSPORTISTA_DEL %>',{id:id},function(result) {     
+        deleteData(PathCfg.TRANSPORTISTA_DEL ,{id:id},function(result) {     
                 if(result.Result === "OK") {
                     $tr.remove();
                 } else if (result.Message) bootbox.alert(result.Message);
@@ -171,7 +172,7 @@
                             var data = recuperarCampos();
                             if (!validar(data)) return;                        
                             $.ajax({
-                                url:'<%= PathCfg.TRANSPORTISTA_EDIT%>',
+                                url:PathCfg.TRANSPORTISTA_EDIT,
                                 data: data,
                                 method:'POST',
                                 dataType:'json',

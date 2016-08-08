@@ -45,7 +45,7 @@ public class OptionsCfg {
     public static final Integer CERTIFICADO_REPARAR = 3;
     public static final Integer CERTIFICADO_VENCIDO = 4;
 
-    public static final Integer CERTIFICADO_PATH = 1;
+    public static final String CERTIFICADO_PATH = "fileDir";
     public static final Integer REMITO_PATH = 2;
     
     public static final Integer ACTIVO_PATH = 3;

@@ -277,6 +277,17 @@ public class Certificado {
 
 	public Certificado setTuerca(Integer tuerca) {
 		this.tuerca = tuerca;
-		return this;
+		return this;                
 	}
+        @Override
+        public boolean equals(Object obj){
+            if(obj==this) return true;
+            if(obj==null) return false;
+            if(!(obj instanceof Certificado)) return false;
+            return ((Certificado) obj).getId().equals(this.getId());
+        }
+        @Override
+        public int hashCode(){
+            return (int) this.id;
+        }
 }

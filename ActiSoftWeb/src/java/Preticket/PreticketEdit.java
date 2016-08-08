@@ -4,6 +4,7 @@
  */
 package Preticket;
 
+import bd.Contrato;
 import bd.Preticket;
 import bd.Preticket_detalle;
 import bd.Remito;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import transaccion.TAuditoria;
+import transaccion.TContrato;
 import transaccion.TPreticket;
 import transaccion.TPreticket_detalle;
 import transaccion.TRemito;
@@ -172,6 +174,7 @@ public class PreticketEdit extends HttpServlet {
             }
             HashMap<Integer,Remito> mapRemitos =  new HashMap<Integer,Remito>();
             ArrayList<Preticket_detalle> lstPreticket_detalle = new ArrayList<Preticket_detalle>();
+            Integer id_divisa =0;
             for( int i=0;i<arrRemito_inicio.length;i++) {
                 Integer remito_inicio   = Parser.parseInt(arrRemito_inicio [i].trim());
                 String fecha_inicio     = arrFecha_inicio [i].trim();
@@ -182,7 +185,7 @@ public class PreticketEdit extends HttpServlet {
                 String descripcion      = arrDescripcion [i].trim();
                 Float cantidad          = Parser.parseFloat(arrCantidad [i].trim());
                 Float precio            = Parser.parseFloat(arrPrecio [i].trim());
-                Integer id_divisa       = Parser.parseInt(arrId_divisa [i].trim());
+                        id_divisa       = Parser.parseInt(arrId_divisa [i].trim());
                 Float  subtotal         = Parser.parseFloat(arrSubtotal [i].trim());
                 Float  dias_herramienta = dias * cantidad;
                 Integer id_unidad = Parser.parseInt(arrUnidad[i].trim());
@@ -211,9 +214,14 @@ public class PreticketEdit extends HttpServlet {
                 pd.setId_unidad(id_unidad);
                 pd.setPrecio(precio);
                 pd.setSubtotal(subtotal);
-                
+                pd.setId_divisa(id_divisa);
                 lstPreticket_detalle.add(pd);                
             }
+            Contrato contrato = new TContrato().getById(id_contrato);
+            if(contrato==null){
+                contrato = new Contrato();
+            }
+                    
             preticket = new Preticket();
             preticket.setFecha(TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));       
             preticket.setId_cliente(id_cliente);
@@ -223,6 +231,7 @@ public class PreticketEdit extends HttpServlet {
             preticket.setNumero(numero);
             preticket.setFecha_creacion(TFecha.ahora(TFecha.formatoBD + " " + TFecha.formatoHora));
             preticket.setTotal(total);
+            preticket.setId_divisa(contrato.getId_divisa());
             Integer id_preticket = tp.alta(preticket);
             preticket.setId(id_preticket);
             todoOk = (preticket.getId()!=0);

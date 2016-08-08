@@ -1,3 +1,5 @@
+<%@page contentType="text/html; charset=UTF-8" %>
+<%@page import="java.nio.charset.Charset"%>
 <%@page import="bd.Certificado"%>
 <%@page import="bd.Activo"%>
 <%@page import="transaccion.TSubrubro"%>
@@ -33,7 +35,7 @@
         <div id="page-wrapper">
              <div class="row">
                  <div class="col-lg-12">
-                     <h3><span class="activo-heading">Activo: <%= activo.getCodigo() %> - <%= activo.getDesc_larga()%> </span></h3>
+                     <h3><span class="activo-heading">Activo: <a href="<%=PathCfg.ACTIVO_EDIT%>?id=<%=activo.getId()%>"><%= activo.getCodigo() %> - <%= activo.getDesc_larga()%></a> </span></h3>
                  </div>
              </div>
             <div class="row">
@@ -116,6 +118,7 @@
                data: data,
                method:"POST",
                dataType: "json",
+               //contentType: "charset=utf-8",
                 beforeSend:function(){
                     var cant_cols = $tabla.find('thead th').length;
                     $tabla.find('tbody').html("<tr><td colspan='" + cant_cols + "'><center><img src='images/ajax-loader.gif'/></center></td></tr>");

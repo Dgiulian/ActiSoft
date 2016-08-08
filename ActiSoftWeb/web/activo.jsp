@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="java.util.HashMap"%>
 <%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
 <%@page import="transaccion.TSubrubro"%>
@@ -152,10 +153,11 @@
     $(document).ready(function() {
        loadDataActivo({id_rubro:1});
        $('#id_rubro').change(function(){rubroChange("<%= PathCfg.SUBRUBRO_LIST%>",{id_rubro:$(this).val(),id_estado:1})});
-       $('#id_subrubro').change(subrubroChange);
-       
-       
+       $('#id_subrubro').change(subrubroChange);       
        $('#btnBuscar').click(buscar);
+       $('#codigo').keydown(function(e){
+           if(e.keyCode===13) buscar();
+       });
        
     });
     function buscar(){

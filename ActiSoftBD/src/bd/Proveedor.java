@@ -1,43 +1,42 @@
 package bd;
 public class Proveedor {
 
-	protected Integer id = 0;
-	protected String nombre_comercial = "";
-        
-	protected String cuit = "";
-        protected String dni = "";
-	protected String razon_social = "";
-	protected String direccion_fisica = "";
-	protected String direccion_legal = "";
-	protected String codigo_postal = "";
-	protected Integer id_pais = 0;
-	protected Integer id_provincia = 0;
-	protected Integer id_localidad = 0;
-	protected String telefono = "";
-	protected String celular = "";
-	protected String contacto = "";
-	protected String observaciones = "";
-	protected String fecha_alta = "";
-	protected Integer id_estado = 1;
-	protected Float descuento_especial = 0f;
-	protected Float descuento_pronto_pago = 0f;
-	protected Integer id_divisa = 0;
-	protected Integer id_forma_pago = 0;
-	protected Float monto_maximo = 0f;
-	protected Integer id_iva = 0;
-	protected Integer id_tipo_proveedor = 0;
-	protected String banco1 = "";
-	protected String cuenta1 = "";
-	protected String banco2 = "";
-	protected String cuenta2 = "";
-        protected String conductores = "";
-	protected String vehiculos = "";
-	protected String dominios = "";
-	protected String dni_conductor = "";
-        protected String email = "";
-        protected String nombre_transportista = "";
-        protected String vencimiento_carnet = "";
-        public Proveedor(){}
+	public Integer id = 0;
+	public String nombre_comercial = "";
+	public String cuit = "";
+    public String dni = "";
+	public String razon_social = "";
+	public String direccion_fisica = "";
+	public String direccion_legal = "";
+	public String codigo_postal = "";
+	public Integer id_pais = 0;
+	public Integer id_provincia = 0;
+	public Integer id_localidad = 0;
+	public String telefono = "";
+	public String celular = "";
+	public String contacto = "";
+	public String observaciones = "";
+	public String fecha_alta = "";
+	public Integer id_estado = 1;
+	public Float descuento_especial = 0f;
+	public Float descuento_pronto_pago = 0f;
+	public Integer id_divisa = 0;
+	public Integer id_forma_pago = 0;
+	public Float monto_maximo = 0f;
+	public Integer id_iva = 0;
+	public Integer id_tipo_proveedor = 0;
+	public String banco1 = "";
+	public String cuenta1 = "";
+	public String banco2 = "";
+	public String cuenta2 = "";
+    public String conductores = "";
+	public String vehiculos = "";
+	public String dominios = "";
+	public String dni_conductor = "";
+    public String email = "";
+    public String nombre_transportista = "";
+    public String vencimiento_carnet = "";
+    public Proveedor(){}
         public Proveedor(Proveedor proveedor){
             this.id                    = proveedor.getId();
             this.nombre_comercial      = proveedor.getNombre_comercial();
@@ -324,7 +323,7 @@ public class Proveedor {
             this.cuenta2 = cuenta2;
             return this;
 	}
-        
+
 	public String getConductores() {
 		return this.conductores;
 	}
@@ -363,7 +362,7 @@ public class Proveedor {
         public String getEmail(){
             return this.email;
         }
-        
+
         public Proveedor setEmail(String email){
             this.email = email;
             return this;
@@ -371,7 +370,7 @@ public class Proveedor {
         public String getNombre_transportista(){
             return this.nombre_transportista;
         }
-        
+
         public Proveedor setNombre_transportista(String nombre_transportista){
             this.nombre_transportista = nombre_transportista;
             return this;
@@ -379,7 +378,7 @@ public class Proveedor {
          public String getVencimiento_carnet(){
             return this.vencimiento_carnet;
         }
-        
+
         public Proveedor setVencimiento_carnet(String vencimiento_carnet){
             this.vencimiento_carnet = vencimiento_carnet;
             return this;

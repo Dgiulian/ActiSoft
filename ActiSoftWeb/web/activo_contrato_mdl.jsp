@@ -177,7 +177,7 @@
     }
    
    
-   function loadDataKit(data){        
+   function loadDataKit(data){
         var $tabla = $('#tblKit');  
         $tabla.find('tbody').html("")
         $tabla.find('tfoot').html("");

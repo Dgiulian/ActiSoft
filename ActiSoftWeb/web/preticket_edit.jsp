@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="transaccion.TSite"%>
@@ -178,9 +179,11 @@
                                             <th style="width:50px;">Remito cierre</th>
                                             <th style="width:40px">Fecha cierre</th>
                                             <th style="width:50px">Q Dias</th>
+                                            <th style="width:50px">Q Dias</th>
+                                            <th style="width:50px">Cantidad</th>
                                             <th style="width:50px">Posici&oacute;n</th>
                                             <th>Descripci&oacute;n</th>
-                                            <th style="width:50px">Cantidad</th>
+                                            
                                             <th style="width:50px">Dias Herramientas</th>
                                             <th style="width:50px">Unidad</th>
                                             <th style="width:50px">Precio unitario</th>
@@ -194,7 +197,12 @@
                                             Integer dias;
                                             Float dias_herramienta ;
                                             for( Remito_contrato detalle: lstDetalle) {
-                                                if(detalle.getActivo_id_rubro()!=14)
+                                                /*
+                                                 * El transporte se considera como cantidad uno sin considerar los días.
+                                                 * El resto de los rubros se consideran la cantidad de días
+                                                 * Si es no un remito transitorio (es un remitose
+                                                 */
+                                                if(detalle.getActivo_id_rubro()!=OptionsCfg.RUBRO_TRANSPORTE)
                                                     dias = TFecha.diferenciasDeFechas( remito_inicio.getFecha(),remito_cierre.getFecha()) + 1;
                                                 else dias = !transitorio?1:2;
                                                 divisa = detalle.getContrato_detalle_id_divisa()==0?"U$S":"$";
@@ -245,6 +253,10 @@
                                                     <%=dias %>
                                                     <input type="hidden" name ="dias" value="<%=dias %>">
                                                 </td>
+                                                <td>
+                                                    <%= detalle.getRemito_detalle_cantidad()%>
+                                                    <input type="hidden" name ="cantidad" value="<%= detalle.getRemito_detalle_cantidad()%>">
+                                                </td>
                                                 <td >
                                                     <%= detalle.getPosicion() %>
                                                     <input type="hidden" name ="posicion" value="<%= detalle.getPosicion() %>">
@@ -253,10 +265,7 @@
                                                     <%= detalle.getActivo_desc_larga() %>
                                                     <input type="hidden" name ="descripcion" value="<%= detalle.getActivo_desc_larga() %>">
                                                 </td>
-                                                <td  >
-                                                    <%= detalle.getRemito_detalle_cantidad()%>
-                                                    <input type="hidden" name ="cantidad" value="<%= detalle.getRemito_detalle_cantidad()%>">
-                                                </td>
+                                                
                                                 <td  >
                                                     <%= dias_herramienta %>
                                                     <input type="hidden" name ="dias_herramienta " value="<%= dias_herramienta %>">
@@ -459,9 +468,9 @@
             total += parseFloat($st);
 
         }
-
-        $('#spn_total').text(total);
-        $('#total').val(total);
+        
+        $('#spn_total').text(total.toFixed(2));
+        $('#total').val(total.toFixed(2));
     }
     </script>
     <!-- Modal -->

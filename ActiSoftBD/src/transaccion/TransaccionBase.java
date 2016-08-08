@@ -166,10 +166,11 @@ public abstract class TransaccionBase<E> {
      ** Cada clase que herede puede implementar este método 
      */
     public String getOrderBy(){
-        return "";
+        return this.orderBy;
     }
      
      public TransaccionBase<E> setOrderBy(String orderBy){
+        if(!orderBy.startsWith("order by")) orderBy = " order by " + orderBy;
         this.orderBy = orderBy;
         return this;
         

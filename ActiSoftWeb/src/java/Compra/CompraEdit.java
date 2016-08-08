@@ -129,8 +129,10 @@ public class CompraEdit extends HttpServlet {
         String factura                = "";
         Integer id_accion             = 0;
         String cetificado_fabricacion = "";
+        String factura_compra         = "";
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         FileItem archivo1 = null;
+        FileItem archivo2 = null;
         try{
             if (!isMultipart) 
                 throw new BaseException("ERROR","El formulario no es multiparte. <br> No se pueden subir archivos");
@@ -184,6 +186,11 @@ public class CompraEdit extends HttpServlet {
                             archivo1 = item;                    
                             cetificado_fabricacion = FilenameUtils.getName(item.getName());
                         }
+                        if(fieldName.equalsIgnoreCase("factura_compra")) {
+                            archivo2 = item;                    
+                            factura_compra = FilenameUtils.getName(item.getName());
+                        }
+                        
                     }
                 };           
             } catch (FileUploadException ex) {
@@ -227,9 +234,19 @@ public class CompraEdit extends HttpServlet {
                     compra.setCertificado_fabricacion(cetificado_fabricacion);
                     
                 } catch (Exception ex) {
-                    throw new BaseException("ERROR","Ocurrió un error al cargar el archivo");
+                    throw new BaseException("ERROR","Ocurri&oacute; un error al cargar el el certificado de fabricaci&oacute;n");
                 }                            
-            }            
+            }
+            if(archivo2!=null && !"".equals(factura_compra)) {
+                String filePath = uploadFolder + File.separator + factura_compra;
+                File uploadedFile = new File(filePath);
+                try {
+                    archivo2.write(uploadedFile);
+                    compra.setFactura_compra(factura_compra);                    
+                } catch (Exception ex) {
+                    throw new BaseException("ERROR","Ocurri&oacute; un error al cargar la factura de compra");
+                }                            
+            } 
             boolean todoOk = true;
             if(nuevo) {
                 compra.setCantidad(Parser.parseFloat(cantidad)); 

@@ -72,6 +72,8 @@ public class RemitoContratoList extends HttpServlet {
                     listaDet.add(new Remito_contratoDet(remito_contrato));
                 }
                 if(remito.getId_tipo_remito()==OptionsCfg.REMITO_DEVOLUCION) {
+                    // Si es un remito de devolución. Se busca el remito de entrega (indicado por el campo id_referencia)
+                    //
                     List<Remito_contrato> det_inicio  = trc.getByRemitoId(remito.getId_referencia());
                     for(Remito_contrato rc : det_inicio){
                         if(rc.getActivo_id_rubro()!=OptionsCfg.RUBRO_TRANSPORTE) continue;
@@ -106,9 +108,10 @@ private class Remito_contratoDet extends Remito_contrato{
         super(rc);
         remito_inicio = tr.getById(rc.getId_referencia());        
         remito_cierre = tr.getById(rc.getId_remito());    
-        if(rc.getActivo_id_rubro()!=14)
+        if(rc.getActivo_id_rubro()!=OptionsCfg.RUBRO_TRANSPORTE)
             dias = TFecha.diferenciasDeFechas( remito_inicio.getFecha(),remito_cierre.getFecha()) + 1;
-        else dias = !tr.esTransitorio(remito_cierre)?1:2;
+        else dias = !tr.esTransitorio(remito_cierre)?1:1;  //!tr.esTransitorio(remito_cierre)?1:2
+        /*12/07/2016 Se modificó la cantidad de días si es un remito transitorio*/; 
         divisa = rc.getContrato_detalle_id_divisa()==0?"U$S":"$";
         
         Option o = mapUnidades.get(rc.getContrato_detalle_id_unidad());

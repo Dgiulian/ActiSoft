@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="transaccion.TPreticket_detalle"%>
 <%@page import="bd.Preticket_detalle"%>
 <%@page import="transaccion.TSite"%>
@@ -192,9 +193,10 @@
                                             <th style="width:50px;">Remito cierre</th>
                                             <th style="width:40px">Fecha cierre</th>
                                             <th style="width:50px">Q Dias</th>
+                                            <th style="width:50px">Cantidad</th>
                                             <th style="width:50px">Posici&oacute;n</th>
                                             <th>Descripci&oacute;n</th>
-                                            <th style="width:50px">Cantidad</th>
+                                            
                                             <th style="width:50px">Dias Herramientas</th>
                                             <th style="width:50px">Unidad</th>
                                             <th style="width:50px">Precio unitario</th>
@@ -227,15 +229,16 @@
                                                     <%=detalle.getDias()%>
                                                     
                                                 </th>
+                                                <td  >
+                                                    <%= detalle.getCantidad()%>
+                                                </td>
                                                 <td >
                                                     <%= detalle.getPosicion() %>
                                                 </td>
                                                 <td style="width:290px;">
                                                     <%= detalle.getDescripcion() %>
                                                 </td>
-                                                <td  >
-                                                    <%= detalle.getCantidad()%>
-                                                </td>
+                                                
                                                 <td  >
                                                     <%= dias_herramienta %>
                                                     <input type="hidden" name ="dias_herramienta " value="<%= dias_herramienta %>">

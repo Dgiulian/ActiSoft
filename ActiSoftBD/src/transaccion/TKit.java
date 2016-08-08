@@ -43,5 +43,6 @@ public class TKit extends TransaccionBase<Kit>{
     public boolean actualizar(Kit kit){
         return super.actualizar(kit, "id");
     }
+    
    
 }

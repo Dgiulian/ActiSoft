@@ -165,7 +165,7 @@ public class ActivoEdit extends HttpServlet {
             if (item.isFormField()) {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
                 String fieldName = item.getFieldName();
-                String fieldValue = item.getString();
+                String fieldValue = item.getString("UTF-8");
                 if(fieldName.equalsIgnoreCase("id"))             idActivo          = fieldValue;
                 if(fieldName.equalsIgnoreCase("codigo"))         codigo          = fieldValue;
                 if(fieldName.equalsIgnoreCase("marca"))          marca           = fieldValue;

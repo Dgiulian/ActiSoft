@@ -47,6 +47,11 @@
       <%@include file="tpl_navbar.jsp" %>
 
         <div id="page-wrapper">
+             <div class="row">
+                 <div class="col-lg-12">
+                     <h3><span class="activo-heading">Activo: <a href="<%=PathCfg.ACTIVO_EDIT%>?id=<%=activo.getId()%>"><%= activo.getCodigo() %> - <%= activo.getDesc_larga()%></a> </span></h3>
+                 </div>
+             </div>
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header"><% if(nuevo) {%>Nueva<%}else {%>Editar<%}%> compra</h1>
@@ -145,7 +150,11 @@
                                           <input class="form-control" name="factura" id="factura" value="<%= compra.getFactura() %>">
                                       </div>                                        
                                  </div>
-                                      <div class="col-lg-12 " >
+                                 </div>
+                            </div>
+                            <div class="row">
+                                  <div class="col-lg-12 " >
+                                  <div class="col-lg-4 " >
                                           <% String display1 = ""; %>
                                           <div class="form-group"  >
                                             <label for="certificado_fabricacion">Certificado de fabricaci&oacute;n</label>
@@ -154,8 +163,6 @@
                                              display1 = "style='display: none'";     
                                     %>                                  
                                         <div class="form-group">                            
-                                            <!--<a href='<%=PathCfg.DOWNLOAD%>?type=activo&id=<%=activo.getId()%>' class="btn btn-success"><span> </span> Archivo asociado: <b><%= activo.getArchivo_1() %></b></a>-->
-<!--                                            <a href='<%=compra.getCertificado_fabricacion()%>' target="_blank">-->
                                             <a href='<%=compra_url + File.separator + compra.getCertificado_fabricacion()%>' target="_blank"><%=compra.getCertificado_fabricacion()%></a>
                                             </a>
                                              <span class="btn btn-default cambiarArchivo" data-target="selectFile1">Cambiar</span>
@@ -166,14 +173,34 @@
                                         </div>
                                         </div>
                                     </div>
+                                    <div class="col-lg-6 " >
+                                          <% String dspFactura_compra = ""; %>
+                                          <div class="form-group"  >
+                                            <label for="factura_compra">Factura de compra</label>
+                                    <%
+                                        if (!"".equals(compra.getFactura_compra())) { 
+                                             dspFactura_compra = "style='display: none'";     
+                                    %>                                  
+                                        <div class="form-group">                            
+                                            <a href='<%=compra_url + File.separator + compra.getFactura_compra()%>' target="_blank"><%=compra.getFactura_compra()%></a>
+                                            </a>
+                                             <span class="btn btn-default cambiarArchivo" data-target="selectFile2">Cambiar</span>
+                                        </div>
+                                        <% }  %>
+                                        <div  <%=dspFactura_compra %>  id="selectFile2">
+                                            <input type="file" name="factura_compra" id="factura_compra" value="">
+                                        </div>
+                                        </div>
+                                    </div>        
+                                    </div> <!-- row-->
                                <!--</div>-->
-                            </fieldset>
+                            
                         </div>
-                        
+                        </fieldset>
                         
                         <!-- /.col-lg-6 (nested) -->
                             <!-- /.row (nested) -->
-                        </div>
+                        <!--</div>-->
                         <div class="row">
                             <div class="col-lg-12">
                             <button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Guardar</button>
@@ -218,58 +245,77 @@
     
     <script>       
     $(document).ready(function(){
-
         $('#fecha').mask('99/99/9999');
         $('#cantidad').change(completarTotal);
         $('#precio_unit').change(completarTotal);
-        $('#btnSubmit').click(submitForm);
+        $('#btnSubmit').click(function(e){
+           e.preventDefault();  
+           limpiarErrores();
+           if(validar(recuperarDatos())){
+                $('form').submit();
+           }
+        });
          $('.cambiarArchivo').click(function(){
             target = $(this).data('target');
             if(target!==undefined)
                 $('#' + target).slideDown();
         });
     });
+    function recuperarDatos(){
+       var data = {};
+       data.fecha = $('#fecha').val();
+       data.cant  = $('#cantidad').val()
+       data.precio_unit = $('#precio_unit').val();
+       data.precio_tot = $('#precio_tot').val();
+       return data;
+    }
     function completarTotal(){
-        var $cant = $('#cantidad');
-        var $precio_unit = $('#precio_unit');
-        var $precio_tot = $('#precio_tot');
-
-        if($cant ===undefined || $precio_unit ===undefined  || $precio_tot ===undefined  ) return;
-        
-        if($cant.val() === "") return;
-        if($precio_unit.val() ==="") return;        
-        $precio_tot.val($cant.val() * $precio_unit.val());
-    }            
-    function validar(){
-        var $fecha = $('#fecha');
-        var $cant  = $('#cantidad');
-        var $precio_unit = $('#precio_unit');
-        var $precio_tot = $('#precio_tot');
-        
-        if($fecha===undefined || $fecha.val()==="" || !validarFecha($fecha.val())){            
-            bootbox.alert("Debe ingresar la fecha de compra");
-            $fecha.parent().addClass("has-error");
+        var data = recuperarDatos();
+        if(data.cant ===undefined || 
+           data.precio_unit ===undefined  || 
+           data.precio_tot ===undefined  ) return;        
+        if(data.cant === "") return;
+        if(data.precio_unit ==="") return;        
+        $('#precio_tot').val(data.cant * data.precio_unit);
+    }
+    function errorCampoFecha(){                
+        $('#fecha').parent().addClass("has-error");
+        bootbox.alert("Debe ingresar la fecha de compra");
+    }
+    function errorCampoCant(){        
+        $('#cantidad').parent().addClass("has-error");
+        bootbox.alert("Debe ingresar la cantidad de la compra");
+    }
+    function errorCampoPrecio(){
+       $('#precio_unit').parent().addClass("has-error");
+       bootbox.alert("Debe ingresar el precio unitario de la compra");
+    }
+    function errorCampoTotal(){
+        $('#precio_tot').parent().addClass("has-error");
+        bootbox.alert("Debe ingresar el precio total de la compra");
+    }
+    function limpiarErrores(){
+       $('#fecha').parent().removeClass("has-error");
+       $('#cantidad').parent().removeClass("has-error");
+       $('#precio_unit').parent().removeClass("has-error");
+       $('#precio_tot').parent().removeClass("has-error");
+    };
+    function validar(data){
+        if(data.fecha===undefined || data.fecha==="" || !validarFecha(data.fecha)){            
+            errorCampoFecha();
             return false;
-        } else $fecha.parent().removeClass("has-error");
-        
-        if($cant===undefined || $cant.val()==="" || parseInt($cant.val()) === 0){            
-            bootbox.alert("Debe ingresar la cantidad de la compra");
-            $cant.parent().addClass("has-error");
+        }
+        if(data.cant===undefined || data.cant==="" || parseInt(data.cant) === 0){            
+            errorCampoCant();
             return false;
-        } else $cant.parent().removeClass("has-error");
-        
-        
-        if($precio_unit===undefined || $precio_unit.val()==="" || parseFloat($precio_unit.val())===0){            
-            bootbox.alert("Debe ingresar el precio unitario de la compra");
-            $precio_unit.parent().addClass("has-error");
+        }
+        if(data.precio_unit===undefined || data.precio_unit==="" || parseFloat(data.precio_unit)===0){            
+            errorCampoPrecio();
             return false;
-        } else $precio_unit.parent().removeClass("has-error");
-        
-        if($precio_tot===undefined || $precio_tot.val()==="" || parseFloat($precio_tot.val())===0){            
-            bootbox.alert("Debe ingresar el precio total de la compra");
-            $precio_tot.parent().addClass("has-error");
+        }        
+        if(data.precio_tot===undefined || data.precio_tot==="" || parseFloat(data.precio_tot)===0){            
             return false;
-        } else $precio_tot.parent().removeClass("has-error");             
+        }
         return true;
     }
    

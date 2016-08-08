@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 
 /**
@@ -65,37 +64,28 @@ public class TransaccionRS {
                     try {
                         Object valor = getter.invoke(objeto, new Object[0]);
                         if (valor != null) {
-
                             if (tipo.equals("Integer") || tipo.equals("int")) {
                                 if (Integer.parseInt(String.valueOf(valor)) != 0) {
                                     where += band ? " and " : "";
                                     where += getNombre.toLowerCase() + " = " + valor;
-                                    ;
                                     band = true;
                                 }
                             }
-
                             if (tipo.equals("float")) {
                                 if (Float.parseFloat(String.valueOf(valor)) != 0) {
                                     where += band ? " and " : "";
                                     where += getNombre.toLowerCase() + " = " + valor;
-                                    ;
                                     band = true;
                                 }
                             }
-
                             if (tipo.equals("double")) {
                                 if (Double.parseDouble(String.valueOf(valor)) != 0) {
                                     where += band ? " and " : "";
                                     where += getNombre.toLowerCase() + " = " + valor;
-                                    ;
                                     band = true;
                                 }
                             }
-
-
-                        } else {
-                        }
+                        } else { }
                     } catch (IllegalAccessException ex) {
                         Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IllegalArgumentException ex) {
@@ -104,7 +94,6 @@ public class TransaccionRS {
                         Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-
             } catch (IllegalAccessException ex) {
                 Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException ex) {
@@ -125,9 +114,7 @@ public class TransaccionRS {
         if (!extensionSQL.equalsIgnoreCase("")) {
             consulta += " " + extensionSQL;
         }
-
         return consulta;
-
     }
 
     public List recuperarLista(String clase, ResultSet rs) {
@@ -235,13 +222,14 @@ public class TransaccionRS {
             Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         } catch (NoSuchMethodException ex) {
+            System.out.println("No se pudo recuperar el metodo " + tipobd + " / " + clase);
             Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         } catch (SecurityException ex) {
             Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         } catch (ClassNotFoundException ex) {
-            System.out.println("No se pudo recuperar el metodo " + tipobd + " / " + clase);
+            System.out.println("No se pudo recuperar la clase " + tipobd + " / " + clase);
             Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         } catch (SQLException ex) {
@@ -255,76 +243,78 @@ public class TransaccionRS {
 
 
     }*/
-    public boolean altaObjeto(Object objeto) {
-
-        String clase = objeto.getClass().getSimpleName();
-        String tabla = clase.toLowerCase();
-        Field[] atributos = objeto.getClass().getDeclaredFields();
-        if (atributos.length == 0 ) atributos = objeto.getClass().getFields();
-        StringBuffer query = new StringBuffer();
-        query.append("insert into " + tabla + " (");
+    public ArrayList<Field> recuperarAtributos(Class clase){
+        ArrayList<Field> fields = new ArrayList<Field>();
+        Field[] atributos = clase.getFields();
         for (int i = 0; i <= atributos.length - 1; i++) {
-            query.append(atributos[i].getName());
-            if (i != atributos.length - 1) {
-                query.append(",");
-            }
+            fields.add(atributos[i]);
         }
-        query.append(") values (");
-        for (int i = 0; i <= atributos.length - 1; i++) {
-            try {
-                Class tipoClass = atributos[i].getType();
-                String tipo = tipoClass.getSimpleName();
-                String getNombre = atributos[i].getName();
-                getNombre = getNombre.substring(0, 1).toUpperCase() + getNombre.substring(1, getNombre.length());
-                Method getter = objeto.getClass().getMethod("get" + getNombre);
-                if (tipo.equals("String") == true) {
-                    try {
-                        Object valor = getter.invoke(objeto, new Object[0]);
-                        query.append("'" + valor + "'");
-                    } catch (IllegalAccessException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (InvocationTargetException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else if (tipo.equals("Integer") == true || tipo.equals("int") == true || tipo.equals("float") == true || tipo.equals("double") == true) {
-                    try {
-                        Object valor = getter.invoke(objeto, new Object[0]);
-                        query.append(valor);
-                    } catch (IllegalAccessException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (InvocationTargetException ex) {
-                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                if (i != atributos.length - 1) {
-                    query.append(",");
-                }
-            } catch (NoSuchMethodException ex) {
-                Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        query.append(")");
-        String sql = query.toString();
-
-        Conexion conexion = new Conexion();
-        conexion.conectarse();
-        boolean result = conexion.EjecutarInsert(sql);
-        conexion.desconectarse();
-
-        return result;
+        return fields;
     }
-
-        public int altaObjetoAutonumerico(Object objeto) {
-
-        String clase = objeto.getClass().getSimpleName();
+    
+    
+//    public String queryInsert(Object objeto){
+//        String clase = objeto.getClass().getSimpleName();
+//        String tabla = clase.toLowerCase();
+//        Class<? extends Object> aClass = objeto.getClass();
+//        Field[] atributos = aClass.getFields();        
+//        String query = "";
+//        query +="insert into " + tabla + " (";
+//        for (int i = 0; i <= atributos.length - 1; i++) {
+//            query +=atributos[i].getName();
+//            if (i != atributos.length - 1) {
+//                query += ",";
+//            }
+//        }
+//        query += ") values (";
+//        for (int i = 0; i <= atributos.length - 1; i++) {
+//            try {
+//                Class tipoClass = atributos[i].getType();
+//                String tipo = tipoClass.getSimpleName();
+//                String getNombre = atributos[i].getName();
+//                getNombre = getNombre.substring(0, 1).toUpperCase() + getNombre.substring(1, getNombre.length());
+//                Method getter = objeto.getClass().getMethod("get" + getNombre);
+//                if (tipo.equals("String") == true) {
+//                    try {
+//                        Object valor = getter.invoke(objeto, new Object[0]);
+//                        query += "'" + valor + "'";
+//                    } catch (IllegalAccessException ex) {
+//                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+//                    } catch (IllegalArgumentException ex) {
+//                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+//                    } catch (InvocationTargetException ex) {
+//                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                } else if (tipo.equals("Integer") == true || tipo.equals("int") == true || tipo.equals("float") == true || tipo.equals("double") == true) {
+//                    try {
+//                        Object valor = getter.invoke(objeto, new Object[0]);
+//                        query += valor;
+//                    } catch (IllegalAccessException ex) {
+//                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+//                    } catch (IllegalArgumentException ex) {
+//                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+//                    } catch (InvocationTargetException ex) {
+//                        Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
+//                if (i != atributos.length - 1) {
+//                    query += ",";
+//                }
+//            } catch (NoSuchMethodException ex) {
+//                Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (SecurityException ex) {
+//                Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+//        query +=")";
+//        return query;
+//    }
+    public String queryInsert(Object objeto){
+         String clase = objeto.getClass().getSimpleName();
         String tabla = clase.toLowerCase();
         Field[] atributos = objeto.getClass().getFields();
+        if(atributos.length==0) atributos = objeto.getClass().getDeclaredFields();
+        
         ArrayList<String> lstCampos  = new ArrayList<String>();
         ArrayList<String> lstValores = new ArrayList<String>();
         String query = "";
@@ -375,8 +365,7 @@ public class TransaccionRS {
             i++;
             if (i < lstCampos.size() ) {
                 query+=",";
-            }
-            
+            }            
         }
         query += ") values(";
         i = 0;
@@ -388,29 +377,19 @@ public class TransaccionRS {
             }
         }
         query+=")";
-        String sql = query.toString();
-        System.out.println(sql);
-        Conexion conexion = new Conexion();
-        conexion.conectarse();
-        int result = conexion.EjecutarInsertAutonumerico(sql);
-        conexion.desconectarse();
-
-        return result;
+        return query;
     }
-
-
-    public boolean eliminarObjeto(Object objeto) {
-
+    
+    public String queryDelete(Object objeto){
         String clase = objeto.getClass().getSimpleName();
         String tabla = clase.toLowerCase();
         Field[] atributos = objeto.getClass().getDeclaredFields();
         if (atributos.length == 0 ) atributos = objeto.getClass().getFields();
-        StringBuffer query = new StringBuffer();
-        query.append("delete from  " + tabla + " where ");
+        String query = "";
+        query += "delete from  " + tabla + " where ";
         if (atributos.length > 0) {
-            query.append(atributos[0].getName());
-        
-            query.append(" = ");
+            query += atributos[0].getName();        
+            query += " = ";
 
             try {
                 Class tipoClass = atributos[0].getType();
@@ -421,7 +400,7 @@ public class TransaccionRS {
                 if (tipo.equals("String") == true) {
                     try {
                         Object valor = getter.invoke(objeto, new Object[0]);
-                        query.append("'" + valor + "'");
+                        query += "'" + valor + "'";
                     } catch (IllegalAccessException ex) {
                         Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IllegalArgumentException ex) {
@@ -433,7 +412,7 @@ public class TransaccionRS {
                         || tipo.equals("Float") == true || tipo.equals("float") == true) {
                     try {
                         Object valor = getter.invoke(objeto, new Object[0]);
-                        query.append(valor);
+                        query += valor;
                     } catch (IllegalAccessException ex) {
                         Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IllegalArgumentException ex) {
@@ -448,21 +427,11 @@ public class TransaccionRS {
                 Logger.getLogger(TransaccionRS.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-        String sql = query.toString();
-
-        Conexion conexion = new Conexion();
-        conexion.conectarse();
-        boolean result = conexion.EjecutarInsert(sql);
-        conexion.desconectarse();
-
-        return result;
+        return query;
     }
-
-    public boolean actualizarObjeto(Object objeto, String campoId) {
-
+    public String queryUpdate(Object objeto, String campoId){
+        
         String where = "";
-
         String clase = objeto.getClass().getSimpleName();
         String tabla = clase.toLowerCase();
         Field[] atributos = objeto.getClass().getDeclaredFields();
@@ -485,7 +454,7 @@ public class TransaccionRS {
                 } else if (tipo.equals("String") == true) {
                     query+=field.getName() + "='" + valor + "'";
                     if (campoId.equalsIgnoreCase(field.getName())) {
-                        where = campoId + "='" + StringEscapeUtils.escapeJava(valor.toString()) + "'";
+                        where = campoId + "='" + valor.toString() + "'";
                     }
                 } else if (tipo.equals("Integer") || 
                            tipo.equals("int")  || 
@@ -517,7 +486,39 @@ public class TransaccionRS {
 
 
         query+=" where " + where;
-        String sql = query.toString();
+        return query;
+    }
+    public boolean altaObjeto(Object objeto) {
+        String sql = queryInsert(objeto);
+        Conexion conexion = new Conexion();
+        conexion.conectarse();
+        boolean result = conexion.EjecutarInsert(sql);
+        conexion.desconectarse();
+        return result;
+    }
+    public int altaObjetoAutonumerico(Object objeto) {       
+        String sql = queryInsert(objeto);
+        System.out.println(sql);
+        Conexion conexion = new Conexion();
+        conexion.conectarse();
+        int result = conexion.EjecutarInsertAutonumerico(sql);
+        conexion.desconectarse();
+        return result;
+    }
+
+
+    public boolean eliminarObjeto(Object objeto) {
+        String sql = queryDelete(objeto);
+        Conexion conexion = new Conexion();
+        conexion.conectarse();
+        boolean result = conexion.EjecutarInsert(sql);
+        conexion.desconectarse();
+
+        return result;
+    }
+
+    public boolean actualizarObjeto(Object objeto, String campoId) {
+        String sql = queryUpdate(objeto,campoId);
         System.out.println(sql);
         Conexion conexion = new Conexion();
         conexion.conectarse();
@@ -578,8 +579,6 @@ public class TransaccionRS {
     }
 
     public Object recuperarValor(Object value, String tipoParametro) {
-
-
         if (tipoParametro.equalsIgnoreCase("java.lang.Integer")) {
             return Integer.parseInt((String) value);
         }

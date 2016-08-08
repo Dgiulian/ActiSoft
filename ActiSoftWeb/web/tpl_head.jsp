@@ -51,5 +51,10 @@
     padding: 0;
     line-height: 50px;    
 }
-
+.activo-heading{
+                background-color: #f5f5f5;
+               line-height: 58px;
+               display: inline-block;
+               width: 100%;
+         }
 </style>

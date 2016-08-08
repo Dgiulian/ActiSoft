@@ -6,6 +6,7 @@ package transaccion;
 
 import bd.Auditoria;
 import java.util.List;
+import utils.OptionsCfg;
 import utils.TFecha;
 
 public class TAuditoria extends TransaccionBase<Auditoria>{
@@ -27,7 +28,11 @@ public class TAuditoria extends TransaccionBase<Auditoria>{
         auditoria.setId_accion(id_accion);
         auditoria.setId_referencia(id_referencia);
         auditoria.setFecha(TFecha.ahora());
+        //System.out.println(new TransaccionRS().queryInsert(auditoria));
         new TAuditoria().alta(auditoria);        
     }
-   
+   public static void main (String[] args){
+       boolean nuevo = true;
+       TAuditoria.guardar(1,2,OptionsCfg.MODULO_ACTIVO,nuevo?OptionsCfg.ACCION_ALTA:OptionsCfg.ACCION_MODIFICAR,0);
+   }
 }

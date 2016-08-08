@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="bd.Cliente"%>
 <%@page import="bd.Site"%>
 <%@page import="bd.Activo"%>

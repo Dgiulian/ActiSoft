@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="transaccion.TActivo"%>
 <%@page import="bd.Activo"%>
 <%@page import="java.util.ArrayList"%>

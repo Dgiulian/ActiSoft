@@ -23,7 +23,7 @@ public class TProveedor extends TransaccionBase<Proveedor>{
      @Override
     public String getOrderBy(){
         if (this.orderBy.trim().equals("")) return "";
-        else return " order by " + this.orderBy;
+        else if(this.orderBy.contains(" order by ") ) return this.orderBy; else return " order by " + this.orderBy;
     }
      public Proveedor getByCuit(String cuit){
          String query= String.format("select * from proveedor where proveedor.cuit = '%s'",cuit);

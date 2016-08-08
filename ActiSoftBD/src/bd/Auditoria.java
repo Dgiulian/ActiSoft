@@ -1,14 +1,14 @@
 package bd;
 public class Auditoria {
 
-    protected Integer id = 0;
-    protected Integer id_usuario = 0;
-    protected Integer id_tipo_usuario = 0;
-    protected Integer id_modulo = 0;
-    protected Integer id_accion = 0;
-    protected Integer id_referencia = 0;
-    protected String fecha = "";
-    
+    public Integer id = 0;
+    public Integer id_usuario = 0;
+    public Integer id_tipo_usuario = 0;
+    public Integer id_modulo = 0;
+    public Integer id_accion = 0;
+    public Integer id_referencia = 0;
+    public String fecha = "";
+
         public Auditoria(){}
 
         public Auditoria(Auditoria auditoria){

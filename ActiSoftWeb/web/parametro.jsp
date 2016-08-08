@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="utils.PathCfg"%>
 <%
 %>
@@ -89,14 +90,14 @@
     $(document).ready(function() {
         loadData({});
         $('#btnNuevo').click(function(){
-            agregarParametro({id:0,codigo:'',nombre:'',valor:'',activo:1});
+            agregarParametro({id:0,numero:'',codigo:'',nombre:'',valor:'',activo:1});
         });
 
     });
     function loadData(data){
         var $tabla = $('#tblParametro');
         $.ajax({
-               url: '<%= PathCfg.PARAMETRO_LIST %>',
+               url: PathCfg.PARAMETRO_LIST,
                data: data,
                method:"POST",
                dataType: "json",
@@ -116,7 +117,7 @@
     function borrarParametro(){
         var id = $(this).data('index');
         var $tr = $(this).parent().parent();
-        deleteData('<%= PathCfg.PARAMETRO_DEL %>',{id:id},function(result) {
+        deleteData(PathCfg.PARAMETRO_DEL,{id:id},function(result) {
                 if(result.Result === "OK") {
                     $tr.remove();
                 } else if (result.Message) bootbox.alert(result.Message);
@@ -126,12 +127,13 @@
         return Handlebars.templates['parametro.list']({records:data});       
     }
      function editarParametro(){
+        var numero = $(this).data('numero');
         var codigo = $(this).data('codigo');
         var nombre = $(this).data('nombre');
         var valor  = $(this).data('valor');
         var index  = $(this).data('index');
         var activo = $(this).data('activo');
-        agregarParametro({codigo:codigo,nombre:nombre,id:index,valor:valor,activo:activo});
+        agregarParametro({numero:numero,codigo:codigo,nombre:nombre,id:index,valor:valor,activo:activo});
     }
     function agregarParametro(data){
         data.checked = (data.activo)?"checked":"";
@@ -146,7 +148,7 @@
                         callback: function () {
                             var data = recuperarCampos();
                             $.ajax({
-                                url:'<%= PathCfg.PARAMETRO_EDIT%>',
+                                url:PathCfg.PARAMETRO_EDIT,
                                 data: data,
                                 method:'POST',
                                 dataType:'json',
@@ -168,8 +170,9 @@
     function recuperarCampos(){
         var data = {};
         data.id     = $('#id').val();
-        data.nombre = $('#nombre').val();
+        data.numero = $('#numero').val();
         data.codigo = $('#codigo').val();
+        data.nombre = $('#nombre').val();
         data.valor  = $('#valor').val();
         data.activo = $('#activo').prop('checked')?'1':'';
         data.activo = 1;

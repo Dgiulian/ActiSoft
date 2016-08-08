@@ -76,7 +76,7 @@ public class DownloadServlet extends HttpServlet {
             
             String tipo = request.getParameter("type");
             String filePath = "";
-            Parametro parametro = new TParametro().getByNumero(OptionsCfg.CERTIFICADO_PATH);
+            Parametro parametro = new TParametro().getByCodigo(OptionsCfg.CERTIFICADO_PATH);
             
             if (tipo==null|| tipo.equals(""))
                 throw new BaseException("Error","Debe seleccionar el tipo de documento a descargar");

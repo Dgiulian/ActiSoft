@@ -9,18 +9,18 @@ package bd;
  * @author Diego
  */
 public class Contrato_detalle {
-    protected Integer id = 0;
-    protected Integer id_contrato = 0;
-    protected Integer posicion = 0;
-    protected String descripcion = "";
-    protected Integer id_rubro = 0;
-    protected Integer id_subrubro = 0;
-    protected Integer id_activo = 0;
-    protected Integer id_divisa = 0;
-    protected Float precio = 0f;
-    protected Float porcentaje = 0f;
-    protected Integer id_clase = 0;
-    protected Integer id_unidad = 0;
+    public Integer id = 0;
+    public Integer id_contrato = 0;
+    public Integer posicion = 0;
+    public String descripcion = "";
+    public Integer id_rubro = 0;
+    public Integer id_subrubro = 0;
+    public Integer id_activo = 0;
+    public Integer id_divisa = 0;
+    public Float precio = 0f;
+    public Float porcentaje = 0f;
+    public Integer id_clase = 0;
+    public Integer id_unidad = 0;
 
     public Integer getId(){
         return this.id;
@@ -82,7 +82,7 @@ public class Contrato_detalle {
     public Contrato_detalle setId_clase(Integer id_clase) {
         this.id_clase = id_clase;
         return this;
-     }    
+     }
     public Contrato_detalle setId_subrubro(Integer id_subrubro){
         this.id_subrubro = id_subrubro;
         return this;

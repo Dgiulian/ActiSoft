@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="transaccion.TKit"%>
 <%@page import="bd.Kit"%>
 <%@page import="transaccion.TSite"%>
