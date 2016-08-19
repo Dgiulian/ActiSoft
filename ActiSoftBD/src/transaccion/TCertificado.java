@@ -34,6 +34,18 @@ public class TCertificado extends TransaccionBase<Certificado>{
         " and certificado.fecha_hasta >= CURDATE()" +
         " and certificado.archivo_url <> '' ",id_activo,OptionsCfg.CERTIFICADO_APTO);
         return super.getById(query);
+        
+    }
+     /* Devuelve un certificado vigente si existiere para un activo */
+    public Certificado getVigente(Integer id_activo,String fecha){
+        String query = String.format("select * from certificado\n" +
+                        " where certificado.id_activo = %d\n" +
+                        " and certificado.id_resultado = %d " +
+                        " and certificado.fecha_desde <= '%s'" +
+                        " and certificado.fecha_hasta >= '%s'" +
+                        " and certificado.archivo_url <> '' ",id_activo,OptionsCfg.CERTIFICADO_APTO,fecha,fecha);
+        System.out.println(query);
+        return super.getById(query);
     }
     /*
      * Devuelve un Map con un certificado válido para cáda activo
@@ -45,8 +57,7 @@ public class TCertificado extends TransaccionBase<Certificado>{
          String query = String.format("select * from certificado\n" +
         " where certificado.id_resultado = %d " +
         " and certificado.fecha_desde <= curdate()" +
-        " and certificado.fecha_hasta >= CURDATE()" +
-        " and certificado.archivo_url <> '' ",OptionsCfg.CERTIFICADO_APTO);
+        " and certificado.fecha_hasta >= CURDATE()",OptionsCfg.CERTIFICADO_APTO);
         List<Certificado> lstCertificados = this.getList(query);
         if (lstCertificados==null) return mapa;
         

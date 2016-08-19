@@ -74,7 +74,7 @@
                                         <col span="1" style="width: 10%;"> <!-- Contrato -->
                                         <col span="1" style="width: 12%;"> <!-- Equipo -->
                                         <col span="1" style="width: 9%;text-align: center">
-                                        <col span="1" style="width: 9%;text-align: center">
+                                        <col span="1" style="width: 8%;text-align: center">
                                         <!--<col span="1" style="width: 24%;text-align: center">-->
                                      </colgroup>
                                     <thead>

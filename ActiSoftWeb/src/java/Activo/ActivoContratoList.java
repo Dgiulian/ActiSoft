@@ -5,6 +5,7 @@
 package Activo;
 
 import bd.Activo_contrato_view;
+import bd.Certificado;
 import bd.Subrubro;
 import bd.Rubro;
 import com.google.gson.Gson;
@@ -19,11 +20,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TActivo_contrato_view;
+import transaccion.TCertificado;
 import transaccion.TSubrubro;
 import transaccion.TRubro;
 import utils.JsonRespuesta;
 import utils.OptionsCfg;
 import utils.OptionsCfg.Option;
+import utils.TFecha;
 
 /**
  *
@@ -45,7 +48,8 @@ public class ActivoContratoList extends HttpServlet {
      HashMap<Integer,Rubro> mapRubros;
      HashMap<Integer,Subrubro> mapSubrubros;
      HashMap<Integer,Option> mapEstados;
-     
+     TCertificado tc;
+     String fecha;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
@@ -54,6 +58,8 @@ public class ActivoContratoList extends HttpServlet {
         String idRubro = request.getParameter("id_rubro");
         String idSubrubro = request.getParameter("id_subrubro");
         String idContrato = request.getParameter("id_contrato");
+        fecha = TFecha.formatearFechaVistaBd(request.getParameter("fecha"));
+        if (fecha==null || fecha == "") fecha = TFecha.ahora(TFecha.formatoBD);
         
         mapRubros = new TRubro().getMap();
         mapSubrubros = new TSubrubro().getMap();
@@ -67,6 +73,7 @@ public class ActivoContratoList extends HttpServlet {
         Integer id_rubro = 0;
         Integer id_subrubro = 0;
         Integer id_contrato = 0;
+        tc = new TCertificado();
         try{
              page = (pagNro!=null)?Integer.parseInt(pagNro):0;
              id_rubro = (idRubro!=null)?Integer.parseInt(idRubro):0;
@@ -118,6 +125,7 @@ public class ActivoContratoList extends HttpServlet {
      String cod_subrubro = "";
      String subrubro = "";
      String estado = "";
+     Certificado certificado;
      public ActivoDet(Activo_contrato_view activo){
          super(activo);
          // Por default devolvemos el Id
@@ -135,6 +143,12 @@ public class ActivoContratoList extends HttpServlet {
          Option o = mapEstados.get(activo.getId_estado());
          if(o!=null)
              this.estado = o.getDescripcion();
+        System.out.println(fecha);
+        if(activo.getId_rubro()==OptionsCfg.RUBRO_TRANSPORTE) this.certificado = new Certificado();
+        else this.certificado = tc.getVigente(activo.id,fecha);
+        
+//        if(this.certificado!=null)
+//             if (this.certificado.getArchivo() != null && this.certificado.getArchivo().equals("")) this.certificado = null;
      }
  }
    

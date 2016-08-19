@@ -1,6 +1,8 @@
 package bd;
 public class Preticket_detalle {
+    public Integer id = 0;
 
+    
 	public Integer id_preticket = 0;
 	public Integer remito_inicio = 0;
 	public Integer remito_cierre = 0;
@@ -130,4 +132,11 @@ public class Preticket_detalle {
 		this.id_unidad = id_unidad;
 		return this;
 	}
+        public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }

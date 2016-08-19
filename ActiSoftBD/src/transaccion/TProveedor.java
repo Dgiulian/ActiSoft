@@ -20,11 +20,11 @@ public class TProveedor extends TransaccionBase<Proveedor>{
     public boolean actualizar(Proveedor proveedor){
         return super.actualizar(proveedor, "id");
     }
-     @Override
-    public String getOrderBy(){
-        if (this.orderBy.trim().equals("")) return "";
-        else if(this.orderBy.contains(" order by ") ) return this.orderBy; else return " order by " + this.orderBy;
-    }
+//     @Override
+//    public String getOrderBy(){
+//        if (this.orderBy.trim().equals("")) return "";
+//        else return this.orderBy;
+//    }
      public Proveedor getByCuit(String cuit){
          String query= String.format("select * from proveedor where proveedor.cuit = '%s'",cuit);
          return this.getById(query);

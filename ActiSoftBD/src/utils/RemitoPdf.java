@@ -316,7 +316,7 @@ public class RemitoPdf extends BasePdf {
      
      public void imprimirObservaciones(PdfContentByte cb,Integer start,String observaciones){
          Integer lineHeight = 10;
-         Integer lineWidth = 170;
+         Integer lineWidth = 130;
          Integer startIndex = 0;
          Integer lines = observaciones.length() / lineWidth;
          for(int i = 0;i<=lines;i++){

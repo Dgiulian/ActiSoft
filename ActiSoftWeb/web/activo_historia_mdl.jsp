@@ -20,7 +20,7 @@
                     <li class="active"><a href="#tab1" data-toggle="tab">Remitos</a></li>
                     <li><a href="#tab2" data-toggle="tab">Certificados</a></li>
                     <li><a href="#tab3" data-toggle="tab">Compras</a></li>
-                    <li><a href="#tab4" data-toggle="tab">Correctivos</a></li>                           
+                    <!--<li><a href="#tab4" data-toggle="tab">Correctdivos</a></li>-->                           
                     <li><a href="#tab5" data-toggle="tab">Kit</a></li>                           
             </ul>
       </div>
@@ -94,12 +94,12 @@
                                 </table>
                             </div>
             </div>
-            <div class="tab-pane" id="tab4">
+<!--            <div class="tab-pane" id="tab4">
                 <div class="dataTable_wrapper">
                         <table class="table table-striped table-bordered table-condensed" id="tblCorrectivo">
                             <thead>
                                 <tr>
-                                    <!--<th>Id</th>-->
+                                    <th>Id</th>
                                     <th>Fecha</th>
                                     <th>Actividad</th>
                                     <th>Resultado</th>                                            
@@ -110,7 +110,7 @@
                             </tbody>
                         </table>
                     </div>
-            </div>
+            </div>-->
             <div class="tab-pane" id="tab5">
                 <div class="dataTable_wrapper">
                         <table class="table table-striped table-bordered table-hover" id="tblKitHistoria">
@@ -148,7 +148,7 @@
           loadDataActivoHistoria(data);
           loadDataCertificado(data);
           loadDataCompra(data);
-          loadDataCorrectivo(data);
+//          loadDataCorrectivo(data);
           loadDataKitHistoria(data);
           if(fecha_alta!==undefined && fecha_alta!=="") $('#fecha_alta').val(convertirFecha(fecha_alta));
        });

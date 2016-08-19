@@ -165,8 +165,8 @@
                                         <col span="1" style="width: 7%;">
                                         <col span="1" style="width: 5%;">
                                         <col span="1" style="width: 5%;">
-                                        <col span="1">
                                         <col span="1" style="width: 5%;">
+                                        <col span="1">
                                         <col span="1" style="width: 8%;">
                                         <col span="1" style="width: 5%;">
                                         <col span="1" style="width: 8%;">
@@ -178,8 +178,7 @@
                                             <th style="width:40px">Fecha inicio</th>
                                             <th style="width:50px;">Remito cierre</th>
                                             <th style="width:40px">Fecha cierre</th>
-                                            <th style="width:50px">Q Dias</th>
-                                            <th style="width:50px">Q Dias</th>
+                                            <th style="width:50px">Q Dias</th>                                            
                                             <th style="width:50px">Cantidad</th>
                                             <th style="width:50px">Posici&oacute;n</th>
                                             <th>Descripci&oacute;n</th>
@@ -196,6 +195,10 @@
                                             String divisa = "";
                                             Integer dias;
                                             Float dias_herramienta ;
+                                            String fecha_inicio;
+                                            String fecha_cierre;
+                                            Integer numero_inicio;
+                                            Integer numero_cierre;
                                             for( Remito_contrato detalle: lstDetalle) {
                                                 /*
                                                  * El transporte se considera como cantidad uno sin considerar los días.
@@ -212,42 +215,36 @@
 //                                                subtotal =
 //                                                subtot Float.parseFloat(String.format("%,2f",subtotal));
 
-                                                total +=subtotal;
-                                        %>
+                                                total +=subtotal;                                      
+                                                if (detalle.getActivo_id_rubro()==OptionsCfg.RUBRO_TRANSPORTE){
+                                                    fecha_inicio = detalle.getRemito_fecha();
+                                                    fecha_cierre = detalle.getRemito_fecha();
+                                                    numero_cierre = detalle.getRemito_numero();
+                                                    numero_inicio = detalle.getRemito_numero();
+                                                 } else {
+                                                    fecha_inicio  =  remito_inicio.getFecha();
+                                                    fecha_cierre  = remito_cierre.getFecha();
+                                                    numero_cierre = remito_cierre.getNumero();
+                                                    numero_inicio = remito_inicio.getNumero();
+                                                }
+                                         %>
                                             <%--<%@include file="preticket_detalle.jsp" %>--%>
                                             <tr>
                                                 <td >
-                                                    <%if (detalle.getActivo_id_rubro()==OptionsCfg.RUBRO_TRANSPORTE){%>
-                                                        <%= detalle.getRemito_numero()%>
-                                                    <% } else {%>
-                                                        <%= remito_inicio.getNumero()%>
-                                                    <% } %>
-                                                    <input type="hidden" name ="remito_inicio" value="<%= remito_inicio.getNumero()%>">
+                                                    <%=numero_inicio%>
+                                                    <input type="hidden" name ="remito_inicio" value="<%= numero_inicio%>">
                                                 </td>
-
                                                 <td style="width:20px;">
-                                                    <%if (detalle.getActivo_id_rubro()==OptionsCfg.RUBRO_TRANSPORTE){%>
-                                                        <%= TFecha.formatearFechaBdVista(detalle.getRemito_fecha())%>
-                                                    <% } else {%>
-                                                        <%= TFecha.formatearFechaBdVista(remito_inicio.getFecha()) %>
-                                                    <% } %>
-                                                    <input type="hidden" name ="fecha_inicio" value="<%= remito_inicio.getFecha() %>">                                                </td>
-
+                                                    <%=TFecha.formatearFechaBdVista(fecha_inicio)%>
+                                                    <input type="hidden" name ="fecha_inicio" value="<%= fecha_inicio %>">                                                </td>
+                                                </td>
                                                 <td>
-                                                    <%if (detalle.getActivo_id_rubro()==OptionsCfg.RUBRO_TRANSPORTE){%>
-                                                        <%= detalle.getRemito_numero()%>
-                                                    <% } else {%>
-                                                    <%= remito_cierre.getNumero() %>
-                                                    <% } %>
-                                                    <input type="hidden" name ="remito_cierre" value="<%= remito_cierre.getNumero() %>">
+                                                    <%= numero_cierre %>
+                                                    <input type="hidden" name ="remito_cierre" value="<%= numero_cierre %>">
                                                 </td>
-                                                <td style="width:20px;">
-                                                    <%if (detalle.getActivo_id_rubro()==OptionsCfg.RUBRO_TRANSPORTE){%>
-                                                        <%= TFecha.formatearFechaBdVista(detalle.getRemito_fecha()) %>
-                                                    <% } else {%>
-                                                        <%= TFecha.formatearFechaBdVista(remito_cierre.getFecha()) %>
-                                                    <% } %>
-                                                    <input type="hidden" name ="fecha_cierre" value="<%= remito_cierre.getFecha() %>">
+                                                <td style="width:20px;">                                                    
+                                                    <%= TFecha.formatearFechaBdVista(fecha_cierre) %>
+                                                    <input type="hidden" name ="fecha_cierre" value="<%= fecha_cierre %>">
                                                 </td>
                                                 <td>
                                                     <%=dias %>
@@ -262,8 +259,8 @@
                                                     <input type="hidden" name ="posicion" value="<%= detalle.getPosicion() %>">
                                                 </td>
                                                 <td style="width:290px;">
-                                                    <%= detalle.getActivo_desc_larga() %>
-                                                    <input type="hidden" name ="descripcion" value="<%= detalle.getActivo_desc_larga() %>">
+                                                    <%= detalle.getContrato_detalle_descripcion() %>
+                                                    <input type="hidden" name ="descripcion" value="<%= detalle.getContrato_detalle_descripcion() %>">
                                                 </td>
                                                 
                                                 <td  >
@@ -448,7 +445,7 @@
             html += '<input type="hidden" name ="fecha_cierre"      value="' + d.remito_cierre.fecha.split(" ")[0] + '">';
             html += '<input type="hidden" name ="dias"              value="' + d.dias + '">';
             html += '<input type="hidden" name ="posicion"          value="' + d.posicion + '">';
-            html += '<input type="hidden" name ="descripcion"       value="' + d.activo_desc_larga + '">';
+            html += '<input type="hidden" name ="descripcion"       value="' + d.contrato_detalle_descripcion + '">';
             html += '<input type="hidden" name ="cantidad"          value="' + d.remito_detalle_cantidad + '">';
             html += '<input type="hidden" name ="dias_herramienta " value="' + dias_herramienta  + '">';
             html += '<input type="hidden" name ="id_unidad"         value="' + d.contrato_detalle_id_unidad + '">';

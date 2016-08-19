@@ -181,8 +181,8 @@
                                         <col span="1" style="width: 7%;">
                                         <col span="1" style="width: 5%;">
                                         <col span="1" style="width: 5%;">
-                                        <col span="1">
                                         <col span="1" style="width: 8%;">
+                                        <col span="1">
                                         <col span="1" style="width: 8%;">
                                         <col span="1" style="width: 10%;text-align: right">
                                      </colgroup>
