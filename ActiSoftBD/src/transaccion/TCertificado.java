@@ -6,6 +6,7 @@ package transaccion;
 
 import bd.Certificado;
 
+import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import org.joda.time.LocalDate;
@@ -27,6 +28,8 @@ public class TCertificado extends TransaccionBase<Certificado>{
     }
     /* Devuelve un certificado vigente si existiere para un activo */
     public Certificado getVigente(Integer id_activo){
+        /* Fecha desde: Desde */
+        /* Fecha hasta: Hasta */
         String query = String.format("select * from certificado\n" +
         " where certificado.id_activo = %d\n" +
         " and certificado.id_resultado = %d " +
@@ -72,6 +75,8 @@ public class TCertificado extends TransaccionBase<Certificado>{
        * y los que no tengan archivo de imagen 
     */
     public void vencerCertificados(){       
+        String query = "update certificado\n" +
+                       "   set id_resultado = %d\n" +
         String query = "update certificado\n" +
                        "   set id_resultado = %d\n" +
                        " where certificado.id_resultado = 1" + 

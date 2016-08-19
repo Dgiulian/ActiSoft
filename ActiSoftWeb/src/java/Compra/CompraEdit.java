@@ -161,7 +161,7 @@ public class CompraEdit extends HttpServlet {
 
             // Set overall request size constraint
             upload.setSizeMax(MAX_REQUEST_SIZE);            
-            
+                                
             try {
                 List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
                 for (FileItem item : items) {
@@ -190,7 +190,6 @@ public class CompraEdit extends HttpServlet {
                             archivo2 = item;                    
                             factura_compra = FilenameUtils.getName(item.getName());
                         }
-                        
                     }
                 };           
             } catch (FileUploadException ex) {
