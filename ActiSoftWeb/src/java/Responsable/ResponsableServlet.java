@@ -2,29 +2,24 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Parametro;
+package Responsable;
 
-import bd.Parametro;
-import com.google.gson.Gson;
+import bd.Proveedor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import transaccion.TAuditoria;
-import transaccion.TParametro;
+import transaccion.TProveedor;
 import utils.BaseException;
-import utils.JsonRespuesta;
-import utils.OptionsCfg;
 import utils.Parser;
 
 /**
  *
  * @author Diego
  */
-public class ParametroDel extends HttpServlet {
+public class ResponsableServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -45,10 +40,10 @@ public class ParametroDel extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ParametroDel</title>");            
+            out.println("<title>Servlet ResponsableServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ParametroDel at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ResponsableServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         } finally {            
@@ -56,7 +51,7 @@ public class ParametroDel extends HttpServlet {
         }
     }
 
-    
+   
     /**
      * Handles the HTTP
      * <code>GET</code> method.
@@ -69,7 +64,18 @@ public class ParametroDel extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+        try{
+            Integer id_proveedor = Parser.parseInt(request.getParameter("id_proveedor"));         
+            Proveedor proveedor = new TProveedor().getById(id_proveedor);
+            if (proveedor == null) throw new BaseException("Proveedor inexistente", "No se encontr&oacute; el proveedor");
+            request.setAttribute("proveedor", proveedor);
+            request.getRequestDispatcher("responsable.jsp").forward(request, response);
+        } catch (BaseException ex){
+            request.setAttribute("titulo", ex.getResult());
+            request.setAttribute("mensaje", ex.getMessage());
+            request.getRequestDispatcher("message.jsp").forward(request,response);
+        }
     }
 
     /**
@@ -84,32 +90,7 @@ public class ParametroDel extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         response.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        JsonRespuesta jr = new JsonRespuesta();
-        try {           
-           Integer id = Parser.parseInt(request.getParameter("id"));
-           Parametro parametro = new TParametro().getById(id);            
-           if (parametro==null) throw new BaseException("ERROR","No existe el registro");
-           
-           boolean baja = new TParametro().baja(parametro);
-           if ( baja){
-               jr.setResult("OK");
-//                Integer id_usuario = 0;
-//                Integer id_tipo_usuario = 0;
-//                HttpSession session = request.getSession();
-//                id_usuario = (Integer) session.getAttribute("id_usuario");
-//                id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
-//                TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_CLIENTE,OptionsCfg.ACCION_BAJA,parametro.getId());
-           } else throw new BaseException("ERROR","Ocurrio un error al eliminar el registro");                     
-        }  catch (BaseException ex) {
-            jr.setResult(ex.getResult());
-            jr.setMessage(ex.getMessage());            
-        }
-        finally {
-            out.print(new Gson().toJson(jr));
-            out.close();
-        }
+         
     }
 
     /**

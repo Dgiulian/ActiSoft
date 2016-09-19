@@ -23,7 +23,7 @@ public class Activo {
     public String desc_opcional = "";
     public Integer stock_minimo = 0;
     public Float  extension     = 0f;
-
+    
     public String anillo        = "";
     public Float peso           = 0f;
     public Float alto           = 0f;
@@ -54,7 +54,9 @@ public class Activo {
     public String archivo_1_url = "";
     public String archivo_2_url = "";
     public String archivo_3_url = "";
-    
+    public String fecha_alta    = "";
+
+  
 
 public Activo(){}
     public Activo(Activo activo){
@@ -70,7 +72,6 @@ public Activo(){}
         this.desc_corta     = activo.getDesc_corta();
         this.desc_larga     = activo.getDesc_larga();
         this.desc_opcional  = activo.getDesc_opcional();
-        
         this.stock_minimo   = activo.getStock_minimo();
         this.anillo         = activo.getAnillo();
         this.peso           = activo.getPeso();
@@ -92,11 +93,12 @@ public Activo(){}
         this.id_divisa      = activo.getId_divisa();
         this.stock          = activo.getStock();
         this.aplica_stock   = activo.getAplica_stock();
-        this.aplica_compra   = activo.getAplica_compra();
+        this.aplica_compra  = activo.getAplica_compra();
         this.bloqueado      = activo.getBloqueado();
         this.archivo_1      = activo.getArchivo_1();
         this.archivo_2      = activo.getArchivo_2();
         this.archivo_3      = activo.getArchivo_3();
+        this.fecha_alta     = activo.getFecha_alta();
     }
     public Integer getId(){
         return id;
@@ -406,5 +408,12 @@ public Activo(){}
 
     public void setExtension(Float extension) {
         this.extension = extension;
+    }
+    public String getFecha_alta() {
+        return fecha_alta;
+    }
+
+   public void setFecha_alta(String fecha_alta) {
+        this.fecha_alta = fecha_alta;
     }
 }

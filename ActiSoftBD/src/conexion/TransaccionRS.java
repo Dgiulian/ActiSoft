@@ -158,8 +158,9 @@ public class TransaccionRS {
                                 valor = rs.getDouble(i);
                                 tipobd = "java.lang.Double";
                                 break;
-                            case 12:
-                                valor = rs.getString(i);
+                            case 12:                                
+                                valor = new String(rs.getBytes(i)); //rs.getString(i).replace('"', '\"');                                                                                              
+                               
                                 tipobd = "java.lang.String";
                                 break;
                             case 91: // Date

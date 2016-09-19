@@ -1,0 +1,21 @@
+{{#each records}}
+  <tr class="">
+      <td class="">{{nombre}}</td>
+      <td class="">{{apellido}}</td>
+      <td class="">
+          <span data-index="{{id}}" data-nombre="{{nombre}}" data-apellido="{{apellido}}"  class="btn btn-xs btn-circle btn-warning btn-edit"><span class="fa fa-edit fw"></span></span>
+          <span data-index="{{id}}" data-toggle='modal' data-target='#mdlHabilitacion' class="btn btn-xs btn-circle btn-primary btn-view"><span class="fa fa-graduation-cap fw"></span></span>
+          <span data-index="{{id}}" class="btn btn-xs btn-danger btn-circle btn-del"><span class="fa fa-trash fw"></span></span>
+      </td>
+  </tr>
+{{else}}
+<tr>
+    <td colspan="3"> <center> A&uacute;n no se ha cargado ning&uacute;n responsable    </td>
+</tr>
+{{/each}}
+
+
+
+
+
+

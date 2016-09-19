@@ -66,11 +66,9 @@ public class ActivoList extends HttpServlet {
         
         mapSubrubros = new TSubrubro().getMap();
         mapValidos = tcert.getMapValidos();
-        mapEstados = new HashMap<Integer,Option>();
-        for (Iterator<Option> it = OptionsCfg.getEstadoActivo().iterator(); it.hasNext();) {
-             Option o = it.next();
-             mapEstados.put(o.getId(),o);
-        }
+        
+        mapEstados = OptionsCfg.getMap( OptionsCfg.getEstadoActivo());
+
         Integer page = 0;
         Integer id_rubro = 0;
         Integer id_subrubro = 0;
@@ -130,8 +128,9 @@ public class ActivoList extends HttpServlet {
      String cod_subrubro = "";
      String subrubro = "";
      String estado = "";
-     String fecha_alta = "";
-     String certificado = "";
+//     String fecha_alta = "";
+     String certificado     = "";
+     Integer id_certificado = 0;
      public ActivoDet(Activo activo){
          super(activo);
          // Por default devolvemos el Id
@@ -151,13 +150,16 @@ public class ActivoList extends HttpServlet {
          if(o!=null)
              this.estado = o.getDescripcion();
          
-         Compra compra = tc.getPrimerCompra(activo.getId());
-         if(compra!=null) this.fecha_alta = compra.getFecha();         
+//         Compra compra = tc.getPrimerCompra(activo.getId());
+//         if(compra!=null) this.fecha_alta = compra.getFecha();         
          //this.certificado = (tcert.getVigente(activo.getId())!=null)?"Si":"No";
+         
          Certificado cert = mapValidos.get(activo.getId());
-         if(cert==null) this.certificado = "Vencido";
-         else if(cert.getArchivo_url()==null || cert.getArchivo_url().equals(""))  this.certificado = "No";
-         else  this.certificado = "Si";
+         if(cert==null) this.certificado = "No";
+         else { this.id_certificado = cert.getId();
+             if(cert.getId_resultado()==OptionsCfg.CERTIFICADO_VENCIDO)  this.certificado = "Vencido";                            
+             else certificado = "Si";
+       }
      }
  }
    

@@ -5,6 +5,7 @@
 package utils;
 
 import bd.Certificado;
+import bd.Habilitacion;
 import bd.Parametro;
 import bd.Remito;
 import java.io.File;
@@ -12,14 +13,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TCertificado;
+import transaccion.THabilitacion;
 import transaccion.TParametro;
 import transaccion.TRemito;
 
@@ -76,12 +76,14 @@ public class DownloadServlet extends HttpServlet {
             
             String tipo = request.getParameter("type");
             String filePath = "";
-            Parametro parametro = new TParametro().getByCodigo(OptionsCfg.CERTIFICADO_PATH);
+            Parametro parametro;
+            TParametro tp = new TParametro();
             
             if (tipo==null|| tipo.equals(""))
                 throw new BaseException("Error","Debe seleccionar el tipo de documento a descargar");
             
             if (tipo.equalsIgnoreCase("certificado")) {
+                parametro = tp.getByCodigo(OptionsCfg.CERTIFICADO_PATH);
                 String idCertif = request.getParameter("id");
                 Integer id_certif = (idCertif!=null && !idCertif.equals(""))?Integer.parseInt(idCertif):0;
                 Certificado certificado = new TCertificado().getById(id_certif);
@@ -93,14 +95,8 @@ public class DownloadServlet extends HttpServlet {
                 if (filePath==null || filePath.equals("")) throw new BaseException("ERROR", "El certificado no tiene ning&uacute;n archivo asociado");
                 
                 //filePath = "c:\\Users\\Diego\\Documents\\NetBeansProjects\\ActiSoft\\ActiSoftWeb\\data\\HaxLogs.log";
-            }else if(tipo.equalsIgnoreCase("remito")){
-                String idRemito = request.getParameter("id");
-                Integer id_remito = 0;
-                try{ id_remito = Integer.parseInt(idRemito);                
-                } catch(NumberFormatException ex) {
-                    id_remito = 0;
-                }
-                
+            }else if(tipo.equalsIgnoreCase("remito")){                
+                Integer id_remito = Parser.parseInt(request.getParameter("id"));
                 Remito remito = new TRemito().getById(id_remito);
                 if(remito == null) throw new BaseException("ERROR","No se encontr&oacute; el remito");
                 
@@ -109,7 +105,15 @@ public class DownloadServlet extends HttpServlet {
 //                filePath = parametro.getValor() + File.separator + fileName; 
                         
                 if (filePath==null || filePath.equals("")) throw new BaseException("ERROR", "El remito no tiene ning&uacute;n archivo asociado");
-            } else   throw new BaseException("Error","El tipo de documento a descargar no es v&aacute;lido");
+            } else if(tipo.equalsIgnoreCase("habilitacion")){
+                Integer id_habilitacion = Parser.parseInt(request.getParameter("id"));
+                Habilitacion habilitacion = new THabilitacion().getById(id_habilitacion);
+                if(habilitacion==null) throw new BaseException("ERROR", "No se encontr&oacute; la habilitaci&oacute;n");
+                parametro = tp.getByCodigo(OptionsCfg.HABILITACION_PATH);
+                if(parametro==null) throw new BaseException("ERROR","Error de configuraci&oacute;n del sistema");   
+                filePath = parametro.getValor() + File.separator + habilitacion.getArchivo();
+            }
+            else   throw new BaseException("Error","El tipo de documento a descargar no es v&aacute;lido");
             
         // reads input file from an absolute path        
             File downloadFile = new File(filePath);

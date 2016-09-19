@@ -72,7 +72,7 @@
                             <fieldset>
                                 <input type="hidden" name="id_activo" value="<%= activo.getId()%>">
                                 <% if (!nuevo) {%>
-                                    <input type="hidden" name="id" value="<%= certificado.getId()%>">                                    
+                                    <input type="hidden" name="id" id="id" value="<%= certificado.getId()%>">                                    
                                 <% }%>
                                 
                                 <div class="col-lg-4 " >
@@ -157,7 +157,7 @@
                                              display = "style='display: none'"; 
                                     %>
                                         <div class="form-group">                            
-                                            <a href="<%=PathCfg.DOWNLOAD%>?type=certificado&id=<%=certificado.getId()%>" class="btn btn-success"><span> </span> Archivo asociado: <b><%= certificado.getArchivo() %></b></a>                                         
+                                            <a id="link_archivo" href="<%=PathCfg.DOWNLOAD%>?type=certificado&id=<%=certificado.getId()%>" class="btn btn-success"><span> </span> Archivo asociado: <b><%= certificado.getArchivo() %></b></a>                                         
                                             <span class="btn btn-default" id="cambiarArchivo" name="cambiarArchivo">Cambiar</span>
                                         </div>
                                     <% }  %>
@@ -298,6 +298,9 @@
             var $fecha = $('#fecha');
             var $fecha_hasta = $('#fecha_hasta');
             var $fecha_desde = $('#fecha_desde');
+            var $archivo     = $('#archivo');
+            var $id          = $('#id')
+            var $link_archivo = $('#link_archivo');
             
             if($fecha===undefined || $fecha.val()==="" || !validarFecha($fecha.val())){
                 bootbox.alert("Debe ingresar la fecha del certificado");
@@ -317,6 +320,11 @@
                 return false;
             } else $fecha_desde.parent().removeClass("has-error");
             
+           if($link_archivo.val()===undefined && $archivo.val()===""){
+                bootbox.alert("Debe ingresar el archivo del certificado");
+                $archivo.parent().addClass("has-error");
+                return false;
+            } else $archivo.parent().removeClass("has-error");
             return true;
         }
                    

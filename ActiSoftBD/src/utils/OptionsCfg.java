@@ -45,16 +45,21 @@ public class OptionsCfg {
     public static final Integer CERTIFICADO_REPARAR = 3;
     public static final Integer CERTIFICADO_VENCIDO = 4;
 
-    public static final String CERTIFICADO_PATH = "fileDir";
+    public static final String  CERTIFICADO_PATH = "fileDir";
     public static final Integer REMITO_PATH = 2;
+    public static final String  EXPORT_PATH = "export_dir";
     
     public static final Integer ACTIVO_PATH = 3;
     public static final Integer ACTIVO_URL = 4;
     public static final String  COMPRA_PATH = "compra_path";
     public static final String  COMPRA_URL  = "compra_url";
     public static final Integer PRETICKET_IMAGE = 5;
-    public static final String  ETIQUETA_IMAGE = "fondo_etiqueta";
-    public static final String  REMITO_IMAGE = "fondo_remito";
+    public static final String  ETIQUETA_IMAGE  = "fondo_etiqueta";
+    public static final String  REMITO_IMAGE    = "fondo_remito";
+    public static final String  ACTIVO_IMAGE    = "fondo_activo";
+    public static final String  HABILITACION_PATH = "habilitacion_path";
+    
+    
     
     public static final Integer UNIDAD_DIAS = 1;
     public static final Integer UNIDAD_HORAS = 2;
@@ -148,14 +153,14 @@ public class OptionsCfg {
         ArrayList<Option> lista = new ArrayList();
         lista.add(new Option(ACTIVO_ESTADO_DISPONIBLE,String.format("%03d",ACTIVO_ESTADO_DISPONIBLE),"Disponible"));
         lista.add(new Option(ACTIVO_ESTADO_ALQUILADO,String.format("%03d",ACTIVO_ESTADO_ALQUILADO),"Alquilado"));
-        lista.add(new Option(ACTIVO_ESTADO_BAJA,String.format("%03d",ACTIVO_ESTADO_BAJA),"Baja"));
-        lista.add(new Option(ACTIVO_ESTADO_FALLA,String.format("%03d",ACTIVO_ESTADO_FALLA),"Falla"));
-        lista.add(new Option(ACTIVO_ESTADO_INSPECCION,String.format("%03d",ACTIVO_ESTADO_INSPECCION),"Inspección"));
-        lista.add(new Option(ACTIVO_ESTADO_PRESTADO,String.format("%03d",ACTIVO_ESTADO_PRESTADO),"Prestado"));
-        lista.add(new Option(ACTIVO_ESTADO_NO_DISPONIBLE,String.format("%03d",ACTIVO_ESTADO_NO_DISPONIBLE),"Prestado"));
-        lista.add(new Option(ACTIVO_ESTADO_NO_APTO,String.format("%03d",ACTIVO_ESTADO_NO_APTO),"No Apto"));
+//        lista.add(new Option(ACTIVO_ESTADO_BAJA,String.format("%03d",ACTIVO_ESTADO_BAJA),"Baja"));
+//        lista.add(new Option(ACTIVO_ESTADO_FALLA,String.format("%03d",ACTIVO_ESTADO_FALLA),"Falla"));
+//        lista.add(new Option(ACTIVO_ESTADO_INSPECCION,String.format("%03d",ACTIVO_ESTADO_INSPECCION),"Inspección"));
+//        lista.add(new Option(ACTIVO_ESTADO_PRESTADO,String.format("%03d",ACTIVO_ESTADO_PRESTADO),"Prestado"));
+//        lista.add(new Option(ACTIVO_ESTADO_NO_DISPONIBLE,String.format("%03d",ACTIVO_ESTADO_NO_DISPONIBLE),"Prestado"));
+//        lista.add(new Option(ACTIVO_ESTADO_NO_APTO,String.format("%03d",ACTIVO_ESTADO_NO_APTO),"No Apto"));
         lista.add(new Option(ACTIVO_ESTADO_KIT,String.format("%03d",ACTIVO_ESTADO_KIT),"Kit"));
-        lista.add(new Option(ACTIVO_ESTADO_ELIMINADO,String.format("%03d",ACTIVO_ESTADO_ELIMINADO),"Eliminado"));
+//        lista.add(new Option(ACTIVO_ESTADO_ELIMINADO,String.format("%03d",ACTIVO_ESTADO_ELIMINADO),"Eliminado"));
         
 //        lista.add(new Option(6,"003","Cabeza fractura 001"));        
         return lista;
@@ -266,8 +271,10 @@ public static ArrayList<Option> getTipoActividades(){
    }
    public static HashMap<Integer,Option> getMap(List<Option> lista){
         HashMap<Integer,Option> mapa = new HashMap<>();
-        for(Option o:lista){
-            mapa.put(o.getId(), o);
+        if (lista!=null){
+            for(Option o:lista){
+                mapa.put(o.getId(), o);
+            }
         }
         return mapa;
    } 

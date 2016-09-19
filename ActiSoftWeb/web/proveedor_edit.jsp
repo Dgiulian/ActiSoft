@@ -42,6 +42,7 @@
                     <div class="button-bar" >
                         <a class="btn btn-info" href="<%=PathCfg.TRANSPORTISTA %>?id_proveedor=<%= proveedor.getId()%>"><i class="fa fa-male fa-fw"></i> Transportistas</a>
                         <a class="btn btn-info" href="<%=PathCfg.VEHICULO %>?id_proveedor=<%= proveedor.getId()%>"><i class="fa fa-truck fa-fw"></i> Vehiculos</a>
+                        <a class="btn btn-info" href="<%=PathCfg.RESPONSABLE %>?id_proveedor=<%= proveedor.getId()%>"><i class="fa fa-check-square-o fa-fw"></i> Responsables</a>
                     </div>
                     <% } %>
                 </div>

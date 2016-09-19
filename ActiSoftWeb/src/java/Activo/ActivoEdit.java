@@ -32,6 +32,7 @@ import utils.BaseException;
 import utils.OptionsCfg;
 import utils.Parser;
 import utils.PathCfg;
+import utils.TFecha;
 
 
 /**
@@ -117,6 +118,7 @@ public class ActivoEdit extends HttpServlet {
         Integer stock_minimo   = 0;
         Float   extension      = 0f;
         Float stock            = 0f;
+        String fecha_alta      = "";
     try{
         Integer id_usuario = 0;
         Integer id_tipo_usuario = 0;
@@ -192,6 +194,7 @@ public class ActivoEdit extends HttpServlet {
                 if(fieldName.equalsIgnoreCase("aplica_compra"))  aplicaCompra    = fieldValue;
                 if(fieldName.equalsIgnoreCase("sock"))           stock           = Parser.parseFloat(fieldValue);
                 if(fieldName.equalsIgnoreCase("extension"))      extension       = Parser.parseFloat(fieldValue);
+                if(fieldName.equalsIgnoreCase("fecha_alta"))     fecha_alta      = fieldValue;
             } else {
                 // Process form file field (input type="file").
                 String fieldName = item.getFieldName();
@@ -285,7 +288,7 @@ public class ActivoEdit extends HttpServlet {
         activo.setId_subrubro(id_subrubro);
         activo.setDesc_corta(desc_corta);
         activo.setDesc_opcional(desc_opcional);
-        
+        activo.setFecha_alta(TFecha.formatearFechaVistaBd(fecha_alta));
         activo.setNum_serie(num_serie);
         activo.setStock_minimo(stock_minimo);
         activo.setNum_rfid(num_rfid);

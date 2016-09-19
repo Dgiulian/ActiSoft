@@ -21,6 +21,7 @@ import transaccion.TKit;
 import transaccion.TRubro;
 import utils.BaseException;
 import utils.JsonRespuesta;
+import utils.OptionsCfg;
 
 /**
  *
@@ -74,8 +75,8 @@ public class ActivoCheck extends HttpServlet {
                 Rubro r = tr.getById(activo.getId_rubro());
                 if (r.getAplica_certificado()!=0){
 
-                    Certificado vigente = tc.getVigente(activo.getId());
-                    if(vigente == null) throw new BaseException("ERROR","El activo " + activo.getCodigo() + " no tiene un certificado v&aacute;lido");
+                    Certificado vigente = tc.getVigente(activo.getId()); //Buscamos el certificado vigente a la fecha
+                    if(vigente == null || vigente.getId_resultado()!= OptionsCfg.CERTIFICADO_APTO) throw new BaseException("ERROR","El activo " + activo.getCodigo() + " no tiene un certificado v&aacute;lido");
 
                 }
             }

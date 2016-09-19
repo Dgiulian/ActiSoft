@@ -322,7 +322,7 @@ public class RemitoPdf extends BasePdf {
          for(int i = 0;i<=lines;i++){
              startIndex = lineWidth * i;
              Integer endIndex = Math.min(startIndex + lineWidth,observaciones.length());
-             addText(cb,30,start - i * lineHeight,observaciones.substring(startIndex,endIndex));
+             addText(cb,100,start - i * lineHeight,observaciones.substring(startIndex,endIndex));
          }
      }
   private HashMap<Integer,Object[]> groupBySubrubro(List<Remito_detalle_view> detalle){

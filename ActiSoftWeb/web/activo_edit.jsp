@@ -1,3 +1,4 @@
+<%@page import="utils.TFecha"%>
 <%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="java.util.HashMap"%>
 <%@page import="transaccion.TParametro"%>
@@ -34,6 +35,8 @@
     List<Subrubro> lstSubrubro = new TSubrubro().getListFiltro(mapSubrubro);
     
     ArrayList<Option> lstEstados = OptionsCfg.getEstadoActivo();    
+    String fecha_alta = activo.getFecha_alta().equals("")?TFecha.ahora(TFecha.formatoVista):TFecha.formatearFechaBdVista(activo.getFecha_alta());
+    
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -100,13 +103,19 @@
                                 <div class="tab-pane active" id="tab1">
                                     <div class="col-lg-6">
                                         <div class="row">
-                                            <div class="col-lg-6" >
+                                            <div class="col-lg-4" >
+                                                <div class="form-group">
+                                                    <label for="fecha_alta" >Fecha de alta</label>
+                                                    <input name="fecha_alta" id="fecha_alta" class="form-control  date-picker" value='<%= fecha_alta%>'>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4" >
                                                 <div class="form-group">
                                                     <label for="codigo" >C&oacute;digo</label>
                                                     <input name="codigo" id="codigo" class="form-control uppercase" value='<%= activo.getCodigo()%>'>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6" >
+                                            <div class="col-lg-4" >
                                                 <div class="form-group">
                                                     <label for="codigo" >C&oacute;digo New</label>
                                                     <input name="codigo" id="codigo" class="form-control" value='<%= activo.getCodigoNew()%>' disabled>

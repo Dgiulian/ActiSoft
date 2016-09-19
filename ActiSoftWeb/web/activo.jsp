@@ -47,7 +47,9 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Activos <a href="<%= PathCfg.ACTIVO_EDIT%>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a></h1>                    
+                    <h1 class="page-header">Activos 
+                       <a href="<%= PathCfg.ACTIVO_EDIT%>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"></span> Nuevo</a>
+                       <span class="btn btn-info" data-toggle="modal" data-target="#mdlActivoExport"><span class="fa fa-file-excel-o fa-fw"></span> Exportar</a></h1>                    
                 </div>
 
             </div>
@@ -240,7 +242,13 @@
            var htmlEstado = '<a href="#" data-toggle="modal" data-target="#mdlActivoHistoria" data-index="'+ d.id + '" data-fecha_alta=' +  d.fecha_alta + '>' + d.estado + ' </a>';
            html +=wrapTag('td',htmlEstado,'');
            html += wrapTag('td',d.stock,'');
-           html += wrapTag('td',d.certificado,'');
+           if(d.id_certificado!==0){
+            var urlCertificado = '<%=PathCfg.CERTIFICADO_EDIT%>?id='+ d.id_certificado + '&id_activo=' + d.id;
+           } else {
+               var urlCertificado = '<%=PathCfg.CERTIFICADO%>?id_activo=' + d.id;
+           }
+           var htmlCertificado = '<a href="' + urlCertificado +'">'+ d.certificado +'</a>';
+           html += wrapTag('td',htmlCertificado,'');
            
 //           html +=wrapTag('td',d.num_rfid,'');
             var htmlEdit = "<a href='<%= PathCfg.ACTIVO_EDIT%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
@@ -255,6 +263,7 @@
      </script>
      <%@include  file="upload_mdl.jsp" %>
      <%@include  file="activo_historia_mdl.jsp" %>
+     <%@include  file="activo_export_mdl.jsp" %>
      <%@include file="tpl_footer.jsp"%>
 </body>
 

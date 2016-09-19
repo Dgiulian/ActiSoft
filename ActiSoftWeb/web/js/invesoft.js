@@ -350,13 +350,24 @@ $(document).ready(function(){
         $('.hora').mask('99:99:99');
     }
     if($().datepicker) {
+        if($.fn.datepicker.defaults)
+            $.fn.datepicker.defaults.format = "dd/mm/yyyy";
         $('.date-picker').datepicker({
-            language: 'es'
-        });
-        $('.date-picker').on('changeDate', function(ev){
-            $(this).datepicker('hide');
+            language: 'es',
+            locale:'es-AR',
+            format:'dd/mm/yyyy',
+            dateFormat:'dd/mm/yyyy',
+            autoclose: true
         });
     }
+//    if($().datepicker) {
+//        $('.date-picker').datepicker({
+//            language: 'es'
+//        });
+//        $('.date-picker').on('changeDate', function(ev){
+//            $(this).datepicker('hide');
+//        });
+//    }
     
      $('#btnHideData').click(function(){
         $('#btnHideData').toggleClass("fa-chevron-down");
@@ -483,3 +494,7 @@ function lnkVRHistorial(){
        });
    }        
 //$('#nav-bar').width('50px'); $('$('.side - bar').width('50px');$('#page - wrapper').css('margin - left','50px')
+
+function escapeHTML(mystring){
+    return mystring.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+}

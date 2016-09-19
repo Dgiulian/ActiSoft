@@ -143,9 +143,11 @@ public class ActivoContratoList extends HttpServlet {
          Option o = mapEstados.get(activo.getId_estado());
          if(o!=null)
              this.estado = o.getDescripcion();
-        System.out.println(fecha);
-        if(activo.getId_rubro()==OptionsCfg.RUBRO_TRANSPORTE) this.certificado = new Certificado();
-        else this.certificado = tc.getVigente(activo.id,fecha);
+        Integer id_rubro = activo.getId_rubro();
+        if(r!=null && r.getAplica_certificado()==1) {
+             Certificado vigente = tc.getVigente(activo.id,fecha);
+             if (vigente.getId_resultado()!=OptionsCfg.CERTIFICADO_APTO) this.certificado = vigente;
+        } else this.certificado = new Certificado();
         
 //        if(this.certificado!=null)
 //             if (this.certificado.getArchivo() != null && this.certificado.getArchivo().equals("")) this.certificado = null;

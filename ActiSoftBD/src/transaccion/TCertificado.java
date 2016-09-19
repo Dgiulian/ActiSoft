@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.joda.time.LocalDate;
 import utils.OptionsCfg;
+import utils.TFecha;
 
 public class TCertificado extends TransaccionBase<Certificado>{
     public List<Certificado>getList(){
@@ -30,23 +31,25 @@ public class TCertificado extends TransaccionBase<Certificado>{
     public Certificado getVigente(Integer id_activo){
         /* Fecha desde: Desde */
         /* Fecha hasta: Hasta */
-        String query = String.format("select * from certificado\n" +
-        " where certificado.id_activo = %d\n" +
-        " and certificado.id_resultado = %d " +
-        " and certificado.fecha_desde <= curdate()" +
-        " and certificado.fecha_hasta >= CURDATE()" +
-        " and certificado.archivo_url <> '' ",id_activo,OptionsCfg.CERTIFICADO_APTO);
-        return super.getById(query);
+        return this.getVigente(id_activo,TFecha.ahora(TFecha.formatoBD));
         
     }
      /* Devuelve un certificado vigente si existiere para un activo */
     public Certificado getVigente(Integer id_activo,String fecha){
         String query = String.format("select * from certificado\n" +
-                        " where certificado.id_activo = %d\n" +
-                        " and certificado.id_resultado = %d " +
+                        " where certificado.id_activo = %d\n" +                        
                         " and certificado.fecha_desde <= '%s'" +
                         " and certificado.fecha_hasta >= '%s'" +
-                        " and certificado.archivo_url <> '' ",id_activo,OptionsCfg.CERTIFICADO_APTO,fecha,fecha);
+//                        " and certificado.id_resultado = %d " +
+                        " and certificado.archivo_url <> '' ",id_activo,fecha,fecha);
+        
+        query = String.format("select * \n" +
+                "  from certificado\n" +
+                " where certificado.id_activo = %d\n" +
+                "   and certificado.fecha_desde <= '%s' \n" +
+                " order by certificado.fecha_hasta desc,\n" +
+                "	    certificado.id desc\n" +
+                " limit 0,1 ",id_activo,fecha);
         System.out.println(query);
         return super.getById(query);
     }
@@ -55,12 +58,15 @@ public class TCertificado extends TransaccionBase<Certificado>{
      * Donde la key del mapa es el Id de activo y el valor es un certificado válido.
      * Pueden existir varios certificados válidos para un mismo activo.      
      */
-    public HashMap<Integer,Certificado> getMapValidos(){
+public HashMap<Integer,Certificado> getMapValidos(){
         HashMap<Integer,Certificado> mapa = new HashMap<Integer,Certificado>();
          String query = String.format("select * from certificado\n" +
-        " where certificado.id_resultado = %d " +
-        " and certificado.fecha_desde <= curdate()" +
-        " and certificado.fecha_hasta >= CURDATE()",OptionsCfg.CERTIFICADO_APTO);
+                                        "where certificado.id in (select max(id)\n" +
+                                        "         from certificado\n" +
+                                        "        where archivo <> '' \n" +
+                                        "          and fecha_desde <= curdate()\n" +
+                                        "        group by id_activo);" );
+         System.out.println(query);
         List<Certificado> lstCertificados = this.getList(query);
         if (lstCertificados==null) return mapa;
         
@@ -69,14 +75,26 @@ public class TCertificado extends TransaccionBase<Certificado>{
         }
         return mapa;
     }
+//    public HashMap<Integer,Certificado> getMapValidos(){
+//        HashMap<Integer,Certificado> mapa = new HashMap<Integer,Certificado>();
+//         String query = String.format("select * from certificado\n" +
+//        " where certificado.id_resultado = %d " +
+//        " and certificado.fecha_desde <= curdate()" +
+//        " and certificado.fecha_hasta >= CURDATE()",OptionsCfg.CERTIFICADO_APTO);
+//        List<Certificado> lstCertificados = this.getList(query);
+//        if (lstCertificados==null) return mapa;
+//        
+//        for(Certificado c:lstCertificados){
+//            mapa.put(c.getId_activo(), c);
+//        }
+//        return mapa;
+//    }
     /*
        * Actualiza el resultado de los certificados que ya vencieron
        * Se considera como vencido los certificados con fecha hasta anterior a la fecha actual
        * y los que no tengan archivo de imagen 
     */
-    public void vencerCertificados(){       
-        String query = "update certificado\n" +
-                       "   set id_resultado = %d\n" +
+    public void vencerCertificados(){           
         String query = "update certificado\n" +
                        "   set id_resultado = %d\n" +
                        " where certificado.id_resultado = 1" + 
@@ -116,7 +134,8 @@ public class TCertificado extends TransaccionBase<Certificado>{
 //      new TCertificado().vencerCertificados();
         
         TCertificado tc = new TCertificado();
-        
+        HashMap<Integer, Certificado> mapValidos = tc.getMapValidos();
+        System.out.println(mapValidos.get(717));
     }
 
     public Certificado getValido(Integer id_activo) {

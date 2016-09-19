@@ -17,12 +17,13 @@ public class PathCfg {
     public static final Integer PARAMETRO_ENTORNO = 6;
     
     public static final String ACTIVO ="Activo";
-    public static final String ACTIVO_LIST = ACTIVO + "List";
-    public static final String ACTIVO_EDIT = ACTIVO + "Edit";
-    public static final String ACTIVO_DEL  = ACTIVO + "Del";
-    public static final String ACTIVO_SEARCH  = ACTIVO + "Search";
-    public static final String ACTIVO_CHECK  = ACTIVO + "Check";
+    public static final String ACTIVO_LIST      = ACTIVO + "List";
+    public static final String ACTIVO_EDIT      = ACTIVO + "Edit";
+    public static final String ACTIVO_DEL       = ACTIVO + "Del";
+    public static final String ACTIVO_SEARCH    = ACTIVO + "Search";
+    public static final String ACTIVO_CHECK     = ACTIVO + "Check";
     public static final String ACTIVO_ETIQUETA  = ACTIVO + "Etiqueta";
+    public static final String ACTIVO_EXPORT    = ACTIVO + "Export";
     
     public static final String ACTIVO_CONTRATO_LIST   = ACTIVO + "ContratoList";
     public static final String ACTIVO_CONTRATO_SEARCH = ACTIVO + "ContratoSearch";
@@ -168,5 +169,16 @@ public class PathCfg {
     public static final String PARAMETRO_LIST   = PARAMETRO + "List";
     public static final String PARAMETRO_EDIT   = PARAMETRO + "Edit";
     public static final String PARAMETRO_DEL    = PARAMETRO + "Del";    
+    
+    public static final String RESPONSABLE = "Responsable";
+    public static final String RESPONSABLE_LIST   = RESPONSABLE + "List";
+    public static final String RESPONSABLE_EDIT   = RESPONSABLE + "Edit";
+    public static final String RESPONSABLE_DEL    = RESPONSABLE + "Del";    
+
+    public static final String HABILITACION = "Habilitacion";
+    public static final String HABILITACION_LIST   = HABILITACION + "List";
+    public static final String HABILITACION_EDIT   = HABILITACION + "Edit";
+    public static final String HABILITACION_DEL    = HABILITACION + "Del";    
+    
 
 }

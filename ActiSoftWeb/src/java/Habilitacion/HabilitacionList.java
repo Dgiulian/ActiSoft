@@ -2,29 +2,27 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Parametro;
+package Habilitacion;
 
-import bd.Parametro;
+import bd.Habilitacion;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import transaccion.TAuditoria;
-import transaccion.TParametro;
-import utils.BaseException;
+import transaccion.THabilitacion;
 import utils.JsonRespuesta;
-import utils.OptionsCfg;
 import utils.Parser;
 
 /**
  *
  * @author Diego
  */
-public class ParametroDel extends HttpServlet {
+public class HabilitacionList extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -38,19 +36,29 @@ public class ParametroDel extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+           response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        String pagNro = request.getParameter("pagNro");
+        Integer id_responsable = Parser.parseInt(request.getParameter("id_responsable"));
+        
+        Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
+         
         try {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ParametroDel</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ParametroDel at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            JsonRespuesta jr = new JsonRespuesta();           
+            HashMap<String,String> mapFiltro = new HashMap<String,String>();
+            if(id_responsable!=0) mapFiltro.put("id_responsable",id_responsable.toString());
+            
+            THabilitacion tt = new THabilitacion(); 
+            List<Habilitacion> lista = tt.getListFiltro(mapFiltro);
+            if (lista != null) {
+                jr.setTotalRecordCount(lista.size());
+            } else {    
+                jr.setTotalRecordCount(0);
+            }            
+            jr.setResult("OK");
+            jr.setRecords(lista);
+            String jsonResult = new Gson().toJson(jr);
+            out.print(jsonResult);
         } finally {            
             out.close();
         }
@@ -84,32 +92,7 @@ public class ParametroDel extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         response.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        JsonRespuesta jr = new JsonRespuesta();
-        try {           
-           Integer id = Parser.parseInt(request.getParameter("id"));
-           Parametro parametro = new TParametro().getById(id);            
-           if (parametro==null) throw new BaseException("ERROR","No existe el registro");
-           
-           boolean baja = new TParametro().baja(parametro);
-           if ( baja){
-               jr.setResult("OK");
-//                Integer id_usuario = 0;
-//                Integer id_tipo_usuario = 0;
-//                HttpSession session = request.getSession();
-//                id_usuario = (Integer) session.getAttribute("id_usuario");
-//                id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
-//                TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_CLIENTE,OptionsCfg.ACCION_BAJA,parametro.getId());
-           } else throw new BaseException("ERROR","Ocurrio un error al eliminar el registro");                     
-        }  catch (BaseException ex) {
-            jr.setResult(ex.getResult());
-            jr.setMessage(ex.getMessage());            
-        }
-        finally {
-            out.print(new Gson().toJson(jr));
-            out.close();
-        }
+        processRequest(request, response);
     }
 
     /**

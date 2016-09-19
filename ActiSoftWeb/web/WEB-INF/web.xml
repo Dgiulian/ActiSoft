@@ -584,6 +584,42 @@
         <servlet-name>VehiculoDel</servlet-name>
         <servlet-class>Vehiculo.VehiculoDel</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ResponsableServlet</servlet-name>
+        <servlet-class>Responsable.ResponsableServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResponsableList</servlet-name>
+        <servlet-class>Responsable.ResponsableList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResponsableEdit</servlet-name>
+        <servlet-class>Responsable.ResponsableEdit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResponsableDel</servlet-name>
+        <servlet-class>Responsable.ResponsableDel</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>HabilitacionServlet</servlet-name>
+        <servlet-class>Habilitacion.HabilitacionServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>HabilitacionList</servlet-name>
+        <servlet-class>Habilitacion.HabilitacionList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>HabilitacionEdit</servlet-name>
+        <servlet-class>Habilitacion.HabilitacionEdit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>HabilitacionDel</servlet-name>
+        <servlet-class>Habilitacion.HabilitacionDel</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ActivoExport</servlet-name>
+        <servlet-class>Activo.ActivoExport</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ActivoServlet</servlet-name>
         <url-pattern>/Activo</url-pattern>
@@ -1032,9 +1068,45 @@
         <servlet-name>VehiculoDel</servlet-name>
         <url-pattern>/VehiculoDel</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResponsableServlet</servlet-name>
+        <url-pattern>/Responsable</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResponsableList</servlet-name>
+        <url-pattern>/ResponsableList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResponsableEdit</servlet-name>
+        <url-pattern>/ResponsableEdit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResponsableDel</servlet-name>
+        <url-pattern>/ResponsableDel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HabilitacionServlet</servlet-name>
+        <url-pattern>/Habilitacion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HabilitacionList</servlet-name>
+        <url-pattern>/HabilitacionList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HabilitacionEdit</servlet-name>
+        <url-pattern>/HabilitacionEdit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HabilitacionDel</servlet-name>
+        <url-pattern>/HabilitacionDel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ActivoExport</servlet-name>
+        <url-pattern>/ActivoExport</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
-            30
+            60
         </session-timeout>
     </session-config>
     <welcome-file-list>

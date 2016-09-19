@@ -182,7 +182,7 @@ public class PreticketEdit extends HttpServlet {
                 String  fecha_cierre    = arrFecha_cierre [i].trim();
                 Integer dias            = Parser.parseInt(arrDias [i].trim());
                 Integer posicion        = Parser.parseInt(arrPosicion [i].trim());
-                String  descripcion     = arrDescripcion [i].trim();
+                String  descripcion     = arrDescripcion [i];
                 Float   cantidad        = Parser.parseFloat(arrCantidad [i].trim());
                 Float   precio          = Parser.parseFloat(arrPrecio [i].trim());
                         id_divisa       = Parser.parseInt(arrId_divisa [i].trim());

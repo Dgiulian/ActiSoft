@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Parametro;
+package Responsable;
 
-import bd.Parametro;
+import bd.Responsable;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,19 +12,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import transaccion.TAuditoria;
-import transaccion.TParametro;
+import transaccion.THabilitacion;
+import transaccion.TResponsable;
 import utils.BaseException;
 import utils.JsonRespuesta;
-import utils.OptionsCfg;
-import utils.Parser;
 
 /**
  *
  * @author Diego
  */
-public class ParametroDel extends HttpServlet {
+public class ResponsableDel extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -45,10 +42,10 @@ public class ParametroDel extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ParametroDel</title>");            
+            out.println("<title>Servlet ResponsableDel</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ParametroDel at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ResponsableDel at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         } finally {            
@@ -84,25 +81,25 @@ public class ParametroDel extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         response.setContentType("application/json;charset=UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
         JsonRespuesta jr = new JsonRespuesta();
+        
         try {           
-           Integer id = Parser.parseInt(request.getParameter("id"));
-           Parametro parametro = new TParametro().getById(id);            
-           if (parametro==null) throw new BaseException("ERROR","No existe el registro");
+           Integer id = Integer.parseInt(request.getParameter("id"));
+           Responsable responsable = new TResponsable().getById(id);            
+           if (responsable==null) throw new BaseException("ERROR","No existe el registro");
            
-           boolean baja = new TParametro().baja(parametro);
+           new THabilitacion().bajaByResponsable(responsable.getId());
+           
+           boolean baja = new TResponsable().baja(responsable);
            if ( baja){
-               jr.setResult("OK");
-//                Integer id_usuario = 0;
-//                Integer id_tipo_usuario = 0;
-//                HttpSession session = request.getSession();
-//                id_usuario = (Integer) session.getAttribute("id_usuario");
-//                id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
-//                TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_CLIENTE,OptionsCfg.ACCION_BAJA,parametro.getId());
+               jr.setResult("OK");               
            } else throw new BaseException("ERROR","Ocurrio un error al eliminar el registro");                     
-        }  catch (BaseException ex) {
+        } catch(NumberFormatException ex){
+            jr.setResult("ERROR");
+            jr.setMessage("Ocurio un error al intentar eliminar el registro");
+        } catch (BaseException ex) {
             jr.setResult(ex.getResult());
             jr.setMessage(ex.getMessage());            
         }

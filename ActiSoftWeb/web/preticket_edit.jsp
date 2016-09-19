@@ -259,8 +259,8 @@
                                                     <input type="hidden" name ="posicion" value="<%= detalle.getPosicion() %>">
                                                 </td>
                                                 <td style="width:290px;">
-                                                    <%= detalle.getContrato_detalle_descripcion() %>
-                                                    <input type="hidden" name ="descripcion" value="<%= detalle.getContrato_detalle_descripcion() %>">
+                                                    <%= StringEscapeUtils.escapeHtml4(detalle.getContrato_detalle_descripcion()) %>
+                                                    <input type="hidden" name ="descripcion" value='<%= StringEscapeUtils.escapeHtml4(detalle.getContrato_detalle_descripcion()) %>'>
                                                 </td>
                                                 
                                                 <td  >
@@ -428,10 +428,10 @@
             html += wrapTag('td',d.remito_cierre.numero,'');
             html += wrapTag('td',convertirFecha(d.remito_cierre.fecha),'');
             html += wrapTag('td',d.dias,'');
-
-            html += wrapTag('td',d.posicion,'');
-            html += wrapTag('td',d.activo_desc_larga,'');
             html += wrapTag('td',d.remito_detalle_cantidad,'');
+            html += wrapTag('td',d.posicion,'');
+            html += wrapTag('td',d.contrato_detalle_descripcion,'');
+            
 
             html += wrapTag('td',dias_herramienta,'');
             html += wrapTag('td',d.unidad,'');
@@ -444,9 +444,9 @@
             html += '<input type="hidden" name ="remito_cierre"     value="' + d.remito_cierre.numero + '">';
             html += '<input type="hidden" name ="fecha_cierre"      value="' + d.remito_cierre.fecha.split(" ")[0] + '">';
             html += '<input type="hidden" name ="dias"              value="' + d.dias + '">';
-            html += '<input type="hidden" name ="posicion"          value="' + d.posicion + '">';
-            html += '<input type="hidden" name ="descripcion"       value="' + d.contrato_detalle_descripcion + '">';
             html += '<input type="hidden" name ="cantidad"          value="' + d.remito_detalle_cantidad + '">';
+            html += '<input type="hidden" name ="posicion"          value="' + d.posicion + '">';
+            html += '<input type="hidden" name ="descripcion"       value="' + escapeHTML(d.contrato_detalle_descripcion) + '">';            
             html += '<input type="hidden" name ="dias_herramienta " value="' + dias_herramienta  + '">';
             html += '<input type="hidden" name ="id_unidad"         value="' + d.contrato_detalle_id_unidad + '">';
             html += '<input type="hidden" name ="precio"            value="' + d.contrato_detalle_precio + '">';
