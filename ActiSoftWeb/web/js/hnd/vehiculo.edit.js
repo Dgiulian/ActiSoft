@@ -1,7 +1,9 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
-templates['vehiculo.edit'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+templates['vehiculo.edit'] = template({"1":function(container,depth0,helpers,partials,data) {
+    return " checked ";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "<div class=\"row\">\r\n  <div class=\"col-md-12\">\r\n    <form class=\"form-vertical\">\r\n      <input id=\"id\" name=\"id\" type=\"hidden\" class=\"\" value=\""
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
@@ -17,6 +19,26 @@ templates['vehiculo.edit'] = template({"compiler":[7,">= 4.0.0"],"main":function
     + alias4(((helper = (helper = helpers.vencimiento_poliza || (depth0 != null ? depth0.vencimiento_poliza : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"vencimiento_poliza","hash":{},"data":data}) : helper)))
     + "\">\r\n        </div>\r\n      </div>\r\n      <div class=\"form-group\">\r\n        <label class=\"col-md-4 control-label\" for=\"rsv\">RSV:</label>\r\n        <div class=\"col-md-8\">\r\n          <input id=\"rsv\" name=\"rsv\" type=\"text\" class=\"form-control input-md\" value=\""
     + alias4(((helper = (helper = helpers.rsv || (depth0 != null ? depth0.rsv : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"rsv","hash":{},"data":data}) : helper)))
-    + "\">\r\n        </div>\r\n     </div>\r\n  </form>\r\n  </div>\r\n</div>";
+    + "\">\r\n        </div>\r\n     </div>\r\n\r\n\r\n     <div class=\"form-group\">\r\n        <label class=\"col-md-4 control-label\" for=\"numero_titulo\">N&uacute;mero t&iacute;tulo:</label>\r\n        <div class=\"col-md-8\">\r\n          <input id=\"numero_titulo\" name=\"numero_titulo\" type=\"text\" class=\"form-control input-md\" value=\""
+    + alias4(((helper = (helper = helpers.numero_titulo || (depth0 != null ? depth0.numero_titulo : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"numero_titulo","hash":{},"data":data}) : helper)))
+    + "\">\r\n        </div>\r\n     </div>\r\n    <div class=\"form-group\">\r\n        <label class=\"col-md-4 control-label\" for=\"vencimiento_cedula\">Vencimiento Cedula: </label>\r\n        <div class=\"col-md-8\">\r\n        <input id=\"vencimiento_cedula\" name=\"vencimiento_cedula\" type=\"text\" class=\"form-control input-md date-picker\" value=\""
+    + alias4(((helper = (helper = helpers.vencimiento_cedula || (depth0 != null ? depth0.vencimiento_cedula : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"vencimiento_cedula","hash":{},"data":data}) : helper)))
+    + "\">\r\n        </div>\r\n      </div>\r\n     <div class=\"form-group\">\r\n        <label class=\"col-md-4 control-label\" for=\"modelo\">Modelo:</label>\r\n        <div class=\"col-md-8\">\r\n          <input id=\"modelo\" name=\"modelo\" type=\"text\" class=\"form-control input-md\" value=\""
+    + alias4(((helper = (helper = helpers.modelo || (depth0 != null ? depth0.modelo : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"modelo","hash":{},"data":data}) : helper)))
+    + "\">\r\n        </div>\r\n     </div>\r\n    <div class=\"form-group\">\r\n        <label class=\"col-md-4 control-label\" for=\"seguro_xantrax\">Seguro XANTRAX:</label>\r\n        <!-- <div class=\"col-md-8\"> -->\r\n          <input id=\"seguro_xantrax\" name=\"seguro_xantrax\" type=\"checkbox\" class=\"\" value=\""
+    + alias4(((helper = (helper = helpers.seguro_xantrax || (depth0 != null ? depth0.seguro_xantrax : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"seguro_xantrax","hash":{},"data":data}) : helper)))
+    + "\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.seguro_xantrax : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">\r\n        <!-- </div> -->\r\n     </div>\r\n     <div class=\"form-group\">\r\n        <label class=\"col-md-4 control-label\" for=\"servicio_mantenimiento\">Servicio Mantenimiento:</label>\r\n        <!-- <div class=\"col-md-8\"> -->\r\n          <input id=\"servicio_mantenimiento\" name=\"servicio_mantenimiento\" type=\"checkbox\" class=\"\" value=\""
+    + alias4(((helper = (helper = helpers.servicio_mantenimiento || (depth0 != null ? depth0.servicio_mantenimiento : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"servicio_mantenimiento","hash":{},"data":data}) : helper)))
+    + "\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.servicio_mantenimiento : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">\r\n        <!-- </div> -->\r\n     </div>\r\n     <div class=\"form-group\">\r\n        <label class=\"col-md-4 control-label\" for=\"servicio_fecha\">Servicio Fecha: </label>\r\n        <div class=\"col-md-8\">\r\n        <input id=\"servicio_fecha\" name=\"servicio_fecha\" type=\"text\" class=\"form-control input-md date-picker\" value=\""
+    + alias4(((helper = (helper = helpers.servicio_fecha || (depth0 != null ? depth0.servicio_fecha : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"servicio_fecha","hash":{},"data":data}) : helper)))
+    + "\" >\r\n        </div>\r\n      </div>\r\n      <div class=\"form-group\">\r\n        <label class=\"col-md-4 control-label\" for=\"servicio_xantrax\">Servicio XANTRAX:</label>\r\n        <!-- <div class=\"col-md-8\"> -->\r\n          <input id=\"servicio_xantrax\" name=\"servicio_xantrax\" type=\"checkbox\" class=\"\" value=\""
+    + alias4(((helper = (helper = helpers.servicio_xantrax || (depth0 != null ? depth0.servicio_xantrax : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"servicio_xantrax","hash":{},"data":data}) : helper)))
+    + "\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.servicio_xantrax : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">\r\n        <!-- </div>-->\r\n     </div>\r\n  </form>\r\n  </div>\r\n</div>";
 },"useData":true});
 })();

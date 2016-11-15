@@ -52,11 +52,12 @@ public class PathCfg {
     public static final String REMITO_PRINT = REMITO + "Print";
     public static final String REMITO_DEV   = "Devolucion";
     public static final String REMITO_DET_LIST = REMITO + "DetList";
-    public static final String REMITO_UPLOAD  = REMITO + "Upload";
-    public static final String REMITO_DETALLE = REMITO + "Detalle";
-    public static final String REMITO_DIARIO = REMITO + "Diario";
+    public static final String REMITO_UPLOAD   = REMITO + "Upload";
+    public static final String REMITO_DETALLE  = REMITO + "Detalle";
+    public static final String REMITO_DIARIO   = REMITO + "Diario";
     
-    public static final String REMITO_CONTRATO_LIST = REMITO + "ContratoList";
+    public static final String REMITO_CONTRATO_LIST    = REMITO + "ContratoList";
+    public static final String REMITO_RELACIONADO_LIST = REMITO + "RelacionadoList";
     
     public static final String LOCALIDAD      = "Localidad";
     public static final String LOCALIDAD_LIST = LOCALIDAD + "List";
@@ -145,12 +146,14 @@ public class PathCfg {
     public static final String TRANSPORTISTA_EDIT   = TRANSPORTISTA + "Edit";
     public static final String TRANSPORTISTA_DEL    = TRANSPORTISTA + "Del";    
     public static final String TRANSPORTISTA_SEARCH = TRANSPORTISTA + "Search";
+    public static final String TRANSPORTISTA_EXPORT = TRANSPORTISTA + "Export";
     
     public static final String VEHICULO        = "Vehiculo";
     public static final String VEHICULO_LIST   = VEHICULO + "List";
     public static final String VEHICULO_EDIT   = VEHICULO + "Edit";
     public static final String VEHICULO_DEL    = VEHICULO + "Del";    
     public static final String VEHICULO_SEARCH = VEHICULO + "Search";
+    public static final String VEHICULO_EXPORT = VEHICULO + "Export";
 
     
     public static final String AUDITORIA      = "Auditoria";

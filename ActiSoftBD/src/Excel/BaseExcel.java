@@ -36,15 +36,15 @@ public abstract class  BaseExcel<E> {
     public abstract boolean createExcel(String filename);
     public abstract boolean createExcel(String filename,List<E> lista);
     
-    protected Cell createCell(Short row,Integer column,String value){
+    protected Cell createCell(int row,int column,String value){
         Row fila = this.sheet.getRow(row);
-        
+        if(fila==null) fila = this.sheet.createRow(row);
         Cell celda = fila.createCell(column);
         celda.setCellStyle(this.estilo);
         celda.setCellValue(value);
         return celda;
     }
-    protected Cell createCell(Short row,Integer column,Double value,String formato){
+    protected Cell createCell(int row,int column,Double value,String formato){
         Row fila = this.sheet.getRow(row);
         
         Cell celda = fila.createCell(column);
@@ -65,6 +65,8 @@ public abstract class  BaseExcel<E> {
         estiloCelda.setFont(fuente);
         return estiloCelda;
     }
+  
+    
     
     public boolean save(String filename){
         try (FileOutputStream fileOut = new FileOutputStream(filename)) {
@@ -86,4 +88,27 @@ public abstract class  BaseExcel<E> {
         }
         return true;
     }
+   
+    protected void createStyledCell(int num_row,int num_col,String texto,int size,boolean bold){
+        Row row   = sheet.getRow(num_row);
+        if(row==null) {
+            row = sheet.createRow((short) num_row);        
+        }
+
+        Cell cell = row.createCell((short) num_col);
+        cell.setCellValue(texto);
+
+    //    XSSFCellStyle  cellStyle = (XSSFCellStyle) this.workbook.createCellStyle();    
+    //    cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+    //    cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+
+    //    cellStyle.setFillBackgroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+    //    cellStyle.setFillPattern(CellStyle.LEAST_DOTS);
+    //    Font fuente = workbook.createFont();
+    //    fuente.setFontHeightInPoints((short) size);
+    //    fuente.setBold(bold);
+    //    cellStyle.setFont(fuente);    
+    //    cell.setCellStyle(cellStyle); 
+        }
 }

@@ -58,7 +58,7 @@ public class OptionsCfg {
     public static final String  REMITO_IMAGE    = "fondo_remito";
     public static final String  ACTIVO_IMAGE    = "fondo_activo";
     public static final String  HABILITACION_PATH = "habilitacion_path";
-    
+    public static final String  LOGO_IMAGE    = "logo_image";
     
     
     public static final Integer UNIDAD_DIAS = 1;

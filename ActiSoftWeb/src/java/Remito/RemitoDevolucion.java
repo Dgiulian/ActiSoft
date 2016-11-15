@@ -103,11 +103,11 @@ public class RemitoDevolucion extends HttpServlet {
            TActivo ta = new TActivo();
            TKit tk    = new TKit();
            
-           HashMap<Integer,Remito> mapRemitos = new HashMap<Integer,Remito>();
+           HashMap<Integer,Remito> mapRemitos         = new HashMap<Integer,Remito>();
            HashMap<Integer,Remito_detalle> mapDetalle = new HashMap<Integer,Remito_detalle>();
-           HashMap<Integer,Activo> mapActivo = new HashMap<Integer,Activo>();
-           HashMap<Integer,Kit> mapKit = new HashMap<Integer,Kit>();
-           List<Remito_detalle> lstEntrega = new ArrayList<Remito_detalle>();
+           HashMap<Integer,Activo> mapActivo          = new HashMap<Integer,Activo>();
+           HashMap<Integer,Kit> mapKit                = new HashMap<Integer,Kit>();
+           List<Remito_detalle> lstEntrega            = new ArrayList<Remito_detalle>();
            
            if(request.getParameter("id")==null)  throw new BaseException("Remito inexistente","Debe seleccionar el remito a devolver");
            Integer id = Parser.parseInt(request.getParameter("id"));

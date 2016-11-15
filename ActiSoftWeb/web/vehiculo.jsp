@@ -28,8 +28,10 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">                    
-                    <h3 class="proveedor-heading">Proveedor: <%=proveedor.getNombre_comercial()%></h3>
-                    <h1 class="page-header">Vehiculos <span class="btn btn-primary" id="nuevoVehiculo"><span  class="fa fa-file-o fa-fw"> </span>Nuevo</span></h1>
+                    <h3 class="proveedor-heading">Proveedor: <a href="<%=PathCfg.PROVEEDOR_EDIT%>?id=<%=proveedor.getId()%>" ><%=proveedor.getNombre_comercial()%></a></h3>
+                    <h1 class="page-header">Vehiculos <span class="btn btn-primary" id="nuevoVehiculo"><span  class="fa fa-file-o fa-fw"> </span>Nuevo</span>
+                                           <a class="btn btn-info" href="<%=PathCfg.VEHICULO_EXPORT%>?id_proveedor=<%=proveedor.getId()%>"><span class="fa fa-file-excel-o fa-fw"></span> Exportar</a></h1>                    
+                    </h1>
                 </div>
             </div>
             <!-- /.row -->
@@ -48,7 +50,7 @@
                                         <tr>
                                             <!--<th>Id</th>-->
                                             <th>Dominio</th>
-                                            <th>Vencimiento vtc</th>
+                                            <th>Vencimiento vtv</th>
                                             <th>Seguro</th>
                                             <th>Poliza</th>
                                             <th>Vencimiento Poliza</th>
@@ -156,16 +158,23 @@
         });
     }
      function editarVehiculo(){
-        var index  = $(this).data('index');
-        var id_proveedor  = $('#id_proveedor').val();
-        var dominio = $(this).data('dominio');
-        var vencimiento_vtv    = convertirFecha($(this).data('vencimiento_vtv')) ;
-        var seguro  = $(this).data('seguro');
-        var poliza  = $(this).data('poliza');
-        var vencimiento_poliza = convertirFecha($(this).data('vencimiento_poliza'));
-        var rsv     = $(this).data('rsv');
-        
-        agregarVehiculo({id:index,id_proveedor:id_proveedor, dominio:dominio, vencimiento_vtv: vencimiento_vtv, seguro:seguro, poliza:poliza, vencimiento_poliza:vencimiento_poliza,rsv:rsv});
+        var data = {}
+        data.id  = $(this).data('index');
+        data.id_proveedor  = $('#id_proveedor').val();
+        data.dominio = $(this).data('dominio');
+        data.vencimiento_vtv    = convertirFecha($(this).data('vencimiento_vtv')) ;
+        data.seguro  = $(this).data('seguro');
+        data.poliza  = $(this).data('poliza');
+        data.vencimiento_poliza = convertirFecha($(this).data('vencimiento_poliza'));
+        data.rsv     = $(this).data('rsv');        
+        data.numero_titulo          = $(this).data('numero_titulo');
+        data.vencimiento_cedula     = convertirFecha($(this).data('vencimiento_cedula'));
+        data.modelo                 = $(this).data('modelo');
+        data.seguro_xantrax         = $(this).data('seguro_xantrax');
+        data.servicio_mantenimiento = $(this).data('servicio_mantenimiento');
+        data.servicio_fecha         = convertirFecha($(this).data('servicio_fecha'));
+        data.servicio_xantrax       = $(this).data('servicio_xantrax');
+        agregarVehiculo(data);
     }
     function agregarVehiculo(data){
         
@@ -212,14 +221,22 @@
     }
     function recuperarCampos(){
         var data = {};
-        data.id           = $('#id').val();
-        data.id_proveedor = $('#id_proveedor').val();
-        data.dominio      = $('#dominio').val();
-        data.vencimiento_vtv = $('#vencimiento_vtv').val();
-        data.seguro = $('#seguro').val();
-        data.poliza = $('#poliza').val();                            
-        data.vencimiento_poliza  = $('#vencimiento_poliza').val();
-        data.rsv  = $('#rsv').val();
+        data.id                     = $('#id').val();
+        data.id_proveedor           = $('#id_proveedor').val();
+        data.dominio                = $('#dominio').val();
+        data.vencimiento_vtv        = $('#vencimiento_vtv').val();
+        data.seguro                 = $('#seguro').val();
+        data.poliza                 = $('#poliza').val();                            
+        data.vencimiento_poliza     = $('#vencimiento_poliza').val();
+        data.rsv                    = $('#rsv').val();
+        data.numero_titulo          = $('#numero_titulo').val();
+        data.vencimiento_cedula     = $('#vencimiento_cedula').val();
+        data.modelo                 = $('#modelo').val();
+        data.seguro_xantrax         = $('#seguro_xantrax').prop('checked');
+        data.servicio_mantenimiento = $('#servicio_mantenimiento').prop('checked');
+        data.servicio_fecha         = $('#servicio_fecha').val();
+        data.servicio_xantrax       = $('#servicio_xantrax').prop('checked');
+        
         return data;
     }
     function validar(data){

@@ -2,13 +2,14 @@ package bd;
 public class Transportista {
 
 	public Integer id = 0;
-        public Integer id_proveedor = 0;
 	public String nombre = "";
-        public String dni    = "";
-
-
+	public String dni = "";
+	public Integer id_proveedor = 0;
 	public String vencimiento_carnet = "";
 	public String vencimiento_seguro = "";
+	public String vencimiento_carnet_defensivo = "";
+	public String vencimiento_credencial_ipf = "";
+	public Integer rsv_presentado = 0;
 
 	public Transportista() {
 	}
@@ -16,8 +17,15 @@ public class Transportista {
 	public Transportista(Transportista transportista) {
 		this.id = transportista.getId();
 		this.nombre = transportista.getNombre();
+		this.dni = transportista.getDni();
+		this.id_proveedor = transportista.getId_proveedor();
 		this.vencimiento_carnet = transportista.getVencimiento_carnet();
 		this.vencimiento_seguro = transportista.getVencimiento_seguro();
+		this.vencimiento_carnet_defensivo = transportista
+				.getVencimiento_carnet_defensivo();
+		this.vencimiento_credencial_ipf = transportista
+				.getVencimiento_credencial_ipf();
+		this.rsv_presentado = transportista.getRsv_presentado();
 	}
 
 	public Integer getId() {
@@ -35,6 +43,24 @@ public class Transportista {
 
 	public Transportista setNombre(String nombre) {
 		this.nombre = nombre;
+		return this;
+	}
+
+	public String getDni() {
+		return this.dni;
+	}
+
+	public Transportista setDni(String dni) {
+		this.dni = dni;
+		return this;
+	}
+
+	public Integer getId_proveedor() {
+		return this.id_proveedor;
+	}
+
+	public Transportista setId_proveedor(Integer id_proveedor) {
+		this.id_proveedor = id_proveedor;
 		return this;
 	}
 
@@ -56,18 +82,48 @@ public class Transportista {
 		return this;
 	}
 
-    public Integer getId_proveedor() {
-        return id_proveedor;
-    }
+	public String getVencimiento_carnet_defensivo() {
+		return this.vencimiento_carnet_defensivo;
+	}
 
-    public void setId_proveedor(Integer id_proveedor) {
-        this.id_proveedor = id_proveedor;
-    }
-    public String getDni() {
-        return dni;
-    }
+	public Transportista setVencimiento_carnet_defensivo(
+			String vencimiento_carnet_defensivo) {
+		this.vencimiento_carnet_defensivo = vencimiento_carnet_defensivo;
+		return this;
+	}
 
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
+	public String getVencimiento_credencial_ipf() {
+		return this.vencimiento_credencial_ipf;
+	}
+
+	public Transportista setVencimiento_credencial_ipf(
+			String vencimiento_credencial_ipf) {
+		this.vencimiento_credencial_ipf = vencimiento_credencial_ipf;
+		return this;
+	}
+
+	public Integer getRsv_presentado() {
+		return this.rsv_presentado;
+	}
+
+	public Transportista setRsv_presentado(Integer rsv_presentado) {
+		this.rsv_presentado = rsv_presentado;
+		return this;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof bd.Transportista))
+			return false;
+		return ((bd.Transportista) obj).getId().equals(this.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return (int) this.id;
+	}
 }

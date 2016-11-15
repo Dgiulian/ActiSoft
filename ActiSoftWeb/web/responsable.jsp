@@ -28,7 +28,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">                    
-                    <h3 class="proveedor-heading">Proveedor: <%=proveedor.getNombre_comercial()%></h3>
+                    <h3 class="proveedor-heading">Proveedor: <a href="<%=PathCfg.PROVEEDOR_EDIT%>?id=<%=proveedor.getId()%>" ><%=proveedor.getNombre_comercial()%></a></h3>
                     <h1 class="page-header">Responsables <span class="btn btn-primary" id="nuevoResponsable"><span  class="fa  fa-file-o fa-fw"> </span>Nuevo</span></h1>
                 </div>
             </div>

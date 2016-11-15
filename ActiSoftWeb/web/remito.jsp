@@ -65,7 +65,7 @@
                                     </div>
                                 </div>
                             <div class="dataTable_wrapper">
-                                <table class="table table-striped table-bordered table-hover" id="tblRemito">
+                                <table class="table table-striped table-bordered table-hover table-responsive" id="tblRemito">
                                     <colgroup>
                                         <col span="1" style="width: 10%; text-align: right;"> <!-- Numero -->
                                         <col span="1" style="width: 10%;"> <!-- Tipo -->
@@ -157,7 +157,7 @@
         $('#keyValue').val(id);
         $('#id').val(id);
     });
-
+    
 
     });
     function buscar(){
@@ -194,8 +194,9 @@
 //                     $('#btnExcel').attr('href','Excel?type=GRC&pageNro='+page);
                         $('.btn-del').click(deleteData);
                         $('.btn-dev').click(devolucion);
-                        $('.btn-print').click(impresion);
+                        $('.btn-print').click(impresion);            
                         $('.btn-diario').click(diario);
+                        $('.btn-relacionado').click(relacionado);
                         $tabla.DataTable({
                                 responsive: true,
                                 paging: false,
@@ -237,7 +238,10 @@
             html += wrapTag('td',contratoLnk,'');
             html += wrapTag('td',d.equipo,'');
             html += wrapTag('td',d.facturado!==0?"Si":"No",'');
-            html += wrapTag('td',d.estado,'');
+            
+            var estadoLnk= "<a href='#' class='btn-relacionado' data-index='" + d.id + "'>"+d.estado +"</a>";
+            html += wrapTag('td',estadoLnk,'');
+            
             var htmlEdit = "<a href='<%= PathCfg.REMITO_VIEW%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-info'><span class='glyphicon glyphicon-sunglasses fw'></span></a> ";
   //            var htmlDel = "";
             var htmlDel = " <span data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span> ";
@@ -257,6 +261,11 @@
            html +="</tr>";
        }
        return html;
+    }
+    function relacionado(){
+        $('#mdlRelacionado').modal('show');
+        var id_remito = $(this).data('index');
+        loadDataRelacionado({id_remito:id_remito});
     }
     function devolucion(){
         var id = $(this).data('index');
@@ -348,5 +357,6 @@
 </body>
 <%@include  file="remito_upload_mdl.jsp" %>
 <%@include  file="remito_diario_mdl.jsp" %>
+<%@include  file="remito_relacionado_mdl.jsp" %>
 <%@include file="tpl_footer.jsp"%>
 </html>

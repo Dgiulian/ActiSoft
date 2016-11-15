@@ -3,29 +3,52 @@
     <form class="form-vertical">
       <input id="id" name="id" type="hidden" class="" value="{{id}}" >
       <input id="id_proveedor" name="id_proveedor" type="hidden" class="" value="{{id_proveedor}}" >
-       <div class="form-group">
-          <label class="col-md-4 control-label" for="nombre">Nombre:</label>
-          <div class="col-md-8">
-          <input id="nombre" name="nombre" type="text" class="form-control input-md" value="{{nombre}}">
-       </div>
-       <div class="form-group">
-          <label class="col-md-4 control-label" for="nombre">DNI:</label>
-          <div class="col-md-8">
-          <input id="dni" name="dni" type="text" class="form-control input-md" value="{{dni}}">
-       </div>
       <div class="form-group">
-          <label class="col-md-4 control-label" for="vencimiento_carnet">Vencimiento Carnet:</label>
-          <div class="col-md-8">
+          <label class="col-md-6 control-label" for="nombre">Nombre:</label>
+          <div class="col-md-6">
+          <input id="nombre" name="nombre" type="text" class="form-control input-md" value="{{nombre}}">
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="col-md-6 control-label" for="nombre">DNI:</label>
+          <div class="col-md-6">
+          <input id="dni" name="dni" type="text" class="form-control input-md" value="{{dni}}">
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label class="col-md-6 control-label" for="vencimiento_carnet">Vencimiento Carnet:</label>
+          <div class="col-md-6">
           <input id="vencimiento_carnet" name="vencimiento_carnet" type="text" class="form-control input-md date-picker" value="{{vencimiento_carnet}}">
           </div>
       </div>
-       <div class="form-group">
-          <label class="col-md-4 control-label" for="vencimiento_seguro">Vencimiento Seguro:</label>
-          <div class="col-md-8">
+      <div class="form-group">
+          <label class="col-md-6 control-label" for="vencimiento_seguro">Vencimiento Seguro:</label>
+          <div class="col-md-6">
           <input id="vencimiento_seguro" name="vencimiento_seguro" type="text" class="form-control input-md date-picker" value="{{vencimiento_seguro}}">
           </div>
       </div>
-    </div>
+      <div class="form-group">
+          <label class="col-md-6 control-label" for="rsv_presentado">RSV Presentada:</label>
+          <input id="rsv_presentado" name="rsv_presentado" type="checkbox" class="" value="{{rsv_presentado}}" {{#if rsv_presentado}} checked{{/if}}>
+      </div>
+
+     <div class="form-group" >
+          <label class=" col-md-6 control-label" for="vencimiento_carnet_defensivo">Vencimiento Carnet manejo defensivo:</label>
+          <div class="col-md-6">
+          <input id="vencimiento_carnet_defensivo" name="vencimiento_carnet_defensivo" type="text" class="form-control input-md date-picker" value="{{vencimiento_carnet_defensivo}}">
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label class="col-md-6 control-label" for="vencimiento_credencial_ipf">Vencimiento credencial ingreso IPF:</label>
+          <div class="col-md-6">
+          <input id="vencimiento_credencial_ipf" name="vencimiento_credencial_ipf" type="text" class="form-control input-md date-picker" value="{{vencimiento_credencial_ipf}}">
+          </div>
+      </div>
+
+
+
     </form>
   </div>
 </div>

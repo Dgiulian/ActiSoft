@@ -252,7 +252,7 @@
             $('#btnSubmit').click(submitForm);      
             $('#rdTotal').change(radioChange);
             $('#rdParcial').change(radioChange);
-            $('#btnAgregar').hide();  
+            //$('#btnAgregar').hide();  
             $('#id_rubro').change(function(){
                 rubroChange("<%= PathCfg.SUBRUBRO_LIST%>",{id_rubro:$(this).val(),id_contrato:$('#id_contrato').val(),id_estado:1})
             });
@@ -277,14 +277,14 @@
             var parcial = $('#rdParcial').prop('checked');
             $('#numero_entrega').prop('disabled',!parcial);
             $('#fecha_entrega').prop('disabled',!parcial);
-            if(parcial) {
-                $('#btnAgregar').show();                
-                $('.btnDelActivo').show();
-            }
-            else {
-                $('#btnAgregar').hide();
-                $('.btnDelActivo').hide();
-            }
+//            if(parcial) {
+//                $('#btnAgregar').show();                
+//                $('.btnDelActivo').show();
+//            }
+//            else {
+//                $('#btnAgregar').hide();
+//                $('.btnDelActivo').hide();
+//            }
             
             
             
@@ -331,7 +331,14 @@
 //            });
         }
         function selActivos(){
-            var $arr = $('input.chkSelActivo:checked');
+            var $arr = $('input.chkSelRemitoDetalle:checked');
+            var $todos = $('input.chkSelRemitoDetalle');
+            var parcial = $('#rdParcial').prop('checked');
+            if (!parcial && $arr.length < $todos.length){
+                bootbox.alert("En un remito de entrega definitivo se deben agregar todos los activos del remito");
+                return false;
+            }
+            
             for(var i = 0;i<$arr.length;i++){
                 $codigo = $($arr[i]).data('codigo'); 
                 $descripcion = $($arr[i]).data('descripcion'); 
@@ -420,7 +427,8 @@
         
         function hideModal(e) {
             if($invoker!==null)             
-               $invoker.parent().find('input').focus();    
+               $invoker.parent().find('input').focus();   
+           $('#mdlActivo>table').html('');
 
         }
         function selActivoTransporte(){           
@@ -438,23 +446,23 @@
                 break;
             }
         }
-         function selActivos(){           
-            var $arr = $('input.chkSelActivo:checked');
-            for(var i = 0;i<$arr.length;i++){
-                var $codigo = $($arr[i]).data('codigo'); 
-                var $descripcion = $($arr[i]).data('descripcion'); 
-                var $pos = $($arr[i]).data('pos'); 
-                var $cant = $($arr[i]).data('cant');                                           
-                var html = generarHtml({codigo:$codigo,pos:$pos ,cant:$cant,descripcion:$descripcion,disabled:true});
-                //$tr.after(html);
-                $('#tblRemito').append(html);
-                //agregarActivo({codigo:$codigo,pos:$pos.val(),cant:$cant.val(),descripcion:$descripcion});
-            }
-            //$tr.remove();
-            $('.btnDelActivo').click(deleteActivo);
-            //agregarActivo({});
-            //$('#mdlActivo').modal('hide');
-        }
+//         function selActivos*old(){           
+//            var $arr = $('input.chkSelActivo:checked');
+//            for(var i = 0;i<$arr.length;i++){
+//                var $codigo = $($arr[i]).data('codigo'); 
+//                var $descripcion = $($arr[i]).data('descripcion'); 
+//                var $pos = $($arr[i]).data('pos'); 
+//                var $cant = $($arr[i]).data('cant');                                           
+//                var html = generarHtml({codigo:$codigo,pos:$pos ,cant:$cant,descripcion:$descripcion,disabled:true});
+//                //$tr.after(html);
+//                $('#tblRemito').append(html);
+//                //agregarActivo({codigo:$codigo,pos:$pos.val(),cant:$cant.val(),descripcion:$descripcion});
+//            }
+//            //$tr.remove();
+//            $('.btnDelActivo').click(deleteActivo);
+//            //agregarActivo({});
+//            //$('#mdlActivo').modal('hide');
+//        }
         </script>
         <%@include file="remito_detalle_mdl.jsp"%>
         <%@include file="activo_contrato_mdl.jsp" %>

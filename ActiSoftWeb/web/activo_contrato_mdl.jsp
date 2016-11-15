@@ -117,6 +117,7 @@
   </div>
 </div>
 <script>
+    
     function loadDataActivo(data){
         console.log("LoadDataActivo");
         var $tabla = $('#tblActivo');  

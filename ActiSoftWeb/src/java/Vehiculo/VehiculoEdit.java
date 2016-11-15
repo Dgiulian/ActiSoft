@@ -103,14 +103,25 @@ public class VehiculoEdit extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        Integer id           = Parser.parseInt(request.getParameter("id"));
-        Integer id_proveedor = Parser.parseInt(request.getParameter("id_proveedor"));
-        String  dominio       = request.getParameter("dominio");
-        String  vencimiento_vtv = request.getParameter("vencimiento_vtv");
-        String  seguro       = request.getParameter("seguro");
-        String  poliza       = request.getParameter("poliza");
-        String  vencimiento_poliza  =request.getParameter("vencimiento_poliza");
-        String  rsv  =request.getParameter("rsv");
+        Integer id                    = Parser.parseInt(request.getParameter("id"));
+        Integer id_proveedor          = Parser.parseInt(request.getParameter("id_proveedor"));
+        String  dominio               = request.getParameter("dominio");
+        String  vencimiento_vtv       = request.getParameter("vencimiento_vtv");
+        String  seguro                = request.getParameter("seguro");
+        String  poliza                = request.getParameter("poliza");
+        String  vencimiento_poliza    = request.getParameter("vencimiento_poliza");
+        String  rsv                   = request.getParameter("rsv");
+        
+        Integer numero_titulo         = Parser.parseInt(request.getParameter("numero_titulo"));
+        String vencimiento_cedula     = request.getParameter("vencimiento_cedula");
+        String modelo                 = request.getParameter("modelo");
+        String seguro_xantrax         = request.getParameter("seguro_xantrax");
+        String servicio_mantenimiento = request.getParameter("servicio_mantenimiento");
+        String servicio_fecha         = request.getParameter("servicio_fecha");
+        String servicio_xantrax       = request.getParameter("servicio_xantrax");
+        
+        
+        
         TProveedor tp       = new TProveedor();
         TVehiculo tt   = new TVehiculo();
         Proveedor proveedor ;
@@ -133,10 +144,27 @@ public class VehiculoEdit extends HttpServlet {
             vehiculo.setSeguro(seguro);
             vehiculo.setPoliza(poliza);
             vehiculo.setRsv(rsv);
+            vehiculo.setModelo(modelo);
+            vehiculo.setNumero_titulo(numero_titulo);
+            
             String vtv = TFecha.formatearFechaVistaBd(vencimiento_vtv);
             String v_poliza = TFecha.formatearFechaVistaBd(vencimiento_poliza);
-            if(!"".equals(vtv)) vehiculo.setVencimiento_vtv(vtv);
-            if(!"".equals(v_poliza)) vehiculo.setVencimiento_poliza(v_poliza);
+            String v_cedula = TFecha.formatearFechaVistaBd(vencimiento_cedula);
+            String v_servicio = TFecha.formatearFechaVistaBd(servicio_fecha);
+            
+            if(!"".equals(vtv))        vehiculo.setVencimiento_vtv(vtv);
+            if(!"".equals(v_poliza))   vehiculo.setVencimiento_poliza(v_poliza);
+            if(!"".equals(v_cedula))   vehiculo.setVencimiento_cedula(v_cedula);
+            if(!"".equals(v_servicio)) vehiculo.setServicio_fecha(v_servicio);
+            
+            if(seguro_xantrax!=null && !"".equals(seguro_xantrax)) vehiculo.setSeguro_xantrax(1);
+            else vehiculo.setSeguro_xantrax(0);
+            
+            if(servicio_mantenimiento!=null && !"".equals(servicio_mantenimiento)  && "true".equals(servicio_mantenimiento)) vehiculo.setServicio_mantenimiento(1);
+            else vehiculo.setServicio_mantenimiento(0);
+                    
+            if(servicio_xantrax!=null && !"".equals(servicio_xantrax) && "true".equals(servicio_xantrax) ) vehiculo.setServicio_xantrax(1);
+            else vehiculo.setServicio_xantrax(0);
             
             if(nuevo){
                 id = tt.alta(vehiculo);

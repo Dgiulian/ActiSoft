@@ -28,8 +28,10 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">                    
-                    <h3 class="proveedor-heading">Proveedor: <%=proveedor.getNombre_comercial()%></h3>
-                    <h1 class="page-header">Transportistas <span class="btn btn-primary" id="nuevoTransportista"><span  class="fa fa-file-o fa-fw"> </span>Nuevo</span></h1>
+                    <h3 class="proveedor-heading">Proveedor: <a href="<%=PathCfg.PROVEEDOR_EDIT%>?id=<%=proveedor.getId()%>" ><%=proveedor.getNombre_comercial()%></a></h3>
+                    <h1 class="page-header">Transportistas <span class="btn btn-primary" id="nuevoTransportista"><span  class="fa fa-file-o fa-fw"> </span>Nuevo</span>
+                    <a class="btn btn-info" href="<%=PathCfg.TRANSPORTISTA_EXPORT%>?id_proveedor=<%=proveedor.getId()%>"><span class="fa fa-file-excel-o fa-fw"></span> Exportar</a></h1>
+                    </h1>
                 </div>
             </div>
             <!-- /.row -->
@@ -151,13 +153,17 @@
         });
     }
      function editarTransportista(){
-        var index  = $(this).data('index');
-        var id_proveedor  = $('#id_proveedor').val();
-        var nombre = $(this).data('nombre');
-        var dni    = $(this).data('dni');
-        var vencimiento_carnet = convertirFecha($(this).data('vencimiento_carnet'));
-        var vencimiento_seguro = convertirFecha($(this).data('vencimiento_seguro')) ;
-        agregarTransportista({id:index,id_proveedor:id_proveedor,nombre:nombre,dni:dni,vencimiento_carnet:vencimiento_carnet,vencimiento_seguro:vencimiento_seguro});
+         var data = {};
+        data.id = $(this).data('index');
+        data.id_proveedor  = $('#id_proveedor').val();
+        data.nombre = $(this).data('nombre');
+        data.dni    = $(this).data('dni');
+        data.vencimiento_carnet = convertirFecha($(this).data('vencimiento_carnet'));
+        data.vencimiento_seguro = convertirFecha($(this).data('vencimiento_seguro')) ;
+        data.vencimiento_carnet_defensivo = convertirFecha($(this).data('vencimiento_carnet_defensivo'));
+        data.vencimiento_credencial_ipf = convertirFecha($(this).data('vencimiento_credencial_ipf'));
+        data.rsv_presentado = $(this).data('rsv_presentado');
+        agregarTransportista(data);
     }
     function agregarTransportista(data){     
         var titulo = data.id?"Editar Transportista":"Nuevo Transportista";
@@ -207,6 +213,9 @@
         data.dni    = $('#dni').val();
         data.vencimiento_seguro = $('#vencimiento_seguro').val();
         data.vencimiento_carnet  = $('#vencimiento_carnet').val();  
+        data.vencimiento_carnet_defensivo = $('#vencimiento_carnet_defensivo').val();
+        data.vencimiento_credencial_ipf   = $('#vencimiento_credencial_ipf').val();
+        data.rsv_presentado               = $('#rsv_presentado').prop('checked');
         return data;
     }
      function validar(data){

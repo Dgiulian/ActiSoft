@@ -21,7 +21,13 @@ templates['transportista.list'] = template({"1":function(container,depth0,helper
     + alias4(((helper = (helper = helpers.vencimiento_carnet || (depth0 != null ? depth0.vencimiento_carnet : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"vencimiento_carnet","hash":{},"data":data}) : helper)))
     + "\" data-vencimiento_seguro=\""
     + alias4(((helper = (helper = helpers.vencimiento_seguro || (depth0 != null ? depth0.vencimiento_seguro : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"vencimiento_seguro","hash":{},"data":data}) : helper)))
-    + "\" class=\"btn btn-xs btn-circle btn-warning btn-edit\"><span class=\"fa fa-edit fw\"></span></span>\r\n          <span data-index=\""
+    + "\"  data-vencimiento_carnet_defensivo = \""
+    + alias4(((helper = (helper = helpers.vencimiento_carnet_defensivo || (depth0 != null ? depth0.vencimiento_carnet_defensivo : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"vencimiento_carnet_defensivo","hash":{},"data":data}) : helper)))
+    + "\" data-vencimiento_credencial_ipf = \""
+    + alias4(((helper = (helper = helpers.vencimiento_credencial_ipf || (depth0 != null ? depth0.vencimiento_credencial_ipf : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"vencimiento_credencial_ipf","hash":{},"data":data}) : helper)))
+    + "\" data-rsv_presentado = \""
+    + alias4(((helper = (helper = helpers.rsv_presentado || (depth0 != null ? depth0.rsv_presentado : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"rsv_presentado","hash":{},"data":data}) : helper)))
+    + "\"  class=\"btn btn-xs btn-circle btn-warning btn-edit\"><span class=\"fa fa-edit fw\"></span></span>\r\n          <span data-index=\""
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
     + "\" class=\"btn btn-xs btn-danger btn-circle btn-del\"><span class=\"fa fa-trash fw\"></span></span>\r\n      </td>\r\n  </tr>\r\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {

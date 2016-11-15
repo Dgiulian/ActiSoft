@@ -70,7 +70,7 @@ public class ActivoExcel extends BaseExcel<bd.Activo> {
         Short rowIndex = new Integer(filtros.size() + 2).shortValue();
         this.estilo = estiloBase;
         Integer i = 1;
-        for(Activo activo: this.lista ){
+        for(Activo activo: lista ){
             String rubro = activo.getId_rubro().toString();         
             String subrubro = activo.getId_subrubro().toString();
             String estado = activo.getId_estado().toString();

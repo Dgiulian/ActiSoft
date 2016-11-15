@@ -75,7 +75,7 @@ public class PreticketList extends HttpServlet {
                 if(id_estado!=0)mapFiltro.put("id_estado",id_estado.toString());
                 if(id_tipo != 0) mapFiltro.put("id_tipo_remito",id_tipo.toString());
             }
-            
+            tr.setOrderBy(" fecha desc ");
             lista = tr.getListFiltro(mapFiltro);
             
             List<PreticketDet> listaDet = new ArrayList();

@@ -50,7 +50,7 @@ public class TCertificado extends TransaccionBase<Certificado>{
                 " order by certificado.fecha_hasta desc,\n" +
                 "	    certificado.id desc\n" +
                 " limit 0,1 ",id_activo,fecha);
-        System.out.println(query);
+        //System.out.println(query);
         return super.getById(query);
     }
     /*
@@ -66,7 +66,7 @@ public HashMap<Integer,Certificado> getMapValidos(){
                                         "        where archivo <> '' \n" +
                                         "          and fecha_desde <= curdate()\n" +
                                         "        group by id_activo);" );
-         System.out.println(query);
+       //  System.out.println(query);
         List<Certificado> lstCertificados = this.getList(query);
         if (lstCertificados==null) return mapa;
         
@@ -135,7 +135,7 @@ public HashMap<Integer,Certificado> getMapValidos(){
         
         TCertificado tc = new TCertificado();
         HashMap<Integer, Certificado> mapValidos = tc.getMapValidos();
-        System.out.println(mapValidos.get(717));
+        //System.out.println(mapValidos.get(717));
     }
 
     public Certificado getValido(Integer id_activo) {

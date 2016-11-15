@@ -36,6 +36,50 @@
           <input id="rsv" name="rsv" type="text" class="form-control input-md" value="{{rsv}}">
         </div>
      </div>
+
+
+     <div class="form-group">
+        <label class="col-md-4 control-label" for="numero_titulo">N&uacute;mero t&iacute;tulo:</label>
+        <div class="col-md-8">
+          <input id="numero_titulo" name="numero_titulo" type="text" class="form-control input-md" value="{{numero_titulo}}">
+        </div>
+     </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="vencimiento_cedula">Vencimiento Cedula: </label>
+        <div class="col-md-8">
+        <input id="vencimiento_cedula" name="vencimiento_cedula" type="text" class="form-control input-md date-picker" value="{{vencimiento_cedula}}">
+        </div>
+      </div>
+     <div class="form-group">
+        <label class="col-md-4 control-label" for="modelo">Modelo:</label>
+        <div class="col-md-8">
+          <input id="modelo" name="modelo" type="text" class="form-control input-md" value="{{modelo}}">
+        </div>
+     </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="seguro_xantrax">Seguro XANTRAX:</label>
+        <!-- <div class="col-md-8"> -->
+          <input id="seguro_xantrax" name="seguro_xantrax" type="checkbox" class="" value="{{seguro_xantrax}}" {{#if seguro_xantrax}} checked {{/if}}>
+        <!-- </div> -->
+     </div>
+     <div class="form-group">
+        <label class="col-md-4 control-label" for="servicio_mantenimiento">Servicio Mantenimiento:</label>
+        <!-- <div class="col-md-8"> -->
+          <input id="servicio_mantenimiento" name="servicio_mantenimiento" type="checkbox" class="" value="{{servicio_mantenimiento}}" {{#if servicio_mantenimiento}} checked {{/if}}>
+        <!-- </div> -->
+     </div>
+     <div class="form-group">
+        <label class="col-md-4 control-label" for="servicio_fecha">Servicio Fecha: </label>
+        <div class="col-md-8">
+        <input id="servicio_fecha" name="servicio_fecha" type="text" class="form-control input-md date-picker" value="{{servicio_fecha}}" >
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="servicio_xantrax">Servicio XANTRAX:</label>
+        <!-- <div class="col-md-8"> -->
+          <input id="servicio_xantrax" name="servicio_xantrax" type="checkbox" class="" value="{{servicio_xantrax}}" {{#if servicio_xantrax}} checked {{/if}}>
+        <!-- </div>-->
+     </div>
   </form>
   </div>
 </div>

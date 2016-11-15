@@ -59,7 +59,13 @@
        $('#btnBuscar').click(buscar);
        $('#btnSelActivosRemito').click(selActivos);
        $('#selTodos').change(function(e){
-        selTodos('input.chkSelActivo',$(this).prop('checked'));
+        selTodos('input.chkSelRemitoDetalle',$(this).prop('checked'));
+       });
+       $('#mdlRemito').on('hide.bs.modal',function(){
+           $('#tblRemitoDetalle>tbody').html('');
+       });
+       $('#numero_search').keydown(function(e){
+           if(e.keyCode===13) buscar();
        });
     });
      function buscar(){
@@ -131,7 +137,7 @@
             html += wrapTag('td',d.desc_larga, '');            
             html += wrapTag('td',d.cantidad, '');
             if (d.id_referencia === 0){
-               var htmlSelect = "<input type='checkbox' class='chkSelActivo' data-pos='" + d.posicion + "' data-index='"+ d.id +"' data-codigo='"+d.codigo+"' data-descripcion='" + d.desc_larga + "' data-cant='"+d.cantidad+"'" ;
+               var htmlSelect = "<input type='checkbox' class='chkSelRemitoDetalle' data-pos='" + d.posicion + "' data-index='"+ d.id +"' data-codigo='"+d.codigo+"' data-descripcion='" + d.desc_larga + "' data-cant='"+d.cantidad+"'" ;
         }  else htmlSelect = "";
             html +=wrapTag('td',htmlSelect ,'');
            html +="</tr>";

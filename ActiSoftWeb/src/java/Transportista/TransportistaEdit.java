@@ -77,6 +77,11 @@ public class TransportistaEdit extends HttpServlet {
         String  dni       = request.getParameter("dni");
         String  vencimiento_carnet = request.getParameter("vencimiento_carnet");
         String  vencimiento_seguro  =request.getParameter("vencimiento_seguro");
+        String  vencimiento_carnet_defensivo  = request.getParameter("vencimiento_carnet_defensivo");
+        String  vencimiento_credencial_ipf  = request.getParameter("vencimiento_credencial_ipf");
+        String  rsv_presentado  = request.getParameter("rsv_presentado");
+        
+        
         TProveedor tp       = new TProveedor();
         TTransportista tt   = new TTransportista();
         Proveedor proveedor ;
@@ -97,8 +102,16 @@ public class TransportistaEdit extends HttpServlet {
             transportista.setDni(dni);
             String carnet = TFecha.formatearFechaVistaBd(vencimiento_carnet);
             String seguro = TFecha.formatearFechaVistaBd(vencimiento_seguro);
+            String defensivo = TFecha.formatearFechaVistaBd(vencimiento_carnet_defensivo);
+            String ipf = TFecha.formatearFechaVistaBd(vencimiento_credencial_ipf);
+            
             if(!"".equals(carnet)) transportista.setVencimiento_carnet(carnet);
             if(!"".equals(seguro)) transportista.setVencimiento_seguro(seguro);
+            if(!"".equals(defensivo)) transportista.setVencimiento_carnet_defensivo(defensivo);
+            if(!"".equals(ipf)) transportista.setVencimiento_credencial_ipf(ipf);
+            if(rsv_presentado!=null && !"".equals(rsv_presentado)  && "true".equals(rsv_presentado)) transportista.setRsv_presentado(1);
+            else transportista.setRsv_presentado(0);
+            
             
             if(nuevo){
                 id = tt.alta(transportista);

@@ -620,6 +620,18 @@
         <servlet-name>ActivoExport</servlet-name>
         <servlet-class>Activo.ActivoExport</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RemitoRelacionadoList</servlet-name>
+        <servlet-class>Remito.RemitoRelacionadoList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TransportistaExport</servlet-name>
+        <servlet-class>Transportista.TransportistaExport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VehiculoExport</servlet-name>
+        <servlet-class>Vehiculo.VehiculoExport</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ActivoServlet</servlet-name>
         <url-pattern>/Activo</url-pattern>
@@ -1103,6 +1115,18 @@
     <servlet-mapping>
         <servlet-name>ActivoExport</servlet-name>
         <url-pattern>/ActivoExport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemitoRelacionadoList</servlet-name>
+        <url-pattern>/RemitoRelacionadoList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TransportistaExport</servlet-name>
+        <url-pattern>/TransportistaExport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VehiculoExport</servlet-name>
+        <url-pattern>/VehiculoExport</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
