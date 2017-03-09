@@ -53,7 +53,7 @@
                             <div class="dataTable_wrapper">
                                 <table class="table table-striped table-bordered table-hover" id="tblProveedor">
                                     <colgroup>
-                                        <col style="25%"></col>
+                                        <col style="width:25%"></col>
                                         <col style="width:20%"></col>
                                         <col style="width:10%"></col>
                                         <col style="width:12%"></col>
