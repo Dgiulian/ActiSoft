@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import transaccion.TCertificado;
 import transaccion.TUsuario;
 
 /**
@@ -85,6 +86,7 @@ public class Login extends HttpServlet {
                     session.setAttribute("id_usuario", u.getId());
                     session.setAttribute(("id_tipo_usuario"), u.getId_tipo_usuario());
                     System.out.println(u.getId_tipo_usuario());
+                    new TCertificado().vencerCertificados();
                     if(ref!=null)
                         response.sendRedirect(ref);
                     else response.sendRedirect(request.getContextPath());
