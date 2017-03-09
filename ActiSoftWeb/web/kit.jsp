@@ -29,6 +29,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">Kits <a href="<%= PathCfg.KIT_EDIT %>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a></h1>
+                    <input type="hidden" id="id_activo" name="id_activo" value="<%= kit.getId()%>">
                 </div>
             </div>
             <!-- /.row -->
@@ -44,6 +45,16 @@
                         </select>
                     </div>
                 </div>-->
+
+                <div class="col-lg-3">
+                    <div clas="form-group">
+                        <label for="">C&oacute;digo</label>
+                        <span class="input-group">                                                                                            
+                            <input type="text" class="form-control uppercase" name="codigo" id="codigo" size="20" value="">
+                            <span class="input-group-addon" id="btnBuscar" ><span class="fa fa-search fa-fw"></span></span>
+                        </span>
+                    </div>
+                </div>                            
                 <div class="col-lg-4">
                     <div class="form-group">
                         <label for="activo">
@@ -114,12 +125,24 @@
         filtrar();
         $('#id_estado').change(filtrar);
         $('#activo').change(filtrar);
+        $('#btnBuscar').click(filtrar);
+         $('#codigo').keydown(function(e){
+           if(e.keyCode===13) filtrar();
+       });
     });
     function filtrar(){
-            var id_estado = $('#id_estado').val();
-            var activo = $('#activo').prop('checked')?1:0;
-        loadData({id_kit:<%= kit.getId()%>,id_estado:id_estado,activo:activo});
+        
+        var data = getData();
+        loadData(data);
     }
+    function getData(){
+        var data = {};
+        data.id_estado = $('#id_estado').val();
+        data.activo = $('#activo').prop('checked')?1:0;
+        data.codigo = $('#codigo').val();
+        data.id_kit =  $('#id_activo').val();
+        return data;
+    }   
     function loadData(data){
          var $tabla = $('#tblKit');
 
