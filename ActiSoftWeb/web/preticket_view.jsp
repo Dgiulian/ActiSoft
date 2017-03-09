@@ -100,6 +100,7 @@
                                     </div>-->
                                 <!--</div>-->
                                <!--<div class="form-group col-lg-12 " >-->
+                                <div class="row" >
                                    <div class="col-lg-4 " >
                                         <div class="form-group " >
                                              <label for="">Divisa</label>
@@ -116,11 +117,33 @@
                                         </div>
                                    </div>
                                     <div class="col-lg-4 " >   
-                                   <div class="form-group " >
-                                        <label for="">Monto</label>
-                                        <input class="form-control" name="total" id="total"  value="<%= preticket.getTotal() %>" disabled >
-                                    </div>                                        
+                                    <div class="form-group " >
+                                         <label for="">Monto</label>
+                                         <input class="form-control" name="total" id="total"  value="<%= preticket.getTotal() %>" disabled >
+                                     </div>                                        
                                     </div>                                    
+                               </div>
+                               <div class="row">
+                                   
+                                    <div class="col-lg-4 " >   
+                                        <div class="form-group " >
+                                             <label for="">Certificado</label>
+                                             <input class="form-control" name="nro_certificado" id="nro_certificado"  value="<%= preticket.getNro_certificado() %>" disabled >
+                                         </div>                                        
+                                    </div>
+                                    <div class="col-lg-4 " >   
+                                        <div class="form-group " >
+                                             <label for="">Habilitaci&oacute;n</label>
+                                             <input class="form-control" name="nro_habilitacion" id="nro_habilitacion"  value="<%= preticket.getNro_habilitacion() %>" disabled >
+                                        </div>                                        
+                                    </div> 
+                                     <div class="col-lg-4 " >
+                                        <div class="form-group " >
+                                             <label for="">Numero Factura</label>
+                                             <input class="form-control" name="nro_factura" id="nro_factura"  value="<%= preticket.getNro_factura() %>" disabled >
+                                        </div>
+                                   </div>    
+                               </div>                                    
                                <!--</div>-->
                             </fieldset>
                         </div>

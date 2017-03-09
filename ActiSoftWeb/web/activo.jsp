@@ -49,7 +49,7 @@
                 <div class="col-lg-12">
                     <h1 class="page-header">Activos 
                        <a href="<%= PathCfg.ACTIVO_EDIT%>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"></span> Nuevo</a>
-                       <span class="btn btn-info" data-toggle="modal" data-target="#mdlActivoExport"><span class="fa fa-file-excel-o fa-fw"></span> Exportar</a></h1>                    
+                       <span class="btn btn-info" data-toggle="modal" data-target="#mdlActivoExport"><span class="fa fa-file-excel-o fa-fw"></span> Exportar</a></h1>
                 </div>
 
             </div>
@@ -145,6 +145,11 @@
     <script src="bower_components/datatables-plugins/sorting/date-uk.js"></script>
     
     <script src="js/bootbox.min.js"></script>        
+    
+    <script src="bower_components/jquery-mask/jquery.mask.min.js"></script>
+    <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.min.js"></script>
+    
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
     <script src="js/moment-with-locales.min.js"></script>
@@ -156,13 +161,13 @@
        loadDataActivo({id_rubro:1});
        $('#id_rubro').change(function(){rubroChange("<%= PathCfg.SUBRUBRO_LIST%>",{id_rubro:$(this).val(),id_estado:1})});
        $('#id_subrubro').change(subrubroChange);       
-       $('#btnBuscar').click(buscar);
+       $('#btnBuscar').click(filtrar);
        $('#codigo').keydown(function(e){
-           if(e.keyCode===13) buscar();
+           if(e.keyCode===13) filtrar();
        });
        
     });
-    function buscar(){
+    function filtrar(){
         var $codigo = $('#codigo'); 
         var data =  ($codigo.val()!=="")? {codigo:$codigo.val()}:{id_rubro:$('#id_rubro').val(),id_subrubro:$('#id_subrubro').val()};
         loadDataActivo(data);
@@ -265,6 +270,7 @@
      <%@include  file="activo_historia_mdl.jsp" %>
      <%@include  file="activo_export_mdl.jsp" %>
      <%@include file="tpl_footer.jsp"%>
+     
 </body>
 
 </html>

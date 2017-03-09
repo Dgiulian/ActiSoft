@@ -1,9 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="bd.Proveedor"%>
-<%
-    Proveedor proveedor = (Proveedor) request.getAttribute("proveedor");
-    if(proveedor==null) proveedor = new Proveedor();
-%>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,9 +25,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">                    
-                    <h3 class="proveedor-heading">Proveedor: <a href="<%=PathCfg.PROVEEDOR_EDIT%>?id=<%=proveedor.getId()%>" ><%=proveedor.getNombre_comercial()%></a></h3>
-                    <h1 class="page-header">Transportistas <span class="btn btn-primary" id="nuevoTransportista"><span  class="fa fa-file-o fa-fw"> </span>Nuevo</span>
-                    <a class="btn btn-info" href="<%=PathCfg.TRANSPORTISTA_EXPORT%>?id_proveedor=<%=proveedor.getId()%>"><span class="fa fa-file-excel-o fa-fw"></span> Exportar</a></h1>
+                    <h1 class="page-header">Pozos <span class="btn btn-primary" id="nuevoPozo"><span  class="fa fa-file-o fa-fw"> </span>Nuevo</span>
                     </h1>
                 </div>
             </div>
@@ -39,20 +34,20 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Listado de Transportistas
-                            <input type="hidden" id="id_proveedor" name="id_proveedor" value="<%= proveedor.getId() %>">
+                            Listado de Pozos
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="dataTable_wrapper">
-                                <table class="table table-striped table-bordered table-condensed" id="tblTransportista">
+                                <table class="table table-striped table-bordered table-condensed" id="tblPozo">
+                                    <colgroup>
+                                        <col style=""></col>
+                                        <col style="width:10%"></col>
+                                    </colgroup>
                                     <thead>
                                         <tr>
                                             <!--<th>Id</th>-->
                                             <th>Nombre</th>
-                                            <th>DNI</th>
-                                            <th>Vencimiento Carnet</th>
-                                            <th>Vencimiento Seguro</th>                                            
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -100,28 +95,25 @@
     <script src="js/moment-with-locales.min.js"></script>
     <script src="js/invesoft.js"></script>
     
-    <script src="js/hnd/transportista.list.js"></script>
-    <script src="js/hnd/transportista.edit.js"></script>
+    <script src="js/hnd/pozo.list.js"></script>
+    <script src="js/hnd/pozo.edit.js"></script>
     
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        var id_proveedor  = $('#id_proveedor').val();
-        loadDataTransportista({id_proveedor:id_proveedor});
-        $('#nuevoTransportista').click(function(){
-            var id_proveedor  = $('#id_proveedor').val();
+        loadDataPozo({});
+        $('#nuevoPozo').click(function(){
             var index = 0;
             var nombre = "";
-            var dni     = "";
-            var vencimiento_carnet = "";
-            var vencimiento_seguro = "";            
-            agregarTransportista({id:index,id_proveedor:id_proveedor,nombre:nombre,dni:dni,vencimiento_carnet:vencimiento_carnet,vencimiento_seguro:vencimiento_seguro});
+            var descripcion     = "";
+            agregarPozo({id:index, nombre:nombre, descripcion: descripcion});
         });    
     });
-    function loadDataTransportista(data){
-        var $tabla = $('#tblTransportista');
+    function loadDataPozo(data){
+        var $tabla = $('#tblPozo');
+        console.log(PathCfg);
         $.ajax({
-               url: PathCfg.TRANSPORTISTA_LIST ,
+               url: PathCfg.POZO_LIST ,
                data: data,
                method:"POST",
                dataType: "json",
@@ -131,45 +123,39 @@
                },
                success: function(data) {
                    if(data.Result === "OK") {
-                       $tabla.find('tbody').html(createTableTransportista(data.Records));
-                        $('.btn-del').click(borrarTransportista);
-                        $('.btn-edit').click(editarTransportista);
+                       $tabla.find('tbody').html(createTablePozo(data.Records));
+                        $('.btn-del').click(borrarPozo);
+                        $('.btn-edit').click(editarPozo);
                    }
                }
            });
     }
 
-    function createTableTransportista(data){
+    function createTablePozo(data){
         Handlebars.registerHelper("convertirFecha",convertirFecha);
-        return Handlebars.templates['transportista.list']({records:data});
+        return Handlebars.templates['pozo.list']({records:data});
     }
-    function borrarTransportista(){
+    function borrarPozo(){
         var id = $(this).data('index');
         var $tr = $(this).parent().parent();
-        deleteData(PathCfg.TRANSPORTISTA_DEL ,{id:id},function(result) {     
+        deleteData(PathCfg.POZO_DEL ,{id:id},function(result) {     
                 if(result.Result === "OK") {
                     $tr.remove();
                 } else if (result.Message) bootbox.alert(result.Message);
         });
     }
-     function editarTransportista(){
+     function editarPozo(){
          var data = {};
         data.id = $(this).data('index');
-        data.id_proveedor  = $('#id_proveedor').val();
         data.nombre = $(this).data('nombre');
-        data.dni    = $(this).data('dni');
-        data.vencimiento_carnet = convertirFecha($(this).data('vencimiento_carnet'));
-        data.vencimiento_seguro = convertirFecha($(this).data('vencimiento_seguro')) ;
-        data.vencimiento_carnet_defensivo = convertirFecha($(this).data('vencimiento_carnet_defensivo'));
-        data.vencimiento_credencial_ipf = convertirFecha($(this).data('vencimiento_credencial_ipf'));
-        data.rsv_presentado = $(this).data('rsv_presentado');
-        agregarTransportista(data);
+        data.descripcion    = $(this).data('descripcion');
+        agregarPozo(data);
     }
-    function agregarTransportista(data){     
-        var titulo = data.id?"Editar Transportista":"Nuevo Transportista";
+    function agregarPozo(data){     
+        var titulo = data.id?"Editar Pozo":"Nuevo Pozo";
         bootbox.dialog({
                 title: titulo,
-                message: Handlebars.templates['transportista.edit'](data),
+                message: Handlebars.templates['pozo.edit'](data),
                 buttons: {
                     success: {
                         label: "Guardar",
@@ -178,12 +164,12 @@
                             var data = recuperarCampos();
                             if (!validar(data)) return;                        
                             $.ajax({
-                                url:PathCfg.TRANSPORTISTA_EDIT,
+                                url:PathCfg.POZO_EDIT,
                                 data: data,
                                 method:'POST',
                                 dataType:'json',
                                 success:function(){
-                                    loadDataTransportista({id_proveedor:data.id_proveedor});
+                                    loadDataPozo({id_proveedor:data.id_proveedor});
                                 }
                             });                            
                         }
@@ -208,28 +194,13 @@
     function recuperarCampos(){
         var data = {};
         data.id     = $('#id').val();                        
-        data.id_proveedor = $('#id_proveedor').val();                        
         data.nombre = $('#nombre').val();
-        data.dni    = $('#dni').val();
-        data.vencimiento_seguro = $('#vencimiento_seguro').val();
-        data.vencimiento_carnet  = $('#vencimiento_carnet').val();  
-        data.vencimiento_carnet_defensivo = $('#vencimiento_carnet_defensivo').val();
-        data.vencimiento_credencial_ipf   = $('#vencimiento_credencial_ipf').val();
-        data.rsv_presentado               = $('#rsv_presentado').prop('checked');
+        data.descripcion    = $('#descripcion').val();
         return data;
     }
      function validar(data){
         if(!data.nombre){
-            bootbox.alert("Ingrese el nombre del transportista");
-            return false;
-        }
-        console.log(data.vencimiento_carnet)
-        if(!data.vencimiento_carnet || !validarFecha(data.vencimiento_carnet)) {
-            bootbox.alert("Ingrese la fecha de vencimiento de VTV");
-            return false;
-        }
-        if(!data.vencimiento_seguro || !validarFecha(data.vencimiento_seguro)) {
-            bootbox.alert("Ingrese la fecha de vencimiento del seguro");
+            bootbox.alert("Ingrese el nombre del pozo");
             return false;
         }
         return true;    

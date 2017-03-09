@@ -29,6 +29,8 @@
         <url-pattern>/CorrectivoDel</url-pattern>
         <url-pattern>/KitDel</url-pattern>
         <url-pattern>/TransportistaDel</url-pattern>
+        <url-pattern>/PozoDel</url-pattern>
+        <url-pattern>/EquipoDel</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
     <filter-mapping>
@@ -42,12 +44,14 @@
         <url-pattern>/CertificadoEdit</url-pattern>
         <url-pattern>/CompraEdit</url-pattern>
         <url-pattern>/SiteEdit</url-pattern>
-        <url-pattern>/PreticketEdit</url-pattern>
+        <url-pattern>/PreticketCreate</url-pattern>
         <url-pattern>/ProveedorEdit</url-pattern>
         <url-pattern>/UsuarioEdit</url-pattern>
         <url-pattern>/CorrectivoEdit</url-pattern>
         <url-pattern>/KitEdit</url-pattern>
         <url-pattern>/TransportistaEdit</url-pattern>
+        <url-pattern>/PozoEdit</url-pattern>
+        <url-pattern>/EquipoEdit</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
     <filter-mapping>
@@ -106,7 +110,7 @@
         <url-pattern>/ActivoHistoriaList</url-pattern>
         <url-pattern>/Preticket</url-pattern>
         <url-pattern>/PreticketList</url-pattern>
-        <url-pattern>/PreticketEdit</url-pattern>
+        <url-pattern>/PreticketCreate</url-pattern>
         <url-pattern>/PreticketDel</url-pattern>
         <url-pattern>/PreticketPrint</url-pattern>
         <url-pattern>/RemitoUpload</url-pattern>
@@ -349,8 +353,8 @@
         <servlet-class>Preticket.PreticketList</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>PreticketEdit</servlet-name>
-        <servlet-class>Preticket.PreticketEdit</servlet-class>
+        <servlet-name>PreticketCreate</servlet-name>
+        <servlet-class>Preticket.PreticketCreate</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>PreticketDel</servlet-name>
@@ -617,6 +621,38 @@
         <servlet-class>Habilitacion.HabilitacionDel</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>PozoServlet</servlet-name>
+        <servlet-class>Pozo.PozoServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PozoList</servlet-name>
+        <servlet-class>Pozo.PozoList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PozoEdit</servlet-name>
+        <servlet-class>Pozo.PozoEdit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PozoDel</servlet-name>
+        <servlet-class>Pozo.PozoDel</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EquipoServlet</servlet-name>
+        <servlet-class>Equipo.EquipoServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EquipoList</servlet-name>
+        <servlet-class>Equipo.EquipoList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EquipoEdit</servlet-name>
+        <servlet-class>Equipo.EquipoEdit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EquipoDel</servlet-name>
+        <servlet-class>Equipo.EquipoDel</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ActivoExport</servlet-name>
         <servlet-class>Activo.ActivoExport</servlet-class>
     </servlet>
@@ -631,6 +667,22 @@
     <servlet>
         <servlet-name>VehiculoExport</servlet-name>
         <servlet-class>Vehiculo.VehiculoExport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RemitoExport</servlet-name>
+        <servlet-class>Remito.RemitoExport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PreticketEdit</servlet-name>
+        <servlet-class>Preticket.PreticketEdit</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PreticketView</servlet-name>
+        <servlet-class>Preticket.PreticketView</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PreticketExport</servlet-name>
+        <servlet-class>Preticket.PreticketExport</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ActivoServlet</servlet-name>
@@ -845,8 +897,8 @@
         <url-pattern>/PreticketList</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>PreticketEdit</servlet-name>
-        <url-pattern>/PreticketEdit</url-pattern>
+        <servlet-name>PreticketCreate</servlet-name>
+        <url-pattern>/PreticketCreate</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PreticketDel</servlet-name>
@@ -1113,6 +1165,38 @@
         <url-pattern>/HabilitacionDel</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>EquipoServlet</servlet-name>
+        <url-pattern>/Equipo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EquipoList</servlet-name>
+        <url-pattern>/EquipoList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EquipoEdit</servlet-name>
+        <url-pattern>/EquipoEdit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EquipoDel</servlet-name>
+        <url-pattern>/EquipoDel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PozoServlet</servlet-name>
+        <url-pattern>/Pozo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PozoList</servlet-name>
+        <url-pattern>/PozoList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PozoEdit</servlet-name>
+        <url-pattern>/PozoEdit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PozoDel</servlet-name>
+        <url-pattern>/PozoDel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>ActivoExport</servlet-name>
         <url-pattern>/ActivoExport</url-pattern>
     </servlet-mapping>
@@ -1127,6 +1211,22 @@
     <servlet-mapping>
         <servlet-name>VehiculoExport</servlet-name>
         <url-pattern>/VehiculoExport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemitoExport</servlet-name>
+        <url-pattern>/RemitoExport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PreticketEdit</servlet-name>
+        <url-pattern>/PreticketEdit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PreticketView</servlet-name>
+        <url-pattern>/PreticketView</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PreticketExport</servlet-name>
+        <url-pattern>/PreticketExport</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

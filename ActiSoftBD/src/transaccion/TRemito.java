@@ -10,6 +10,7 @@ import bd.Remito;
 import bd.Remito_detalle;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -139,4 +140,20 @@ public class TRemito extends TransaccionBase<Remito> {
         String query = String.format("select * from remito where remito.id_tipo_remito=%d and remito.id_referencia=%d",OptionsCfg.REMITO_DEVOLUCION,remito.getId());       
         return tiene_devolucion;
     }
+
+    public List<Remito> getListaExport(HashMap<String, String> mapFiltro) {
+        List<Remito> lista = this.getListFiltro(mapFiltro);
+        return lista;
+    }
+    public Remito getByIdActivo(Integer id_activo, Integer id_tipo_remito,Integer id_estado){
+        String query = String.format("select remito.*\n" +
+                                     " from remito_detalle,remito\n" +
+                                     " where remito_detalle.id_remito = remito.id\n" +
+                                     " and remito_detalle.id_activo = %d\n" +
+                                     " and remito.id_estado = %d \n" +
+                                     " and remito.id_tipo_remito = %d",id_activo,id_tipo_remito,id_estado);
+
+        return this.getById(query);
+    }
+
 }

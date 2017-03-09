@@ -153,13 +153,16 @@ public class ActivoList extends HttpServlet {
 //         Compra compra = tc.getPrimerCompra(activo.getId());
 //         if(compra!=null) this.fecha_alta = compra.getFecha();         
          //this.certificado = (tcert.getVigente(activo.getId())!=null)?"Si":"No";
-         
-         Certificado cert = mapValidos.get(activo.getId());
-         if(cert==null) this.certificado = "No";
-         else { this.id_certificado = cert.getId();
-             if(cert.getId_resultado()==OptionsCfg.CERTIFICADO_VENCIDO)  this.certificado = "Vencido";                            
-             else certificado = "Si";
-       }
+         if (r!=null && r.getAplica_certificado()==0) {
+             this.certificado = "No aplica";
+         } else {
+            Certificado cert = mapValidos.get(activo.getId());
+            if(cert==null) this.certificado = "No";
+            else { this.id_certificado = cert.getId();
+                if(cert.getId_resultado()==OptionsCfg.CERTIFICADO_VENCIDO)  this.certificado = "Vencido";                            
+                else certificado = "Si";
+             }
+        }
      }
  }
    

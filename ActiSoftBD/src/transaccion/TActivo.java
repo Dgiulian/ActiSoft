@@ -65,12 +65,17 @@ public class TActivo extends TransaccionBase<Activo>{
         return codigo;
     }
     public List<Activo> getListaExport(HashMap<String,String> filtro){
+        /*
+         * query1
+         * query2: 
+         */
         List<Activo> lista;
         String query = "";
         if(filtro.containsKey("id_contrato") || filtro.containsKey("id_cliente") ){
             String query1 = "select activo.*\n" +
                     "  from remito_detalle,remito,activo\n" +
-                    " where remito_detalle.id_remito = remito.id\n" +
+                    " where activo.bloqueado = 0" +
+                    "   and remito_detalle.id_remito = remito.id\n" +
                     "   and remito_detalle.id_activo = activo.id\n" +
                     "   and remito.id_tipo_remito = 1\n" +
                     "   and remito.id_estado      = 1\n" +
@@ -80,7 +85,8 @@ public class TActivo extends TransaccionBase<Activo>{
            
             String query2 = "select activo.*\n" +
                 "  from remito_detalle,remito,activo,kit_detalle\n" +
-                " where remito_detalle.id_remito = remito.id\n" +
+                " where activo.bloqueado = 0 " +
+                "   and remito_detalle.id_remito = remito.id\n" +
                 "   and kit_detalle.id_activo    = activo.id\n" +
                 "   and remito_detalle.id_kit    = kit_detalle.id_kit\n" +
                 "   and remito.id_tipo_remito    = 1\n" +
@@ -103,7 +109,8 @@ public class TActivo extends TransaccionBase<Activo>{
         else {
             query = "select activo.*\n" +
                     " from  activo \n" +
-                    " where true \n";
+                    " where true ";
+            query += " and bloqueado = 0 \n";
             if (filtro.containsKey("id_estado")) {
                 query += String.format(" and activo.id_estado  = %s", filtro.get("id_estado"));
             }
@@ -133,5 +140,42 @@ public class TActivo extends TransaccionBase<Activo>{
         }
         
         return lista;
+    }
+    
+    
+    public List<Activo> getListaVencimiento(HashMap<String,String> filtro){
+        List<Activo> lista;
+// String query = "set @fecha := '%s';\n" +
+//                "select activo.*\n" +
+//                "  from activo,certificado\n" +
+//                "  where activo.id = certificado.id_activo\n" +
+//                "  and certificado.fecha_hasta <= @fecha\n" +
+//                "  and not activo.id  in ( \n" +
+//                "  	select  id_activo from certificado\n" +
+//                "  		where certificado.fecha_hasta >= @fecha\n" +
+//                "	  )";
+        
+         String query = "select activo.*\n" +
+                "  from activo,certificado\n" +
+                "  where activo.id = certificado.id_activo\n" +
+                "  and certificado.fecha_hasta <= '%s'\n" +
+                "  and not activo.id  in ( \n" +
+                "  	select  id_activo from certificado\n" +
+                "  		where certificado.fecha_hasta >= '%s'\n" +
+                "	  )";
+        query = String.format(query,filtro.get("fecha_hasta"),filtro.get("fecha_hasta"));
+        
+        System.out.println(query);
+        
+        lista = this.getList(query);
+        
+        System.out.println(lista);
+        return lista;
+    }
+    public static void main(String[] args){
+        HashMap<String,String> filtros = new HashMap<String,String>();
+        filtros.put("fecha_hasta","2016-12-31");
+        new TActivo().getListaVencimiento(filtros);
+        
     }
 }

@@ -1,3 +1,7 @@
+<%@page import="transaccion.TPozo"%>
+<%@page import="bd.Pozo"%>
+<%@page import="transaccion.TEquipo"%>
+<%@page import="bd.Equipo"%>
 <%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="transaccion.TKit"%>
 <%@page import="bd.Kit"%>
@@ -34,6 +38,11 @@
     if(cliente==null) cliente = new Cliente();
     Site site = new TSite().getById(remito.getId_site());
     if(site==null) site = new Site();
+    Equipo equipo = new TEquipo().getById(remito.getId_equipo());
+    if(equipo==null) equipo = new Equipo();
+    
+    Pozo pozo = new TPozo().getById(remito.getId_pozo());
+    if(pozo==null) pozo = new Pozo();
     
     String tipoRemito="";
     for(Option o:OptionsCfg.getTipoRemitos()) {
@@ -68,7 +77,7 @@
                        <% if(remito.getId_tipo_remito() == OptionsCfg.REMITO_DEVOLUCION 
                           && remito.getId_estado() == OptionsCfg.REMITO_ESTADO_CERRADO
                           && remito.getFacturado() == 0) {%>
-                        <a class="btn btn-info" href="<%=PathCfg.PRETICKET_EDIT %>?id_remito=<%= remito.getId()%>"><i class="fa fa-dollar fa-fw"></i> Preticket</a>
+                        <a class="btn btn-info" href="<%=PathCfg.PRETICKET_CREATE %>?id_remito=<%= remito.getId()%>"><i class="fa fa-dollar fa-fw"></i> Preticket</a>
                         <%}%>
                         </div>
                         <input type="hidden" name="id_remito" id="id_remito" value="<%= remito.getId()%>">
@@ -181,13 +190,13 @@
                                 <div class="col-lg-6 " >
                                     <div class="form-group">
                                         <label for="">Pozo</label>
-                                        <input class="form-control" name="pozo" id="pozo" value="<%=site.getPozo()%>" >
+                                        <input class="form-control" name="pozo" id="pozo" value="<%=pozo.getNombre()%>" >
                                     </div>
                                 </div>
                                 <div class="col-lg-6 " >
                                     <div class="form-group-sm">
                                         <label for="">Equipo</label>
-                                        <input class="form-control" name="pozo" id="pozo" value="<%=site.getEquipo()%>" >
+                                        <input class="form-control" name="pozo" id="pozo" value="<%=equipo.getNombre()%>" >
                                     </div>
                                 </div>     
                                 </fieldset>

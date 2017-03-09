@@ -68,7 +68,14 @@ public class RemitoEdit extends HttpServlet {
                 request.getRequestDispatcher("message.jsp").forward(request, response);
                 return;
             }            
-        } 
+        }
+        
+        Integer id_contrato = Parser.parseInt(request.getParameter("id_contrato"));
+        Contrato contrato = new TContrato().getById(id_contrato);        
+        if(contrato!=null){
+            request.setAttribute("contrato", contrato);
+        }
+        
         String view = "remito_edit.jsp";
         if (remito!=null){
             String idRef = request.getParameter("ref");
@@ -105,8 +112,10 @@ public class RemitoEdit extends HttpServlet {
             throws ServletException, IOException {
         
         String[] codigoActivos = request.getParameterValues("codigoActivo");
+        String[] arrId_activos = request.getParameterValues("id_activo");
+        String[] arrId_kits    = request.getParameterValues("id_kit");
         String[] cantActivos   = request.getParameterValues("cantActivo");
-        String[] codigoPos = request.getParameterValues("posicion");
+        String[] arrPos = request.getParameterValues("posicion");
         String strCliente = request.getParameter("idCliente");
         String strSite = request.getParameter("id_site");
         String ptoVta = request.getParameter("punto_venta");
@@ -174,8 +183,11 @@ public class RemitoEdit extends HttpServlet {
                  throw new BaseException("ERROR","Ya existe un remito con ese n&uacute;mero");
             
             remito.setId_cliente(cliente.getId());
-            if(site!=null)
+            if(site!=null) {
                 remito.setId_site(site.getId());
+                remito.setId_pozo(site.getId_pozo());
+                remito.setId_equipo(site.getId_equipo());
+            }
             remito.setFecha(TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));
             remito.setFecha_creacion(TFecha.ahora());
             remito.setPunto_venta(punto_venta);
@@ -187,8 +199,8 @@ public class RemitoEdit extends HttpServlet {
             remito.setObservaciones(observaciones);
          // Verificamos que la longitud de los vectores sea la misa
          if(cantActivos.length   != codigoActivos.length || 
-            cantActivos.length   != codigoPos.length   ||
-            codigoActivos.length != codigoPos.length ){
+            cantActivos.length   != arrPos.length   ||
+            codigoActivos.length != arrPos.length ){
              throw new BaseException("Error de argumentos","Alguno de los argumentos del remito son incorrectos");
          }
          
@@ -198,13 +210,15 @@ public class RemitoEdit extends HttpServlet {
              
              Float cant = Parser.parseFloat(cantActivos[i]);
              String codigo = codigoActivos[i].trim();
-             Integer pos = Parser.parseInt(codigoPos[i]);
-             
+             Integer pos = Parser.parseInt(arrPos[i]);
+             Integer id_activo = Parser.parseInt(arrId_activos[i]);
+             Integer id_kit = Parser.parseInt(arrId_kits[i]);
              if (cant <= 0) continue;
              Remito_detalle detalle = new Remito_detalle();
              
              
-             Activo activo = ta.getByCodigo(codigo);
+//             Activo activo = ta.getByCodigo(codigo);
+             Activo activo = ta.getById(id_activo);
              if(activo!=null) {
                 if(activo.getId_estado()!=OptionsCfg.ACTIVO_ESTADO_DISPONIBLE){
                     throw new BaseException("Activo no disponible", String.format("El activo %s no est&aacute; disponible",activo.getCodigo()));
@@ -218,7 +232,8 @@ public class RemitoEdit extends HttpServlet {
                 detalle.setId_activo(activo.getId());
                lstActivo.add(activo);
              } else { // KIT
-                 Kit kit = tk.getByCodigo(codigo);
+//                 Kit kit = tk.getByCodigo(codigo);
+                 Kit kit = tk.getById(id_kit);
                  if (kit==null)
                      throw new BaseException("Activo o Kit inexistente", String.format("No existe el activo o el kit seleccionado: %s",codigo));
                  

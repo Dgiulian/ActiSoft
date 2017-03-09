@@ -5,6 +5,8 @@
 package Site;
 
 import bd.Cliente;
+import bd.Equipo;
+import bd.Pozo;
 import bd.Site;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -16,6 +18,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TCliente;
+import transaccion.TEquipo;
+import transaccion.TPozo;
 import transaccion.TSite;
 import utils.BaseException;
 import utils.JsonRespuesta;
@@ -26,7 +30,9 @@ import utils.Parser;
  * @author Diego
  */
 public class SiteList extends HttpServlet {
-
+    HashMap<Integer, Pozo> mapPozos;
+    HashMap<Integer, Equipo> mapEquipos;
+    
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -42,11 +48,14 @@ public class SiteList extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String pagNro = request.getParameter("pagNro");
-        String idCliente = request.getParameter("id_cliente");
-
-        HashMap<String,String> mapFiltro = new HashMap<String,String>();
+        Integer id_cliente = Parser.parseInt(request.getParameter("id_cliente"));
+        Integer id_pozo   = Parser.parseInt(request.getParameter("id_pozo"));
+        Integer id_equipo = Parser.parseInt(request.getParameter("id_equipo"));
         Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
-        Integer id_cliente = id_cliente = Parser.parseInt(idCliente);
+        
+        mapPozos = new TPozo().getMap();
+        mapEquipos = new TEquipo().getMap();
+        HashMap<String,String> mapFiltro = new HashMap<String,String>();
         
         JsonRespuesta jr = new JsonRespuesta();
         try {
@@ -57,6 +66,13 @@ public class SiteList extends HttpServlet {
             if (id_cliente!=0 && cliente==null) throw new BaseException("ERROR","No se encontr&oacute; el cliente");
             if(id_cliente!=0)
                 mapFiltro.put("id_cliente",id_cliente.toString());
+            
+            if(id_pozo!=0)
+                mapFiltro.put("id_pozo",id_pozo.toString());
+
+            if (id_equipo!=0)
+                mapFiltro.put("id_equipo",id_equipo.toString());
+            
             lista = tr.getListFiltro(mapFiltro);            
             if (lista != null) {
                 jr.setTotalRecordCount(lista.size());
@@ -79,8 +95,16 @@ public class SiteList extends HttpServlet {
             out.close();
         }
     }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    private class SiteDet extends Site {
+        public SiteDet(Site site){
+            super(site);
+            Pozo p =  mapPozos.get(site.getId_pozo());
+            Equipo e = mapEquipos.get(site.getId_equipo());
+            if(p!=null) this.pozo = p.getNombre();
+            if(e!=null) this.equipo = e.getNombre();
+            
+        }
+    }
     /**
      * Handles the HTTP
      * <code>GET</code> method.

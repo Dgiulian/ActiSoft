@@ -6,6 +6,8 @@ package Remito;
 
 import bd.Cliente;
 import bd.Contrato;
+import bd.Equipo;
+import bd.Pozo;
 import bd.Remito;
 import bd.Site;
 import com.google.gson.Gson;
@@ -20,11 +22,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TCliente;
 import transaccion.TContrato;
+import transaccion.TEquipo;
+import transaccion.TPozo;
 import transaccion.TRemito;
 import transaccion.TSite;
 import utils.JsonRespuesta;
 import utils.OptionsCfg;
 import utils.OptionsCfg.Option;
+import utils.Parser;
 
 /**
  *
@@ -45,6 +50,8 @@ public class RemitoList extends HttpServlet {
      HashMap<Integer,Option> mapTipos;
      HashMap<Integer,Option> mapEstados;
      HashMap<Integer,Contrato> mapContratos;
+     HashMap<Integer,Pozo> mapPozos;
+     HashMap<Integer,Equipo> mapEquipos;
      HashMap<Integer,Cliente> mapClientes;
      HashMap<Integer,Site> mapSites;
      
@@ -57,6 +64,8 @@ public class RemitoList extends HttpServlet {
         mapTipos = OptionsCfg.getMap(OptionsCfg.getTipoRemitos());
         mapEstados = OptionsCfg.getMap(OptionsCfg.getEstadoRemitos());
         mapContratos = new TContrato().getMap();
+        mapPozos = new TPozo().getMap();
+        mapEquipos = new TEquipo().getMap();
         mapClientes = new TCliente().getMap();
         mapSites = new TSite().getMap();
 //        mapTipos = new HashMap<Integer,Option>();
@@ -71,21 +80,21 @@ public class RemitoList extends HttpServlet {
         Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
         JsonRespuesta jr = new JsonRespuesta();
         try {
-            String idEstado = request.getParameter("id_estado");
-            String strFacturado = request.getParameter("facturado");
-            String idTipo = request.getParameter("id_tipo");
-            String strNumero = request.getParameter("numero");
             
-            Integer id_estado = 0;
-            Integer id_tipo = 0;
-            Integer numero = 0;
             Integer facturado = null;
             
-            if (idEstado!=null && !idEstado.equals("")) id_estado = Integer.parseInt(idEstado);
-            if (idTipo!=null && !idTipo.equals("")) id_tipo = Integer.parseInt(idTipo);
-            if (strNumero!=null && !strNumero.equals("")) numero = Integer.parseInt(strNumero);
-            if(strFacturado!=null && !strFacturado.equals("")) facturado = Integer.parseInt(strFacturado);
-            
+            Integer id_estado  = Parser.parseInt(request.getParameter("id_estado"));
+            Integer id_tipo    = Parser.parseInt(request.getParameter("id_tipo"));
+            Integer numero     = Parser.parseInt(request.getParameter("numero"));
+            Integer id_cliente = Parser.parseInt(request.getParameter("id_cliente"));
+            Integer id_site    = Parser.parseInt(request.getParameter("id_site"));
+            Integer id_pozo    = Parser.parseInt(request.getParameter("id_pozo"));
+            Integer id_equipo  = Parser.parseInt(request.getParameter("id_equipo"));
+
+            String strFacturado = request.getParameter("facturado");
+            if (strFacturado!=null && !"".equals(strFacturado))facturado = Parser.parseInt(strFacturado);
+                
+                
             List<Remito> lista;
             TRemito tr = new TRemito();
             HashMap<String,String> mapFiltro = new HashMap<String,String>();
@@ -98,6 +107,10 @@ public class RemitoList extends HttpServlet {
             }
             
             if(facturado!=null) mapFiltro.put("facturado",facturado.toString());
+            if (id_cliente!=0)  mapFiltro.put("id_cliente",id_cliente.toString());
+            if (id_site!=0)     mapFiltro.put("id_site",id_cliente.toString());
+            if (id_pozo!=0)     mapFiltro.put("id_pozo",id_pozo.toString());
+            if (id_equipo!=0)   mapFiltro.put("id_equipo",id_equipo.toString());
             
             lista = tr.getListFiltro(mapFiltro);
             
@@ -125,8 +138,10 @@ public class RemitoList extends HttpServlet {
      public String estado;
      public String cliente;
      public String contrato;
-     public String site;
+     public String pozo;
      public String equipo;
+     public String site;
+     
      public boolean tiene_devolucion = false;
      
      public RemitoDet(Remito remito){
@@ -135,10 +150,12 @@ public class RemitoList extends HttpServlet {
          this.tipo_remito = remito.getId_tipo_remito().toString();
          this.estado = remito.getId_estado().toString();
          this.contrato = remito.getId_contrato().toString();
-         this.cliente = remito.getId_cliente().toString();
-         this.site    = remito.getId_site().toString();
-         this.equipo  = "";
-         Option o     = mapTipos.get(remito.getId_tipo_remito());
+         this.pozo     = remito.getId_pozo().toString();
+         this.equipo   = remito.getId_equipo().toString();
+         this.cliente  = remito.getId_cliente().toString();
+         this.site     = remito.getId_site().toString();
+         this.equipo   = "";
+         Option o      = mapTipos.get(remito.getId_tipo_remito());
          if(o!=null)
              this.tipo_remito = o.getDescripcion();
          
@@ -149,6 +166,14 @@ public class RemitoList extends HttpServlet {
          if(c!=null)
              this.contrato = c.getNumero();
          
+         Pozo p = mapPozos.get(remito.getId_pozo());
+         if(p!=null)
+             this.pozo = p.getNombre();
+         
+         Equipo e = mapEquipos.get(remito.getId_equipo());
+         if(e!=null)
+             this.equipo = e.getNombre();
+         
          Cliente cli = mapClientes.get(remito.getId_cliente());
          if(cli!=null)
              this.cliente = cli.getNombre();
@@ -158,8 +183,10 @@ public class RemitoList extends HttpServlet {
          Site s = mapSites.get(remito.getId_site());
          if(s!=null){
              this.site = s.getNombre();
-             this.equipo =  s.getEquipo();
+             //this.equipo =  s.getEquipo();
          }
+         
+         
      }
  }
 

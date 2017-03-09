@@ -1,3 +1,7 @@
+<%@page import="transaccion.TEquipo"%>
+<%@page import="transaccion.TPozo"%>
+<%@page import="bd.Equipo"%>
+<%@page import="bd.Pozo"%>
 <%@page import="utils.PathCfg"%>
 <!--<script src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry&v=3.7&key=AIzaSyD-jKlyAoMh8GxoIyaDbuvhI1WVw8XSpGA"></script>
 <script src="bower_components/mapplace/maplace-0.1.3.js"></script>-->
@@ -12,14 +16,13 @@
               <h4 class="modal-title">Crear Site</h4>
             </div>
        <div class="modal-body">
+           
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
                            <li class="active"><a href="#tab1" data-toggle="tab">Datos b&aacute;sicos</a></li>
                            <li><a href="#tab2" data-toggle="tab">Contacto</a></li>
-                           <!--<li><a href="#tab3" data-toggle="tab"></a></li>-->
-                           <!--<li><a href="#tab4" data-toggle="tab">Datos financieros</a></li>-->
                            <li><a href="#tab3" data-toggle="tab">Observaciones</a></li>
                            <li><a href="#tab4" data-toggle="tab">Mapa</a></li>
                        </ul>
@@ -49,15 +52,28 @@
 
                                   <div class="col-lg-3 " >
                                        <div class="form-group " >
-                                            <label for="pozo">Pozo</label>
-                                            <input class="form-control" name="pozo" id="pozo_mdl" value="">
-                                        </div>
+                                          <label for="id_pozo">Pozo</label>
+                                          <select class="form-control" name="id_pozo" id="id_pozo" >
+                                              <option value="0"></option>
+                                              <% for(Pozo pozo: new TPozo().getList()) {
+                                                 
+                                              %>
+                                                <option value="<%=pozo.getId()%>" ><%= pozo.getNombre()%></option>
+                                              <% } %>
+                                          </select>
+                                      </div>
                                    </div>
                                   <div class="col-lg-3 " >
                                        <div class="form-group " >
-                                            <label for="equipo">Equipo</label>
-                                            <input class="form-control" name="equipo" id="equipo_mdl" value="">
-                                        </div>
+                                          <label for="equipo">Equipo</label>
+                                          <select class="form-control" name="id_equipo" id="id_equipo" >
+                                              <option value="0"></option>
+                                              <% for(Equipo equipo: new TEquipo().getList()) { %>
+                                              
+                                                <option value="<%=equipo.getId()%>" ><%= equipo.getNombre()%></option>
+                                              <% } %>
+                                          </select>
+                                      </div>
                                   </div>
                                   <div class="row" >
                                       <div class="form-group">
@@ -153,34 +169,26 @@ $(document).ready(function() {
    $('#mdlSiteEdit').on('show.bs.modal',function(){
      
    });
+   function getDatosSite (){
+       var data = {};
+       data.nombre  = $('#nombre').val();
+       data.area  = $('#area_mdl').val();
+       data.id_pozo  = $('#id_pozo').val();
+       data.id_equipo  = $('#id_equipo').val();
+       data.id_estado  = $('#id_estado').val();
+       data.latitud  = $('#latitud').val();
+       data.longitud  = $('#longitud').val();
+       data.telefono  = $('#telefono').val();
+       data.encargado  = $('#encargado').val();
+       data.horario  = $('#horario').val();
+       data.observaciones  = $('#observaciones').val();
+       data.id_cliente = $('#idCliente').val();        
+       data.tipo = 'modal';
+       data.id=0;
+       return data;
+   }
    $('#btnSiteEdit').click(function(){
-       var nombre  = $('#nombre').val();
-       var area  = $('#area_mdl').val();
-       var pozo  = $('#pozo_mdl').val();
-       var equipo  = $('#equipo_mdl').val();
-       var id_estado  = $('#id_estado').val();
-       var latitud  = $('#latitud').val();
-       var longitud  = $('#longitud').val();
-       var telefono  = $('#telefono').val();
-       var encargado  = $('#encargado').val();
-       var horario  = $('#horario').val();
-       var observaciones  = $('#observaciones').val();
-       var id_cliente = $('#idCliente').val();      
-       data = { id_cliente: id_cliente,
-                nombre : nombre,
-                area : area,
-                pozo : pozo,
-                equipo : equipo,
-                id_estado : id_estado,
-                latitud : latitud,
-                longitud : longitud,
-                telefono : telefono,
-                encargado : encargado,
-                horario : horario,
-                observaciones : observaciones,
-                tipo:'modal',
-                id:0,
-            };
+       var data = getDatosSite();
 
       $('#mdlSiteEdit').modal('hide');
       $.ajax({

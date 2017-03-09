@@ -93,6 +93,12 @@
                             <a href="<%=PathCfg.PROVEEDOR%>"><i class="fa fa-truck fa-fw"></i> Proveedores</a>
                         </li>
                         <li>
+                            <a href="<%=PathCfg.POZO%>"><i class="fa fa-tag fa-fw"></i> Pozo</a>
+                        </li>
+                        <li>
+                            <a href="<%=PathCfg.EQUIPO%>"><i class="fa fa-tags fa-fw"></i> Equipo</a>
+                        </li>
+                        <li>
                             <a href="<%=PathCfg.CONTRATO %>"><i class="fa fa-file fa-fw"></i> Contratos</a>
                         </li>
                         <li>

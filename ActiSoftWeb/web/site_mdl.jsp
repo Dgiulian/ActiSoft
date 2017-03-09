@@ -1,3 +1,9 @@
+<%@page import="transaccion.TEquipo"%>
+<%@page import="transaccion.TPozo"%>
+<%@page import="bd.Pozo"%>
+<%@page import="bd.Pozo"%>
+<%@page import="bd.Equipo"%>
+<%@page import="bd.Equipo"%>
 <%@page import="utils.PathCfg"%>
 <div id="mdlSite" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -9,6 +15,31 @@
         <h4 class="modal-title">Busqueda de Site</h4>
       </div>
       <div class="modal-body container-fluid">
+          <div class="row">
+               <div class="col-lg-3 " >
+                    <div class="form-group " >
+                         <label for="id_pozo">Pozo</label>
+                         <select class="form-control" name="src_pozo" id="src_pozo" >
+                             <option value="0">Todos</option>
+                             <% for(Pozo pozo: new TPozo().getList()) { %>
+                               <option value="<%=pozo.getId()%>" ><%= pozo.getNombre()%></option>
+                             <% } %>
+                         </select>
+                     </div>
+                </div>
+               <div class="col-lg-3 " >
+                    <div class="form-group " >
+                         <label for="equipo">Equipo</label>
+                         <select class="form-control" name="src_equipo" id="src_equipo" >
+                             <option value="0">Todos</option>
+                             <% for(Equipo equipo: new TEquipo().getList()) { %>
+
+                               <option value="<%=equipo.getId()%>" ><%= equipo.getNombre()%></option>
+                             <% } %>
+                         </select>
+                     </div>
+                </div>
+           </div>
           <div class="col-lg-12">
               <table class="table table-bordered table-condensed" id="tblSite">
                   <thead>
@@ -34,7 +65,19 @@
   </div>
 </div>
 <script>
+    $(document).ready(function(){
+        $('#src_pozo').change(filtrarSite);
+        $('#src_equipo').change(filtrarSite);
+    });
+    function filtrarSite(){
+        var data = {};
+        data.id_pozo = $('#src_pozo').val();
+        data.id_equipo = $('#src_equipo').val();
+        data.id_cliente = $('#idCliente').val();
+        loadDataSite(data);
+    }
     function loadDataSite(data){    
+//        console.log(data);
         var $tabla = $('#tblSite');    
         $.ajax({
                url: '<%= PathCfg.SITE_LIST %>',

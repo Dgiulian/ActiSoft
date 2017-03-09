@@ -6,7 +6,10 @@ package utils;
 
 import bd.Activo;
 import bd.Certificado;
+import bd.Equipo;
 import bd.Parametro;
+import bd.Pozo;
+import bd.Remito;
 import bd.Rubro;
 import bd.Subrubro;
 import com.itextpdf.text.BadElementException;
@@ -29,11 +32,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import transaccion.TActivo;
 import transaccion.TCertificado;
+import transaccion.TEquipo;
 import transaccion.TParametro;
+import transaccion.TPozo;
+import transaccion.TRemito;
 import transaccion.TRubro;
 import transaccion.TSubrubro;
 
@@ -72,12 +79,18 @@ public class ActivoPdf extends BasePdf{
         PdfPTable table = new PdfPTable(3);
         Integer start = 590;
         Integer cant = 0;        
+        TRemito tr = new TRemito();
+        TPozo tp   = new TPozo();
+        TEquipo te = new TEquipo();
+        Remito remito;
+        String num_remito, pozo, equipo;
         
         for(Activo activo: this.lista ){
             String rubro = activo.getId_rubro().toString();         
             String subrubro = activo.getId_subrubro().toString();
             String estado = activo.getId_estado().toString();
             String certificado = "";
+            
             
             Rubro r = mapRubros.get(activo.getId_rubro());
             if (r!=null){
@@ -90,31 +103,57 @@ public class ActivoPdf extends BasePdf{
             OptionsCfg.Option o = mapEstados.get(activo.getId_estado());
             if(o!=null)
                 estado = o.getDescripcion();
-
-            Certificado cert = mapValidos.get(activo.getId());
-            if(cert==null) certificado = "No";
-            else { 
-                if(cert.getId_resultado()==OptionsCfg.CERTIFICADO_VENCIDO)  certificado = "Vencido";                            
-                else certificado = "Si";
+            if (r!=null && r.getAplica_certificado()==0){
+                certificado = "No aplica";
+            } else {
+                Certificado cert = mapValidos.get(activo.getId());
+                if(cert==null) certificado = "No";
+                else { 
+                    if(Objects.equals(cert.getId_resultado(), OptionsCfg.CERTIFICADO_VENCIDO))  certificado = "Vencido";                            
+                    else certificado = "Si";
+                }
             }
-            
             if(cant >= NUM_ACTIVOS){
                 newPage(document);
                 cant = 0;
                 start = 590;
             }
+            if(Objects.equals(activo.getId_estado(), OptionsCfg.ACTIVO_ESTADO_ALQUILADO) )
+                remito = tr.getByIdActivo(activo.getId(), OptionsCfg.REMITO_ENTREGA, OptionsCfg.REMITO_ESTADO_ABIERTO);
+            else remito = null;
+            
+            num_remito = "";
+            pozo  = "";
+            equipo = "";
+            if(remito!=null){
+                num_remito = remito.getNumero().toString();
+                Pozo p = tp.getById(remito.getId_pozo());                
+                Equipo e = te.getById(remito.getId_equipo());
+                pozo = p!=null?p.getNombre():"";
+                equipo = e!=null? e.getNombre():"";
+                
+            } 
+            
             /*
              * Código
              * Descripción
              * Estado
              * Stock
              * Certificado
+             * remito
+             * pozo
+             * equipo
             */
             addText(cb, 20,  start, activo.getCodigo());
-            addText(cb, 80,  start, activo.getDesc_larga());
-            addText(cb, 425, start, estado);
-            addText(cb, 490, start, String.format("%d",activo.getStock().intValue()));
-            addText(cb, 530, start, certificado);
+            addText(cb, 80,  start, activo.getDesc_larga().substring(0, Math.min(71,activo.getDesc_larga().length())));
+            
+            addText(cb, 320, start, estado);
+            addText(cb, 370, start, String.format("%d",activo.getStock().intValue()));
+            addText(cb, 400, start, certificado);
+            
+            addText(cb, 445, start, num_remito);
+            addText(cb, 490, start, pozo);
+            addText(cb, 532, start, equipo);
 
             start -= 18;
             cant++;
@@ -126,7 +165,7 @@ public class ActivoPdf extends BasePdf{
         try{
            document.newPage();
            String IMAGE = "";
-           Parametro image_url = new TParametro().getByCodigo(OptionsCfg.ACTIVO_IMAGE);
+           Parametro image_url = new TParametro().getByCodigo(OptionsCfg.ACTIVO_EXPORT_IMAGE);
            if (image_url!=null) IMAGE = image_url.getValor();
            Image image = Image.getInstance(IMAGE);
            image.scaleAbsolute(PageSize.A4);
@@ -167,10 +206,10 @@ public class ActivoPdf extends BasePdf{
         
         //new TActivo().getList();
         HashMap<String,String> mapFiltro = new HashMap<String,String>();       
-//        mapFiltro.put("id_estado","1");
+        mapFiltro.put("id_estado","2");
 //        mapFiltro.put("id_resultado",OptionsCfg.CERTIFICADO_VENCIDO.toString());
 //        mapFiltro.put("id_cliente","5");
-        mapFiltro.put("id_contrato","12");
+//        mapFiltro.put("id_contrato","12");
         
         
         List<Activo> lista = new ArrayList<Activo>();

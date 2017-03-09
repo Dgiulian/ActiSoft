@@ -19,7 +19,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">Pretickets
-                        <!--<a href="<%= PathCfg.PRETICKET_EDIT%>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a>-->
+                        <!--<a href="<%= PathCfg.PRETICKET_CREATE%>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a>-->
+                        <span class="btn btn-info" data-toggle="modal" data-target="#mdlPreticketExport"><span class="fa fa-file-excel-o fa-fw"></span> Exportar</a>
                     </h1>
                 </div>
 
@@ -35,6 +36,17 @@
                         <div class="panel-body">
                             <div class="dataTable_wrapper">
                                 <table class="table table-striped table-bordered table-hover" id="tblPreticket">
+                                     <colgroup>
+                                        <col span="1" style="width: 5%; text-align: right;"> <!-- Numero -->
+                                        <col span="1" style="width: 8%;"> <!-- Tipo -->
+                                        <col span="1" style="width: 9%;"> <!-- Fecha -->
+                                        <col span="1" style="width: 10%;text-align: center"> <!-- Cliente-->
+                                        <col span="1" style="width: 10%;"> <!-- Contrato -->
+                                        <col span="1" style="width: 7%;"> <!-- Pozo -->
+                                        <col span="1" style="width: 10%;"> <!-- Equipo -->
+                                        
+                                        <!--<col span="1" style="width: 24%;text-align: center">-->
+                                     </colgroup>
                                     <thead>
                                         <tr>
                                             <!--<th>Id</th>-->
@@ -160,13 +172,14 @@
 
             html += wrapTag('td',divisa + " " + d.total,'');
 
-            var htmlEdit = "<a href='<%= PathCfg.PRETICKET_EDIT%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-info'><span class='glyphicon glyphicon-sunglasses fw'></span></a> ";
+            var htmlEdit = "<a href='<%= PathCfg.PRETICKET_EDIT%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
+            var htmlView = "<a href='<%= PathCfg.PRETICKET_VIEW%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-info'><span class='glyphicon glyphicon-sunglasses fw'></span></a> ";
             var htmlDel = " <span data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span> ";
 //            var htmlDel = "";
             var htmlPrint = "<a target='_blank' href='<%= PathCfg.PRETICKET_PRINT%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-default'><span class='fa fa-print fw'></span></a> ";
 
 //            htmlPrint = "";
-            html +='<td  style="width:120px">' + htmlEdit  + htmlPrint + htmlDel + '</td>';
+            html +='<td  style="width:120px">' + htmlEdit  +  htmlView  +htmlPrint + htmlDel + '</td>';
            html +="</tr>";
        }
        return html;
@@ -215,6 +228,7 @@
          });
     }
      </script>
+<%@include  file="preticket_export_mdl.jsp" %>
 <%@include file="tpl_footer.jsp"%>
 </body>
 

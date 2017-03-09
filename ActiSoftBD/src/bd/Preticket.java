@@ -13,7 +13,9 @@ public class Preticket {
 	public Integer id_divisa = 0;
         public String fecha_creacion = "";
         public Integer id_usuario = 0;
-        
+        public String nro_certificado = "";
+        public String nro_factura = "";
+        public String nro_habilitacion  = "";
         public Preticket(){
             
         }
@@ -28,7 +30,10 @@ public class Preticket {
             this.observaciones = preticket.getObservaciones();
             this.total = preticket.getTotal();
             this.id_divisa = preticket.getId_divisa();
-            this.fecha_creacion  = preticket.getFecha_creacion();
+            this.fecha_creacion   = preticket.getFecha_creacion();
+            this.nro_factura      = preticket.getNro_factura();
+            this.nro_certificado  = preticket.getNro_certificado();
+            this.nro_habilitacion = preticket.getNro_habilitacion();
         }
 	public Integer getId() {
 		return this.id;
@@ -132,4 +137,28 @@ public class Preticket {
             this.id_usuario = id_usuario;
             return this;
         }
+        public String getNro_certificado() {
+        return nro_certificado;
+    }
+
+    public void setNro_certificado(String nro_certificado) {
+        this.nro_certificado = nro_certificado;
+    }
+
+    public String getNro_factura() {
+        return nro_factura;
+    }
+
+    public void setNro_factura(String nro_factura) {
+        this.nro_factura = nro_factura;
+    }
+
+    public String getNro_habilitacion() {
+        return nro_habilitacion;
+    }
+
+    public void setNro_habilitacion(String nro_habilitacion) {
+        this.nro_habilitacion = nro_habilitacion;
+    }
+    
 }

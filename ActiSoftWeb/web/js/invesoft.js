@@ -25,11 +25,23 @@ var PathCfg = {
     CLIENTE_DEL     : "ClienteDel",
     CLIENTE_SEARCH  : "ClienteSearch",
 
-    PROVEEDOR         : "Proveedor",
-    PROVEEDOR_LIST    : "ProveedorList",
-    PROVEEDOR_EDIT    : "ProveedorEdit",
-    PROVEEDOR_DEL     : "ProveedorDel",
-    PROVEEDOR_SEARCH  : "ProveedorSearch",
+    PROVEEDOR       : "Proveedor",
+    PROVEEDOR_LIST  : "ProveedorList",
+    PROVEEDOR_EDIT  : "ProveedorEdit",
+    PROVEEDOR_DEL   : "ProveedorDel",
+    PROVEEDOR_SEARCH: "ProveedorSearch",
+
+    POZO           : "Pozo",
+    POZO_LIST      : "PozoList",
+    POZO_EDIT      : "PozoEdit",
+    POZO_DEL       : "PozoDel",
+    POZO_SEARCH    : "PozoSearch",
+    
+    EQUIPO         : "Equipo",
+    EQUIPO_LIST    : "EquipoList",
+    EQUIPO_EDIT    : "EquipoEdit",
+    EQUIPO_DEL     : "EquipoDel",
+    EQUIPO_SEARCH  : "EquipoSearch",
 
     REMITO          : "Remito",
     REMITO_LIST     : "RemitoList",
@@ -90,6 +102,7 @@ var PathCfg = {
 
     PRETICKET : "Preticket",
     PRETICKET_LIST   : "PreticketList",
+    PRETICKET_CREATE   : "PreticketCreate",
     PRETICKET_EDIT   : "PreticketEdit",
     PRETICKET_DEL    : "PreticketDel",
     PRETICKET_SEARCH : "PreticketSearch",
@@ -304,8 +317,8 @@ function rubroChange(url,data,$id_subrubro) {
             }
         });
     }
-    if (loadDataActivo) loadDataActivo(data);
-    if (loadDataKit)    loadDataKit(data);
+    if (window.loadDataActivo) loadDataActivo(data);
+    if (window.loadDataKit)    loadDataKit(data);
 }
 function subrubroChange() {                       
     $id_rubro = $('#id_rubro');

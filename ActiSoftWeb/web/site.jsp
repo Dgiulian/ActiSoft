@@ -1,3 +1,7 @@
+<%@page import="transaccion.TEquipo"%>
+<%@page import="bd.Equipo"%>
+<%@page import="transaccion.TPozo"%>
+<%@page import="bd.Pozo"%>
 <%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="bd.Cliente"%>
 <%@page import="bd.Site"%>
@@ -32,6 +36,32 @@
                 </div>
             </div>
             <!-- /.row -->
+            <div class="row">
+                <input type="hidden" value="<%=cliente.getId()%>">
+               <div class="col-lg-3 " >
+                    <div class="form-group " >
+                         <label for="id_pozo">Pozo</label>
+                         <select class="form-control" name="src_pozo" id="src_pozo" >
+                             <option value="0">Todos</option>
+                             <% for(Pozo pozo: new TPozo().getList()) { %>
+                               <option value="<%=pozo.getId()%>" ><%= pozo.getNombre()%></option>
+                             <% } %>
+                         </select>
+                     </div>
+                </div>
+               <div class="col-lg-3 " >
+                    <div class="form-group " >
+                         <label for="equipo">Equipo</label>
+                         <select class="form-control" name="src_equipo" id="src_equipo" >
+                             <option value="0">Todos</option>
+                             <% for(Equipo equipo: new TEquipo().getList()) { %>
+
+                               <option value="<%=equipo.getId()%>" ><%= equipo.getNombre()%></option>
+                             <% } %>
+                         </select>
+                     </div>
+                </div>
+           </div>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
@@ -90,9 +120,19 @@
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        loadData({id_cliente:<%= cliente.getId()%>});
+        //loadData({id_cliente:<%= cliente.getId()%>});
+        filtrarSite();    
+        $('#src_pozo').change(filtrarSite);
+        $('#src_equipo').change(filtrarSite);
     });
-    function loadData(data){
+    function filtrarSite(){
+        var data = {};
+        data.id_pozo = $('#src_pozo').val();
+        data.id_equipo = $('#src_equipo').val();
+        data.id_cliente = $('#id_cliente').val();
+        loadDataSite(data);
+    }
+    function loadDataSite(data){
         var $tabla = $('#tblParametro');
         $.ajax({
                url: '<%= PathCfg.SITE_LIST %>',

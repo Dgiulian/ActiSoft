@@ -39,7 +39,7 @@ import utils.TFecha;
  *
  * @author Diego
  */
-public class PreticketEdit extends HttpServlet {
+public class PreticketCreate extends HttpServlet {
 
    
 
@@ -93,7 +93,7 @@ public class PreticketEdit extends HttpServlet {
              }
              
              request.setAttribute("detalle", det_cierre);
-             request.getRequestDispatcher("preticket_edit.jsp").forward(request, response);
+             request.getRequestDispatcher("preticket_create.jsp").forward(request, response);
         } catch (BaseException ex) {
             request.setAttribute("titulo", ex.getResult());
             request.setAttribute("mensaje",ex.getMessage());
@@ -125,6 +125,9 @@ public class PreticketEdit extends HttpServlet {
             
             String[] arrRemito_inicio = request.getParameterValues("remito_inicio");
             String[] arrFecha_inicio  = request.getParameterValues("fecha_inicio");
+            String[] arrId_remito_inicio = request.getParameterValues("id_remito_inicio");
+            String[] arrId_remito_cierre = request.getParameterValues("id_remito_cierre");
+            
             String[] arrRemito_cierre = request.getParameterValues("remito_cierre");
             String[] arrFecha_cierre  = request.getParameterValues("fecha_cierre");
             String[] arrDias          = request.getParameterValues("dias");
@@ -177,8 +180,10 @@ public class PreticketEdit extends HttpServlet {
             Integer id_divisa =0;
             for( int i=0;i<arrRemito_inicio.length;i++) {
                 Integer remito_inicio   = Parser.parseInt(arrRemito_inicio [i].trim());
+                Integer id_remito_inicio   = Parser.parseInt(arrId_remito_inicio [i].trim());
                 String fecha_inicio     = arrFecha_inicio [i].trim();
                 Integer remito_cierre   = Parser.parseInt(arrRemito_cierre [i].trim());
+                Integer id_remito_cierre   = Parser.parseInt(arrId_remito_cierre [i].trim());
                 String  fecha_cierre    = arrFecha_cierre [i].trim();
                 Integer dias            = Parser.parseInt(arrDias [i].trim());
                 Integer posicion        = Parser.parseInt(arrPosicion [i].trim());
@@ -204,8 +209,10 @@ public class PreticketEdit extends HttpServlet {
                     mapRemitos.put(remito_cierre,r_cierre);
                 }
                 pd.setRemito_inicio(remito_inicio);
+                pd.setId_remito_inicio(id_remito_inicio);
                 pd.setFecha_inicio(fecha_inicio);
                 pd.setRemito_cierre(remito_cierre);
+                pd.setId_remito_cierre(id_remito_cierre);
                 pd.setFecha_cierre(fecha_cierre);
                 pd.setDias(dias);
                 pd.setPosicion(posicion);

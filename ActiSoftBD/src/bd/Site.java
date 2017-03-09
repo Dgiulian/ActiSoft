@@ -4,11 +4,13 @@ public class Site {
 	public Integer id = 0;
 	public Integer id_cliente = 0;
 	public String nombre = "";
+	public Integer id_pozo = 0;
+	public Integer id_equipo = 1;
 	public String area = "";
 	public String pozo = "";
 	public String equipo = "";
 	public String fecha_creacion = "";
-	public Integer id_estado = 1;
+	public Integer id_estado = 0;
 	public String telefono = "";
 	public String email = "";
 	public String encargado = "";
@@ -16,6 +18,29 @@ public class Site {
 	public String observaciones = "";
 	public Float latitud = 0f;
 	public Float longitud = 0f;
+
+	public Site() {
+	}
+
+	public Site(Site site) {
+		this.id = site.getId();
+		this.id_cliente = site.getId_cliente();
+		this.nombre = site.getNombre();
+		this.id_pozo = site.getId_pozo();
+		this.id_equipo = site.getId_equipo();
+		this.area = site.getArea();
+		this.pozo = site.getPozo();
+		this.equipo = site.getEquipo();
+		this.fecha_creacion = site.getFecha_creacion();
+		this.id_estado = site.getId_estado();
+		this.telefono = site.getTelefono();
+		this.email = site.getEmail();
+		this.encargado = site.getEncargado();
+		this.horario = site.getHorario();
+		this.observaciones = site.getObservaciones();
+		this.latitud = site.getLatitud();
+		this.longitud = site.getLongitud();
+	}
 
 	public Integer getId() {
 		return this.id;
@@ -41,6 +66,24 @@ public class Site {
 
 	public Site setNombre(String nombre) {
 		this.nombre = nombre;
+		return this;
+	}
+
+	public Integer getId_pozo() {
+		return this.id_pozo;
+	}
+
+	public Site setId_pozo(Integer id_pozo) {
+		this.id_pozo = id_pozo;
+		return this;
+	}
+
+	public Integer getId_equipo() {
+		return this.id_equipo;
+	}
+
+	public Site setId_equipo(Integer id_equipo) {
+		this.id_equipo = id_equipo;
 		return this;
 	}
 
@@ -150,5 +193,21 @@ public class Site {
 	public Site setLongitud(Float longitud) {
 		this.longitud = longitud;
 		return this;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof bd.Site))
+			return false;
+		return ((bd.Site) obj).getId().equals(this.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return (int) this.id;
 	}
 }

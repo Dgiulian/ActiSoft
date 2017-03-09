@@ -41,7 +41,7 @@ public class RemitoPrint extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Remito remito = null;
-        Parametro parametro = new TParametro().getByNumero(OptionsCfg.REMITO_PATH);
+        Parametro parametro = new TParametro().getByCodigo(OptionsCfg.REMITO_PATH);
      try{
         if(request.getParameter("id")==null) throw new BaseException("Error de remito", "Debe seleccionar el remito");
             try{

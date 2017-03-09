@@ -1,3 +1,7 @@
+<%@page import="transaccion.TEquipo"%>
+<%@page import="bd.Equipo"%>
+<%@page import="bd.Pozo"%>
+<%@page import="transaccion.TPozo"%>
 <%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="bd.Cliente"%>
 <%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
@@ -21,6 +25,8 @@
         site.setLatitud(-68.041789f);
     }
     nuevo = site.getId()==0;
+    
+    List<Pozo> lstPozo = new TPozo().getList();
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -84,8 +90,8 @@
                         <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
                            <li class="active"><a href="#tab1" data-toggle="tab">Datos b&aacute;sicos</a></li>
                            <li><a href="#tab2" data-toggle="tab">Contacto</a></li>
-                           <!--<li><a href="#tab3" data-toggle="tab"></a></li>-->
-                           <!--<li><a href="#tab4" data-toggle="tab">Datos financieros</a></li>-->
+                           <!-- <li><a href="#tab3" data-toggle="tab"></a></li> -->
+                           <!-- <li><a href="#tab4" data-toggle="tab">Datos financieros</a></li> -->
                            <li><a href="#tab5" data-toggle="tab">Observaciones</a></li>
                        </ul>
 <!--                      <div class="panel-heading"> Datos b&aacute;sicos del site </div>            -->
@@ -115,18 +121,46 @@
                                 </div>
                                 <!--<div class="col-lg-12 ">-->
 
-                                <div class="col-lg-3 " >
+<!--                                <div class="col-lg-3 " >
                                      <div class="form-group " >
                                           <label for="pozo">Pozo</label>
-                                          <input class="form-control" name="pozo" id="pozo" value="<%= site.getPozo() %>">
+                                          <input class="form-control" name="pozo" id="pozo" value="<%= site.getPozo() %>" disabled>
                                       </div>
-                                 </div>
+                                 </div>-->
+                                      
+                                <div class="col-lg-3 " >
+                                     <div class="form-group " >
+                                          <label for="id_pozo">Pozo</label>
+                                          <select class="form-control" name="id_pozo" id="id_pozo" >
+                                              <option value="0"></option>
+                                              <% for(Pozo pozo: lstPozo) {
+                                                  String selected  = pozo.getId().equals(site.getId_pozo())?"selected":"";
+                                              %>
+                                                <option value="<%=pozo.getId()%>" <%=selected%>><%= pozo.getNombre()%></option>
+                                              <% } %>
+                                          </select>
+                                      </div>
+                                 </div>      
+<!--                                <div class="col-lg-3 " >
+                                     <div class="form-group " >
+                                          <label for="id_equipo">Equipo</label>
+                                          <input class="form-control" name="id_equipo" id="id_equipo" value="<%= site.getEquipo() %>" disabled>
+                                      </div>
+                                </div>-->
                                 <div class="col-lg-3 " >
                                      <div class="form-group " >
                                           <label for="equipo">Equipo</label>
-                                          <input class="form-control" name="equipo" id="equipo" value="<%= site.getEquipo() %>">
+                                          <select class="form-control" name="id_equipo" id="id_equipo" >
+                                              <option value="0"></option>
+                                              <% for(Equipo equipo: new TEquipo().getList()) {
+                                                String selected  = equipo.getId().equals(site.getId_equipo())?"selected":"";
+                                              %>
+                                              
+                                                <option value="<%=equipo.getId()%>" <%= selected %>><%= equipo.getNombre()%></option>
+                                              <% } %>
+                                          </select>
                                       </div>
-                                </div>
+                                 </div>      
                                 <div class="row" >
                                     <div class="form-group">
                                         <label for="id_estado">Activo</label>

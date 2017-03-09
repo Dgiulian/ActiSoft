@@ -43,6 +43,19 @@ public class PathCfg {
     public static final String PROVEEDOR_EDIT = PROVEEDOR + "Edit";
     public static final String PROVEEDOR_DEL  = PROVEEDOR + "Del";
     public static final String PROVEEDOR_SEARCH  = PROVEEDOR + "Search";
+   
+    public static final String POZO ="Pozo";
+    public static final String POZO_LIST = POZO + "List";
+    public static final String POZO_EDIT = POZO + "Edit";
+    public static final String POZO_DEL  = POZO + "Del";
+    public static final String POZO_SEARCH  = POZO + "Search";
+    
+    
+    public static final String EQUIPO ="Equipo";
+    public static final String EQUIPO_LIST = EQUIPO + "List";
+    public static final String EQUIPO_EDIT = EQUIPO + "Edit";
+    public static final String EQUIPO_DEL  = EQUIPO + "Del";
+    public static final String EQUIPO_SEARCH  = EQUIPO + "Search";
     
     public static final String REMITO ="Remito";
     public static final String REMITO_LIST  = REMITO + "List";
@@ -55,6 +68,7 @@ public class PathCfg {
     public static final String REMITO_UPLOAD   = REMITO + "Upload";
     public static final String REMITO_DETALLE  = REMITO + "Detalle";
     public static final String REMITO_DIARIO   = REMITO + "Diario";
+    public static final String REMITO_EXPORT   = REMITO + "Export";
     
     public static final String REMITO_CONTRATO_LIST    = REMITO + "ContratoList";
     public static final String REMITO_RELACIONADO_LIST = REMITO + "RelacionadoList";
@@ -106,10 +120,13 @@ public class PathCfg {
     
     public static final String PRETICKET = "Preticket";
     public static final String PRETICKET_LIST   = PRETICKET + "List";
+    public static final String PRETICKET_CREATE = PRETICKET + "Create";
+    public static final String PRETICKET_VIEW   = PRETICKET + "View";
     public static final String PRETICKET_EDIT   = PRETICKET + "Edit";
     public static final String PRETICKET_DEL    = PRETICKET + "Del";    
     public static final String PRETICKET_SEARCH = PRETICKET + "Search";
     public static final String PRETICKET_PRINT  = PRETICKET + "Print";
+    public static final String PRETICKET_EXPORT = PRETICKET + "Export";
    
     public static final String USUARIO        = "Usuario";
     public static final String USUARIO_LIST   = USUARIO + "List";

@@ -119,7 +119,6 @@
 <script>
     
     function loadDataActivo(data){
-        console.log("LoadDataActivo");
         var $tabla = $('#tblActivo');  
         $tabla.find('tbody').html("")
         $tabla.find('tfoot').html("");
@@ -169,7 +168,7 @@
            html +=wrapTag('td',d.desc_larga,'');
            html +=wrapTag('td',d.stock,'');
            if (d.id_estado === <%= OptionsCfg.ACTIVO_ESTADO_DISPONIBLE %> && d.certificado){
-               var htmlSelect = "<input type='checkbox' class='chkSelActivo' data-pos='" + d.c_posicion + "' data-index='"+ d.id +"' data-codigo='"+d.codigo+"' data-descripcion='" + d.desc_larga + "'" ;
+               var htmlSelect = "<input type='checkbox' class='chkSelActivo' data-pos='" + d.c_posicion + "' data-id_activo='"+ d.id +"' data-codigo='"+d.codigo+"' data-descripcion='" + d.desc_larga + "'" ;
 //            var htmlSelect = "<span data-index='"+ d.id +"' data-codigo='"+d.codigo+"' class='btn btn-xs btn-circle  btn-warning btnSelActivo'><span class='fa fa-plus fw'></span></span> ";
         }  else htmlSelect = "";
             html +=wrapTag('td',htmlSelect ,'');
@@ -222,14 +221,11 @@
            html +="<tr class=''>";
            d = data[i];
            html += wrapTag('td',d.c_posicion,'');
-//           html += wrapTag('td',d.id_rubro,'');
-//           html += wrapTag('td',d.id_subrubro,'');
            html +=wrapTag('td',d.codigo,'');
            html +=wrapTag('td',d.nombre,'');           
-//           html +=wrapTag('td',d.stock,'');
            console.log(d.id_estado,<%= OptionsCfg.KIT_ESTADO_DISPONIBLE %>);
            if (d.id_estado === <%= OptionsCfg.KIT_ESTADO_DISPONIBLE %>){
-               var htmlSelect = "<input type='checkbox' class='chkSelActivo' data-pos='" + d.c_posicion + "' data-index='"+ d.id +"' data-codigo='"+d.codigo+"' data-descripcion='" + d.nombre + "'" ;
+               var htmlSelect = "<input type='checkbox' class='chkSelActivo' data-pos='" + d.c_posicion + "' data-id_kit='"+ d.id +"' data-codigo='"+d.codigo+"' data-descripcion='" + d.nombre + "'" ;
 //            var htmlSelect = "<span data-index='"+ d.id +"' data-codigo='"+d.codigo+"' class='btn btn-xs btn-circle  btn-warning btnSelActivo'><span class='fa fa-plus fw'></span></span> ";
         }  else htmlSelect = "";
             html +=wrapTag('td',htmlSelect ,'');

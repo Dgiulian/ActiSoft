@@ -41,7 +41,7 @@ public class PreticketPrint extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Preticket preticket = null;
-        Parametro parametro = new TParametro().getByNumero(OptionsCfg.REMITO_PATH);
+        Parametro parametro = new TParametro().getByCodigo(OptionsCfg.PRETICKET_PATH);
      try{
         if(request.getParameter("id")==null) throw new BaseException("Error", "Debe seleccionar el preticket");
             try{

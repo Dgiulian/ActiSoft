@@ -62,7 +62,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
     // than the configured size threshold. We use temporary directory for
     // java
     factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
-    Parametro remito_path = new TParametro().getByNumero(OptionsCfg.REMITO_PATH);
+    Parametro remito_path = new TParametro().getByCodigo(OptionsCfg.REMITO_PATH);
     // constructs the folder where uploaded file will be stored
     String uploadFolder = null;
     if (remito_path!=null) uploadFolder = remito_path.getValor();

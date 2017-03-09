@@ -69,7 +69,7 @@
                 <!-- /.col-lg-12 -->
             </div>
             <div class="row">
-                <form action="<%= PathCfg.PRETICKET_EDIT%>?id_remito=<%= remito_cierre.getId()%>" method="POST"  role="form">
+                <form action="<%= PathCfg.PRETICKET_CREATE%>?id_remito=<%= remito_cierre.getId()%>" method="POST"  role="form">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                       <div class="panel-heading"> Datos b&aacute;sicos del preticket </div>
@@ -84,6 +84,8 @@
                                 <input type="hidden" name="id_remito" id="id_remito" value="<%= remito_cierre.getId()%>">
                                 <input type="hidden" name="id_contrato" id="id_contrato" value="<%= contrato.getId()%>">
                                 <input type="hidden" name="id_site" id="id_site" value="<%= site.getId()%>">
+                                <input type="hidden" name="id_pozo" id="id_pozo" value="<%= site.getId_pozo()%>">
+                                <input type="hidden" name="id_equipo" id="id_equipo" value="<%= site.getId_equipo()%>">
                                 <!--<div class="col-lg-12 ">-->
                                     <div class="col-lg-4 " >
                                         <div class="form-group">
@@ -199,6 +201,8 @@
                                             String fecha_cierre;
                                             Integer numero_inicio;
                                             Integer numero_cierre;
+                                            Integer id_remito_inicio;
+                                            Integer id_remito_cierre;
                                             for( Remito_contrato detalle: lstDetalle) {
                                                 /*
                                                  * El transporte se considera como cantidad uno sin considerar los días.
@@ -221,11 +225,15 @@
                                                     fecha_cierre = detalle.getRemito_fecha();
                                                     numero_cierre = detalle.getRemito_numero();
                                                     numero_inicio = detalle.getRemito_numero();
+                                                    id_remito_inicio = detalle.getId_remito();
+                                                    id_remito_cierre = detalle.getId_remito();
                                                  } else {
                                                     fecha_inicio  =  remito_inicio.getFecha();
                                                     fecha_cierre  = remito_cierre.getFecha();
-                                                    numero_cierre = remito_cierre.getNumero();
                                                     numero_inicio = remito_inicio.getNumero();
+                                                    numero_cierre = remito_cierre.getNumero();
+                                                    id_remito_inicio = remito_inicio.getId();
+                                                    id_remito_cierre = remito_cierre.getId();
                                                 }
                                          %>
                                             <%--<%@include file="preticket_detalle.jsp" %>--%>
@@ -233,6 +241,7 @@
                                                 <td >
                                                     <%=numero_inicio%>
                                                     <input type="hidden" name ="remito_inicio" value="<%= numero_inicio%>">
+                                                    <input type="hidden" name ="id_remito_inicio" value="<%= id_remito_inicio %>">
                                                 </td>
                                                 <td style="width:20px;">
                                                     <%=TFecha.formatearFechaBdVista(fecha_inicio)%>
@@ -241,6 +250,7 @@
                                                 <td>
                                                     <%= numero_cierre %>
                                                     <input type="hidden" name ="remito_cierre" value="<%= numero_cierre %>">
+                                                    <input type="hidden" name ="id_remito_cierre" value="<%= id_remito_cierre %>">
                                                 </td>
                                                 <td style="width:20px;">                                                    
                                                     <%= TFecha.formatearFechaBdVista(fecha_cierre) %>
@@ -382,6 +392,8 @@
        $('#mdlRemito').on('show.bs.modal',function(){
            var $id_remito = parseInt($('#id_remito').val());
            var data = {id_tipo:2, facturado:0,id_estado :2,exclude: $id_remito};
+           data.id_pozo = $('#id_pozo').val();
+           data.id_equipo = $('#id_equipo').val();
            loadDataRemito(data);
        })
     });
@@ -440,7 +452,9 @@
 //             var htmlSelect = "<input type='checkbox' class='chkSelActivo' data-index='" + d.id + "' data-pos='" + d.posicion + "' data-index='"+ d.id +"' data-codigo='"+d.codigo+"' data-descripcion='" + d.desc_larga + "' data-cant='"+d.cantidad+"'" ;
 //            html +=wrapTag('td',htmlSelect ,'');
             html += '<input type="hidden" name ="remito_inicio"     value="' + d.remito_inicio.numero + '">';
+            html += '<input type="hidden" name ="id_remito_inicio"     value="' + d.remito_inicio.id + '">';
             html += '<input type="hidden" name ="fecha_inicio"      value="' + d.remito_inicio.fecha.split(" ")[0] + '">';
+            html += '<input type="hidden" name ="id_remito_cierre"     value="' + d.remito_cierre.id + '">';
             html += '<input type="hidden" name ="remito_cierre"     value="' + d.remito_cierre.numero + '">';
             html += '<input type="hidden" name ="fecha_cierre"      value="' + d.remito_cierre.fecha.split(" ")[0] + '">';
             html += '<input type="hidden" name ="dias"              value="' + d.dias + '">';

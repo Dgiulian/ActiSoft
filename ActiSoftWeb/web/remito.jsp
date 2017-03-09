@@ -1,3 +1,7 @@
+<%@page import="transaccion.TEquipo"%>
+<%@page import="bd.Equipo"%>
+<%@page import="transaccion.TPozo"%>
+<%@page import="bd.Pozo"%>
 <%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
 <%@page import="utils.OptionsCfg.Option"%>
@@ -18,7 +22,9 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Remitos <a href="<%= PathCfg.REMITO_EDIT%>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a></h1>
+                    <h1 class="page-header">Remitos <a href="<%= PathCfg.REMITO_EDIT%>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a>
+                    <span class="btn btn-info" data-toggle="modal" data-target="#mdlRemitoExport"><span class="fa fa-file-excel-o fa-fw"></span> Exportar</a>
+                    </h1>
                 </div>
 
             </div>
@@ -32,7 +38,7 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="">Tipo de Remito</label>
                                         <select class="form-control" name="tipo_remito" id="tipo_remito">
@@ -44,7 +50,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="">Estado</label>
                                         <select class="form-control" name="estado_remito" id="estado_remito">
@@ -55,7 +61,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
                                     <div clas="form-group">
                                         <label for="numero">N&uacute;mero </label>
                                         <span class="input-group">
@@ -64,15 +70,50 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="col-lg-1">
+                                    <div class="form-group">
+                                        <label for="">Preticket</label>
+                                        <select class="form-control" name="facturado" id="facturado">
+                                            <option value=""> Todos</option>
+                                            <option value="1"> Si</option>
+                                            <option value="0"> No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                             <div class="col-lg-2 " >
+                                <div class="form-group " >
+                                     <label for="pozo">Pozo</label>
+                                     <select class="form-control" name="id_pozo" id="id_pozo" >
+                                         <option value="0">Todos</option>
+                                         <% for(Pozo pozo: new TPozo().getList()) { %>
+                                           <option value="<%=pozo.getId()%>" ><%= pozo.getNombre()%></option>
+                                         <% } %>
+                                     </select>
+                                 </div>
+                            </div>
+                             <div class="col-lg-2 " >
+                                     <div class="form-group " >
+                                          <label for="equipo">Equipo</label>
+                                          <select class="form-control" name="id_equipo" id="id_equipo" >
+                                              <option value="0">Todos</option>
+                                              <% for(Equipo equipo: new TEquipo().getList()) {
+                                              %>
+                                              
+                                                <option value="<%=equipo.getId()%>" ><%= equipo.getNombre()%></option>
+                                              <% } %>
+                                          </select>
+                                      </div>
+                                 </div>                
                             <div class="dataTable_wrapper">
                                 <table class="table table-striped table-bordered table-hover table-responsive" id="tblRemito">
                                     <colgroup>
-                                        <col span="1" style="width: 10%; text-align: right;"> <!-- Numero -->
-                                        <col span="1" style="width: 10%;"> <!-- Tipo -->
+                                        <col span="1" style="width: 9%; text-align: right;"> <!-- Numero -->
+                                        <col span="1" style="width: 8%;"> <!-- Tipo -->
                                         <col span="1" style="width: 9%;"> <!-- Fecha -->
                                         <col span="1" style="width: 10%;text-align: center"> <!-- Cliente-->
                                         <col span="1" style="width: 10%;"> <!-- Contrato -->
-                                        <col span="1" style="width: 12%;"> <!-- Equipo -->
+                                        <col span="1" style="width: 7%;"> <!-- Pozo -->
+                                        <col span="1" style="width: 10%;"> <!-- Equipo -->
                                         <col span="1" style="width: 9%;text-align: center">
                                         <col span="1" style="width: 8%;text-align: center">
                                         <!--<col span="1" style="width: 24%;text-align: center">-->
@@ -81,10 +122,11 @@
                                         <tr>
                                             <!--<th>Id</th>-->
                                             <th>N&uacute;mero</th>
-                                            <th>Tipo remito</th>
+                                            <th>Tipo</th>
                                             <th>Fecha</th>
                                             <th>Cliente</th>
                                             <th>Contrato</th>
+                                            <th>Pozo</th>
                                             <th>Equipo</th>
                                             <th>Preticket</th>
                                             <th>Estado</th>
@@ -142,6 +184,9 @@
 
     $('#estado_remito').change(cargarDatos);
     $('#tipo_remito').change(cargarDatos);
+    $('#facturado').change(cargarDatos);
+    $('#id_pozo').change(cargarDatos);
+    $('#id_equipo').change(cargarDatos);
     $('#mdlRemito').on('shown.bs.modal', function (e) {
         loadDataRemito({id_remito:7});
     });
@@ -170,10 +215,18 @@
         return true;
     }
     function cargarDatos(){
-        loadData({
-            id_tipo:$('#tipo_remito').val(),
-            id_estado:$('#estado_remito').val()
-        });
+        var data =recuperarDatos();
+        loadData(data);
+    }
+    function recuperarDatos(){
+        var data ={};
+        
+        data.id_tipo = $('#tipo_remito').val();
+        data.id_estado = $('#estado_remito').val();
+        data.id_pozo   = $('#id_pozo').val();
+        data.id_equipo = $('#id_equipo').val();
+        data.facturado = $('#facturado').val(); //$('#facturado').prop('checked')?1:0;
+        return data;
     }
     function loadData(data){
         var $tabla = $('#tblRemito');
@@ -236,6 +289,7 @@
             var contratoLnk = '<a href="<%= PathCfg.CONTRATO_EDIT %>?id='+d.id_contrato+ '">'+ d.contrato + '</a>';
             html += wrapTag('td',clienteLnk,'');
             html += wrapTag('td',contratoLnk,'');
+            html += wrapTag('td',d.pozo,'');
             html += wrapTag('td',d.equipo,'');
             html += wrapTag('td',d.facturado!==0?"Si":"No",'');
             
@@ -358,5 +412,6 @@
 <%@include  file="remito_upload_mdl.jsp" %>
 <%@include  file="remito_diario_mdl.jsp" %>
 <%@include  file="remito_relacionado_mdl.jsp" %>
+<%@include  file="remito_export_mdl.jsp" %>
 <%@include file="tpl_footer.jsp"%>
 </html>

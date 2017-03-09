@@ -75,6 +75,18 @@
                         </select>
                     </div>
                 </div>
+             
+          </div>    
+        <hr>
+          <div class="row">
+              <div class="col-lg-3">
+                  <div class="form-group">
+                      <label for="fecha_venc">Fecha Vencimiento</label>
+                      <input type="text" name="fecha_venc" id="fecha_venc" class="form-control date-picker" >
+                  </div>
+              </div>
+          </div>
+          <div class="row">
                  <div class="col-lg-5">
                     <div class="form-group">
                         <label class="" for="exp_reporte">Formato</label>
@@ -82,7 +94,7 @@
                         <input type="radio" name="exp_reporte" value="2">Excel
                     </div>
                 </div>        
-          </div>           
+            </div>   
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default btn-info" id="btnExportar">Exportar</button>
@@ -95,12 +107,14 @@
 <script>
     $(document).ready(function(){
        $('#btnExportar').click(exportarActivo);
+       
     });
     function exportarActivo(){
         var id_estado      = $('#exp_estado').val();
         var id_resultado   = $('#exp_resultado').val();
         var id_cliente     = $('#exp_cliente').val();
         var id_contrato    = $('#exp_contrato').val();
+        var fecha_venc     = $('#fecha_venc').val();
         var id_reporte     = $('input[name="exp_reporte"]:checked').val();
         
         var location = "<%=PathCfg.ACTIVO_EXPORT%>?id_reporte=" + id_reporte;
@@ -108,6 +122,7 @@
         location += "&id_resultado="+id_resultado;
         location += "&id_cliente="+id_cliente;
         location += "&id_contrato="+id_contrato;
+        location += "&fecha_venc="+fecha_venc;
         console.log(location);    
         window.location = location;
         

@@ -2,28 +2,59 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Proveedor;
+package Equipo;
 
-import bd.Proveedor;
+import bd.Equipo;
+import com.google.gson.Gson;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import transaccion.TProveedor;
+import transaccion.TEquipo;
 import utils.BaseException;
+import utils.JsonRespuesta;
 import utils.Parser;
-import utils.PathCfg;
 import utils.TFecha;
 
 /**
  *
  * @author Diego
  */
-public class ProveedorEdit extends HttpServlet {
+public class EquipoEdit extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP
+     * <code>GET</code> and
+     * <code>POST</code> methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        try {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet EquipoEdit</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet EquipoEdit at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        } finally {            
+            out.close();
+        }
+    }
 
     
-   
     /**
      * Handles the HTTP
      * <code>GET</code> method.
@@ -36,22 +67,22 @@ public class ProveedorEdit extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Proveedor proveedor = null;
+        Equipo equipo = null;
         if(request.getParameter("id")!=null) {
             try{
                 Integer id = Integer.parseInt(request.getParameter("id"));
-                proveedor = new TProveedor().getById(id);
+                equipo = new TEquipo().getById(id);
             } catch (NumberFormatException ex){
                 request.setAttribute("titulo", "Error");
-                request.setAttribute("mensaje","No se ha encontrado el proveedor");
+                request.setAttribute("mensaje","No se ha encontrado el equipo");
                 request.getRequestDispatcher("message.jsp").forward(request, response);
                 return;
             }            
         } 
-         if (proveedor!=null){
-                    request.setAttribute("proveedor", proveedor);
-                }
-        request.getRequestDispatcher("proveedor_edit.jsp").forward(request, response);
+         if (equipo!=null){
+            request.setAttribute("equipo", equipo);
+        }
+        request.getRequestDispatcher("equipo_edit.jsp").forward(request, response);
     }
 
     /**
@@ -66,124 +97,49 @@ public class ProveedorEdit extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Integer id;
-        String razon_social          = request.getParameter("razon_social");
-        String cuit                  = request.getParameter("cuit");
-        String dni                   = request.getParameter("dni");
-        String nombre_comercial      = request.getParameter("nombre_comercial");
-        String direccion_fisica      = request.getParameter("direccion_fisica");
-        String direccion_legal       = request.getParameter("direccion_legal");
-        String codigo_postal         = request.getParameter("codigo_postal");
-        Integer id_pais              = Parser.parseInt(request.getParameter("id_pais"));
-        Integer id_provincia         = Parser.parseInt(request.getParameter("id_provincia"));
-        Integer id_localidad         = Parser.parseInt(request.getParameter("id_localidad"));
-        String telefono              = request.getParameter("telefono");
-        String celular               = request.getParameter("celular");
-        String contacto              = request.getParameter("contacto");
-        String email                 = request.getParameter("email");
-        String observaciones         = request.getParameter("observaciones");
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        Integer id                = Parser.parseInt(request.getParameter("id"));
+        String  nombre            = request.getParameter("nombre");
+        String  descripcion       = request.getParameter("descripcion");
         
-        String id_estado             = request.getParameter("id_estado");
-        Float descuento_especial     = Parser.parseFloat(request.getParameter("descuento_especial"));
-        Float descuento_pronto_pago  = Parser.parseFloat(request.getParameter("descuento_pronto_pago"));
-        Integer id_divisa            = Parser.parseInt(request.getParameter("id_divisa"));
-        Integer id_forma_pago        = Parser.parseInt(request.getParameter("id_forma_pago"));
-        Float monto_maximo           = Parser.parseFloat(request.getParameter("monto_maximo"));
-        Integer id_iva               = Parser.parseInt(request.getParameter("id_iva"));
-        Integer id_tipo_proveedor    = Parser.parseInt(request.getParameter("id_tipo_proveedor"));
-        String banco1                = request.getParameter("banco1");
-        String cuenta1               = request.getParameter("cuenta1");
-        String banco2                = request.getParameter("banco2");
-        String cuenta2               = request.getParameter("cuenta2");
-       
-        String conductores           = request.getParameter("conductores");
-        String vehiculos             = request.getParameter("vehiculos");
-        String dominios              = request.getParameter("dominios");
-        String dni_conductor         = request.getParameter("dni_conductor");
-        String nombre_transportista  = request.getParameter("nombre_transportista");
-        String vencimiento_carnet    = TFecha.formatearFechaVistaBd(request.getParameter("vencimiento_carnet"));
-        boolean todoOk;
         
-        TProveedor tp = new TProveedor();
-        Proveedor proveedor;
-        Proveedor byCuit;
+        TEquipo tt         = new TEquipo();
+        Equipo equipo;
+        JsonRespuesta jr = new JsonRespuesta();
         boolean nuevo = false;
+        boolean todoOk = true;
         try{
 
-
-            id = Parser.parseInt(request.getParameter("id"));            
-            proveedor = tp.getById(id);
-            if (proveedor==null)  {                
-                proveedor = new Proveedor();
+            equipo = tt.getById(id);
+            
+            if ( equipo ==null){
+                equipo = new Equipo();
                 nuevo = true;
             }
-            byCuit = tp.getByCuit(cuit);
-            if(cuit!=null && !"".equals(cuit)) {
-                if(byCuit!=null && byCuit.getId()!=proveedor.getId()){
-                    throw new BaseException("ERROR","Ya existe un proveedor con ese C.U.I.T");
-                }
-            }
-            proveedor.setRazon_social(razon_social);
-            proveedor.setCuit(cuit);
-            proveedor.setDni(dni);
-            proveedor.setNombre_comercial(nombre_comercial);
-            proveedor.setDireccion_fisica(direccion_fisica);
-            proveedor.setDireccion_legal(direccion_legal);
-            proveedor.setCodigo_postal(codigo_postal);
-            proveedor.setId_pais(id_pais);
-            proveedor.setId_provincia(id_provincia);
-            proveedor.setId_localidad(id_localidad);
-            proveedor.setTelefono(telefono);
-            proveedor.setCelular(celular);
-            proveedor.setContacto(contacto);
-            proveedor.setEmail(email);
-            proveedor.setObservaciones(observaciones);
-            if(id_estado!=null)
-                proveedor.setId_estado(1);
-            else proveedor.setId_estado(0);
-            proveedor.setDescuento_especial(descuento_especial);
-            proveedor.setDescuento_pronto_pago(descuento_pronto_pago);
-            proveedor.setId_divisa(id_divisa);
-            proveedor.setId_forma_pago(id_forma_pago);
-            proveedor.setMonto_maximo(monto_maximo);
-            proveedor.setId_iva(id_iva);
-            proveedor.setId_tipo_proveedor(id_tipo_proveedor);
-            proveedor.setBanco1(banco1);
-            proveedor.setCuenta1(cuenta1);
-            proveedor.setBanco2(banco2);
-            proveedor.setCuenta2(cuenta2);
-            proveedor.setConductores(conductores);
-            proveedor.setVehiculos(vehiculos);
-            proveedor.setDominios(dominios);
-            proveedor.setDni_conductor(dni_conductor);
-            proveedor.setNombre_transportista(nombre_transportista);
-            if(vencimiento_carnet!=null && !"".equals(vencimiento_carnet))
-                proveedor.setVencimiento_carnet(vencimiento_carnet);
-            else proveedor.setVencimiento_carnet("2099-12-31");
             
-            proveedor.setDni_conductor(dni_conductor);
-            if(nuevo) proveedor.setFecha_alta(TFecha.ahora(TFecha.formatoBD ));
-            if (!request.getParameter("id_provincia").equals(""))
-                proveedor.setId_provincia(Integer.parseInt(request.getParameter("id_provincia")));
-            if (!request.getParameter("id_localidad").equals(""))
-                proveedor.setId_localidad(Integer.parseInt(request.getParameter("id_localidad")));
-
+            equipo.setNombre(nombre);
+            equipo.setDescripcion(descripcion);
+          
             if(nuevo){
-                id = tp.alta(proveedor);
+                id = tt.alta(equipo);
                 todoOk = id!=0;
-            } else {
-                todoOk = tp.actualizar(proveedor);                
-            }        
-            if(!todoOk) 
-                throw new BaseException("Error", "Ocurrio un error al guardar el proveedor");            
-        
+            }else{
+                todoOk = tt.actualizar(equipo);
+            }
+            if(todoOk) {
+                equipo.setId(id);
+                jr.setResult("OK");
+                jr.setRecord(equipo); 
+            } else throw new BaseException("ERROR","Ocurri&oacute; un error al guardar el equipo");
+            
+        } catch (BaseException ex){
+            jr.setMessage(ex.getMessage());
+            jr.setResult(ex.getResult());
+        }finally{            
+            out.print(new Gson().toJson(jr));
+            out.close();
         }
-        catch(BaseException ex){
-            request.setAttribute("titulo",ex.getResult());
-            request.setAttribute("mensaje", ex.getMessage());
-            request.getRequestDispatcher("message.jsp").forward(request, response);
-        }
-        response.sendRedirect(PathCfg.PROVEEDOR);
     }
 
     /**

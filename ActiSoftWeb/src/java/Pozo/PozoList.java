@@ -2,10 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Proveedor;
+package Pozo;
 
-import bd.Localidad;
-import bd.Proveedor;
+import bd.Pozo;
 import bd.Provincia;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -13,51 +12,39 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import transaccion.TLocalidad;
-import transaccion.TProveedor;
-import transaccion.TProvincia;
+import transaccion.TPozo;
 import utils.JsonRespuesta;
 
 /**
  *
  * @author Diego
  */
-public class ProveedorList extends HttpServlet {
+public class PozoList extends HttpServlet {
 
-    List<Provincia> lstProvincias;
-    
-    Map<Integer,Provincia> mapProvincias;
-    Map<Integer,Localidad> mapLocalidades ;
-    
+   
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String pagNro = request.getParameter("pagNro");
-        String razon_social = request.getParameter("razon_social");
-        String contacto = request.getParameter("contacto");
-        
-        mapProvincias = new TProvincia().getMap();
-        mapLocalidades = new TLocalidad().getMap();
-        
+        String nombre = request.getParameter("nombre");
+       
         Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
          
         try {
             JsonRespuesta jr = new JsonRespuesta();           
             HashMap<String,String> mapFiltro = new HashMap<String,String>();
-            if(razon_social!=null&&!"".equals(razon_social)) mapFiltro.put("razon_social",razon_social);
-            if(contacto!=null && !"".equals(contacto)) mapFiltro.put("contacto",contacto);
-            TProveedor tp = new TProveedor(); 
-            tp.setOrderBy("razon_social");
-            List<Proveedor> lista = tp.getListFiltro(mapFiltro);
+//            if(nombre!=null && !"".equals(nombre)) mapFiltro.put("nombre",nombre);
+            TPozo tp = new TPozo(); 
+//            tp.setOrderBy("nombre");
+            List<Pozo> lista = tp.getListFiltro(mapFiltro);
             
-            List<ProveedorDet> listaDet = new ArrayList();            
-            for(Proveedor c:lista) listaDet.add(new ProveedorDet(c));
+            List<PozoDet> listaDet = new ArrayList();            
+            for(Pozo c:lista) listaDet.add(new PozoDet(c));
             
             if (lista != null) {
                 jr.setTotalRecordCount(listaDet.size());
@@ -72,17 +59,9 @@ public class ProveedorList extends HttpServlet {
             out.close();
         }
     }
- class ProveedorDet extends Proveedor{
-     String provincia = "";
-     String localidad = "";
-     public ProveedorDet(Proveedor proveedor){
-         super(proveedor);  
-         Provincia p = mapProvincias.get(proveedor.getId_provincia());
-         if (p!=null)
-            this.provincia = p.getProv_descripcion();
-         Localidad l = mapLocalidades.get(proveedor.getId_localidad());
-         if(l!=null)
-             this.localidad = l.getLoc_descripcion();
+ class PozoDet extends Pozo{
+     public PozoDet(Pozo pozo){
+         super(pozo);  
      }
  }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

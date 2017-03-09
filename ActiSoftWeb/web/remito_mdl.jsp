@@ -37,8 +37,10 @@
                             <col span="1" style="width: 13%;"> <!-- Tipo -->
                             <col span="1" style="width: 10%;"> <!-- Fecha -->
                             <col span="1" style="text-align: center"> <!-- Cliente-->
-                            <col span="1" style="width: 12%;"> <!-- Contrato -->
-                            <col span="1" style="width: 11%;text-align: center">
+                            <col span="1" style="width: 10%;"> <!-- Contrato -->
+                            <col span="1" style="width: 10%;"> <!-- Contrato -->
+                            <col span="1" style="width: 10%;"> <!-- Contrato -->
+                            <col span="1" style="width: 6%;text-align: center">
                             <col span="1" style="width: 3%;text-align: center">
                             <!--<col span="1" style="width: 24%;text-align: center">-->
                          </colgroup>
@@ -50,6 +52,8 @@
                                 <th>Fecha</th>
                                 <th>Cliente</th>
                                 <th>Contrato</th>
+                                <th>Pozo</th>
+                                <th>Equipo</th>
                                 <th>Preticket</th>
                                 <th>Estado</th>
                                 <th></th>
@@ -118,6 +122,8 @@
             html += wrapTag('td',convertirFecha(d.fecha),'');
             html += wrapTag('td',d.cliente,'');
             html += wrapTag('td',d.contrato,'');
+            html += wrapTag('td',d.pozo,'');
+            html += wrapTag('td',d.equipo,'');
             html += wrapTag('td',d.facturado!==0?"Si":"No",'');
             html += wrapTag('td',d.estado,'');
              var htmlSelect = "<input type='checkbox' class='chkSelActivo' data-index='" + d.id + "' data-pos='" + d.posicion + "' data-index='"+ d.id +"' data-codigo='"+d.codigo+"' data-descripcion='" + d.desc_larga + "' data-cant='"+d.cantidad+"'" ;

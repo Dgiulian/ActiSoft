@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Proveedor;
+package Equipo;
 
 import bd.Localidad;
-import bd.Proveedor;
+import bd.Equipo;
 import bd.Provincia;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TLocalidad;
-import transaccion.TProveedor;
+import transaccion.TEquipo;
 import transaccion.TProvincia;
 import utils.JsonRespuesta;
 
@@ -27,13 +27,10 @@ import utils.JsonRespuesta;
  *
  * @author Diego
  */
-public class ProveedorList extends HttpServlet {
+public class EquipoList extends HttpServlet {
 
     List<Provincia> lstProvincias;
-    
-    Map<Integer,Provincia> mapProvincias;
-    Map<Integer,Localidad> mapLocalidades ;
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
@@ -42,22 +39,19 @@ public class ProveedorList extends HttpServlet {
         String razon_social = request.getParameter("razon_social");
         String contacto = request.getParameter("contacto");
         
-        mapProvincias = new TProvincia().getMap();
-        mapLocalidades = new TLocalidad().getMap();
-        
         Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
          
         try {
             JsonRespuesta jr = new JsonRespuesta();           
             HashMap<String,String> mapFiltro = new HashMap<String,String>();
-            if(razon_social!=null&&!"".equals(razon_social)) mapFiltro.put("razon_social",razon_social);
-            if(contacto!=null && !"".equals(contacto)) mapFiltro.put("contacto",contacto);
-            TProveedor tp = new TProveedor(); 
-            tp.setOrderBy("razon_social");
-            List<Proveedor> lista = tp.getListFiltro(mapFiltro);
+//            if(razon_social!=null&&!"".equals(razon_social)) mapFiltro.put("razon_social",razon_social);
+//            if(contacto!=null && !"".equals(contacto)) mapFiltro.put("contacto",contacto);
+            TEquipo tp = new TEquipo(); 
+//            tp.setOrderBy("razon_social");
+            List<Equipo> lista = tp.getListFiltro(mapFiltro);
             
-            List<ProveedorDet> listaDet = new ArrayList();            
-            for(Proveedor c:lista) listaDet.add(new ProveedorDet(c));
+            List<EquipoDet> listaDet = new ArrayList();            
+            for(Equipo c:lista) listaDet.add(new EquipoDet(c));
             
             if (lista != null) {
                 jr.setTotalRecordCount(listaDet.size());
@@ -72,17 +66,9 @@ public class ProveedorList extends HttpServlet {
             out.close();
         }
     }
- class ProveedorDet extends Proveedor{
-     String provincia = "";
-     String localidad = "";
-     public ProveedorDet(Proveedor proveedor){
-         super(proveedor);  
-         Provincia p = mapProvincias.get(proveedor.getId_provincia());
-         if (p!=null)
-            this.provincia = p.getProv_descripcion();
-         Localidad l = mapLocalidades.get(proveedor.getId_localidad());
-         if(l!=null)
-             this.localidad = l.getLoc_descripcion();
+ class EquipoDet extends Equipo{
+     public EquipoDet(Equipo equipo){
+         super(equipo);  
      }
  }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

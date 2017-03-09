@@ -31,6 +31,7 @@ import utils.BaseException;
 import utils.JsonRespuesta;
 import utils.OptionsCfg;
 import utils.Parser;
+import utils.TFecha;
 
 /**
  *
@@ -60,9 +61,13 @@ public class ActivoExport extends HttpServlet {
             Integer id_cliente   = Parser.parseInt(request.getParameter("id_cliente"));
             Integer id_contrato  = Parser.parseInt(request.getParameter("id_contrato"));
             Integer id_reporte   = Parser.parseInt(request.getParameter("id_reporte"));
+            String  fecha_venc   = TFecha.formatearFechaVistaBd(request.getParameter("fecha_venc"));
             
             HashMap<String,String> mapFiltro = new HashMap<String,String>();
             HashMap<String,String> filtros   = new HashMap<String,String>();
+            List<Activo> lista;
+            TActivo ta = new TActivo();
+            
             if (id_estado!=0) {
                 mapFiltro.put("id_estado",id_estado.toString());
                 HashMap<Integer, OptionsCfg.Option> mapEstados = OptionsCfg.getMap( OptionsCfg.getEstadoActivo());
@@ -87,7 +92,11 @@ public class ActivoExport extends HttpServlet {
                 filtros.put("Contrato",contrato.getNumero());                
             } else filtros.put("Contrato","Todos");
             
-            List<Activo> lista = new TActivo().getListaExport(mapFiltro);
+            if(fecha_venc !=null && !"".equals(fecha_venc)){
+                mapFiltro.put("fecha_hasta",fecha_venc);
+                lista = ta.getListaVencimiento(mapFiltro);
+            } else lista = ta.getListaExport(mapFiltro);
+            
             if (lista==null) throw new BaseException("ERROR","Ocurrió un error al recuperar los activos");
             Parametro parametro = new TParametro().getByCodigo(OptionsCfg.EXPORT_PATH);
             

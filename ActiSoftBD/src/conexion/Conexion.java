@@ -64,8 +64,8 @@ public class Conexion {
             
            /* Local con base local */
             String host = "127.0.0.1";
-            String port = ":3307";            
-            String nombrebd = "/actisoft";
+            String port = ":3306";
+            String nombrebd = "/actisoft_desa";
             String usr = "actisoft";
             String password = "4ct1soft";
 

@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Proveedor;
+package Pozo;
 
-import bd.Proveedor;
+import bd.Pozo;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,7 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import transaccion.TProveedor;
+import transaccion.TPozo;
 import utils.BaseException;
 import utils.JsonRespuesta;
 
@@ -20,7 +20,7 @@ import utils.JsonRespuesta;
  *
  * @author Diego
  */
-public class ProveedorDel extends HttpServlet {
+public class PozoDel extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -41,10 +41,10 @@ public class ProveedorDel extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProveedorDel</title>");            
+            out.println("<title>Servlet PozoDel</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ProveedorDel at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet PozoDel at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         } finally {            
@@ -85,10 +85,10 @@ public class ProveedorDel extends HttpServlet {
         JsonRespuesta jr = new JsonRespuesta();
         try {           
            Integer id = Integer.parseInt(request.getParameter("id"));
-           Proveedor proveedor = new TProveedor().getById(id);            
-           if (proveedor==null) throw new BaseException("ERROR","No existe el registro");
+           Pozo pozo = new TPozo().getById(id);            
+           if (pozo==null) throw new BaseException("ERROR","No existe el registro");
            
-           boolean baja = new TProveedor().baja(proveedor);
+           boolean baja = new TPozo().baja(pozo);
            if ( baja){
                jr.setResult("OK");               
            } else throw new BaseException("ERROR","Ocurrio un error al eliminar el registro");                     

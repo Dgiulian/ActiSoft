@@ -46,9 +46,10 @@ public class OptionsCfg {
     public static final Integer CERTIFICADO_VENCIDO = 4;
 
     public static final String  CERTIFICADO_PATH = "fileDir";
-    public static final Integer REMITO_PATH = 2;
+    public static final String  REMITO_PATH = "remito_dir";
     public static final String  EXPORT_PATH = "export_dir";
-    
+    public static final String  PRETICKET_PATH = "preticket_dir";
+
     public static final Integer ACTIVO_PATH = 3;
     public static final Integer ACTIVO_URL = 4;
     public static final String  COMPRA_PATH = "compra_path";
@@ -56,9 +57,12 @@ public class OptionsCfg {
     public static final Integer PRETICKET_IMAGE = 5;
     public static final String  ETIQUETA_IMAGE  = "fondo_etiqueta";
     public static final String  REMITO_IMAGE    = "fondo_remito";
-    public static final String  ACTIVO_IMAGE    = "fondo_activo";
-    public static final String  HABILITACION_PATH = "habilitacion_path";
-    public static final String  LOGO_IMAGE    = "logo_image";
+    
+    public static final String  ACTIVO_EXPORT_IMAGE     = "fondo_activo";
+    public static final String  REMITO_EXPORT_IMAGE     = "fondo_remito_export";
+    public static final String  PRETICKET_EXPORT_IMAGE  = "fondo_preticket_export";
+    public static final String  HABILITACION_PATH    = "habilitacion_path";
+    public static final String  LOGO_IMAGE           = "logo_image";
     
     
     public static final Integer UNIDAD_DIAS = 1;
@@ -124,6 +128,7 @@ public class OptionsCfg {
     public static final Integer RUBRO_TRANSPORTE  = 14;
 //    public static final Integer KIT_HISTORIA_ALTA  = 1;
 //    public static final Integer KIT_HISTORIA_BAJA  = 2;
+    
     
     public static ArrayList<Option> getTipoRemitos(){
         ArrayList<Option> lista = new ArrayList();

@@ -4,11 +4,13 @@
  */
 package utils;
 
-import bd.Activo;
+import bd.Remito;
 import bd.Certificado;
+import bd.Cliente;
+import bd.Contrato;
 import bd.Parametro;
-import bd.Rubro;
-import bd.Subrubro;
+import bd.Pozo;
+import bd.Equipo;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -31,30 +33,32 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import transaccion.TActivo;
+import transaccion.TRemito;
 import transaccion.TCertificado;
+import transaccion.TCliente;
+import transaccion.TContrato;
 import transaccion.TParametro;
-import transaccion.TRubro;
-import transaccion.TSubrubro;
+import transaccion.TPozo;
+import transaccion.TEquipo;
 
 /**
  *
  * @author Diego
  */
-public class ActivoPdf extends BasePdf{
-    List<Activo> lista ;
+public class RemitoExportPdf extends BasePdf{
+    List<Remito> lista ;
     private Integer hoja = 0;
     private Integer num_hojas = 0;
     private HashMap<String,String> filtros;
-    private final Integer NUM_ACTIVOS = 32;
-    public ActivoPdf(List<Activo> lista){
+    private final Integer NUM_REMITOS = 32;
+    public RemitoExportPdf(List<Remito> lista){
         this.lista = lista;
-        this.num_hojas = (this.lista.size() / NUM_ACTIVOS) + 1 ;
+        this.num_hojas = (this.lista.size() / NUM_REMITOS) + 1 ;
         this.filtros = new HashMap<String,String>();        
     }
-     public ActivoPdf(List<Activo> lista,HashMap filtros){
+     public RemitoExportPdf(List<Remito> lista,HashMap<String,String> filtros){
         this.lista = lista;
-        this.num_hojas = (this.lista.size() / NUM_ACTIVOS) + 1;
+        this.num_hojas = (this.lista.size() / NUM_REMITOS) + 1;
         this.filtros = filtros;        
     }
     
@@ -64,57 +68,75 @@ public class ActivoPdf extends BasePdf{
         newPage(document);
         
         PdfContentByte cb = docWriter.getDirectContent();        
-        HashMap<Integer, Rubro> mapRubros        = new TRubro().getMap();
-        HashMap<Integer, Subrubro> mapSubrubros  = new TSubrubro().getMap();
-        HashMap<Integer, Certificado> mapValidos = new TCertificado().getMapValidos();
-        HashMap<Integer, OptionsCfg.Option> mapEstados = OptionsCfg.getMap( OptionsCfg.getEstadoActivo());
+        HashMap<Integer, Pozo>         mapPozos = new TPozo().getMap();
+        HashMap<Integer, Equipo>     mapEquipos = new TEquipo().getMap();
+        HashMap<Integer, Cliente>   mapClientes = new TCliente().getMap();
+        HashMap<Integer, Contrato> mapContratos = new TContrato().getMap();
+        
+        HashMap<Integer, OptionsCfg.Option> mapEstados = OptionsCfg.getMap( OptionsCfg.getEstadoRemitos());
+        HashMap<Integer, OptionsCfg.Option> mapTipos = OptionsCfg.getMap( OptionsCfg.getTipoRemitos());
         
         PdfPTable table = new PdfPTable(3);
         Integer start = 590;
         Integer cant = 0;        
         
-        for(Activo activo: this.lista ){
-            String rubro = activo.getId_rubro().toString();         
-            String subrubro = activo.getId_subrubro().toString();
-            String estado = activo.getId_estado().toString();
-            String certificado = "";
+        for(Remito remito: this.lista ){
+            String pozo = "",
+                 equipo = "",
+                 estado = "",
+                cliente = "",
+               contrato = "",
+                   tipo = "",
+              preticket = "";
             
-            Rubro r = mapRubros.get(activo.getId_rubro());
-            if (r!=null){
-                rubro = r.getDescripcion();
-
+            Pozo p = mapPozos.get(remito.getId_pozo());
+            if (p!=null){
+                pozo = p.getNombre();
             }
-            Subrubro s = mapSubrubros.get(activo.getId_subrubro());       
-            if (s!=null) {subrubro = s.getDescripcion();};
+            Equipo e = mapEquipos.get(remito.getId_equipo());       
+            if (e!=null) { equipo = e.getNombre(); };
+            
+            Cliente cli = mapClientes.get(remito.getId_cliente());       
+            if (cli!=null) { cliente = cli.getNombre(); };
+            
+            Contrato c = mapContratos.get(remito.getId_contrato());       
+            if (c!=null) { contrato = c.getNumero(); };
 
-            OptionsCfg.Option o = mapEstados.get(activo.getId_estado());
+            OptionsCfg.Option o = mapEstados.get(remito.getId_estado());
+            
             if(o!=null)
                 estado = o.getDescripcion();
 
-            Certificado cert = mapValidos.get(activo.getId());
-            if(cert==null) certificado = "No";
-            else { 
-                if(cert.getId_resultado()==OptionsCfg.CERTIFICADO_VENCIDO)  certificado = "Vencido";                            
-                else certificado = "Si";
-            }
+            o = mapTipos.get(remito.getId_tipo_remito());
+            if(o!=null)
+                tipo = o.getDescripcion();
             
-            if(cant >= NUM_ACTIVOS){
+            preticket = remito.getFacturado()==1?"Si":"No";
+
+            if(cant >= NUM_REMITOS){
                 newPage(document);
                 cant = 0;
                 start = 590;
             }
-            /*
-             * Código
-             * Descripción
-             * Estado
-             * Stock
-             * Certificado
-            */
-            addText(cb, 20,  start, activo.getCodigo());
-            addText(cb, 80,  start, activo.getDesc_larga());
-            addText(cb, 425, start, estado);
-            addText(cb, 490, start, String.format("%d",activo.getStock().intValue()));
-            addText(cb, 530, start, certificado);
+           /*
+                Numero
+                Tipo remito
+                Fecha
+                Cliente
+                Contrato
+                Equipo
+                Preticket
+                Estado
+                */
+            addText(cb, 20,  start, remito.getNumero().toString());
+            addText(cb, 80,  start, tipo);
+            addText(cb, 140,  start, TFecha.formatearFechaBdVista(remito.getFecha()));
+            addText(cb, 220,  start, cliente);
+            addText(cb, 270,  start, contrato);
+            addText(cb, 340,  start, pozo);
+            addText(cb, 410,  start, equipo);            
+            addText(cb, 470,  start, estado);
+            addText(cb, 545,  start, preticket);
 
             start -= 18;
             cant++;
@@ -126,7 +148,7 @@ public class ActivoPdf extends BasePdf{
         try{
            document.newPage();
            String IMAGE = "";
-           Parametro image_url = new TParametro().getByCodigo(OptionsCfg.ACTIVO_IMAGE);
+           Parametro image_url = new TParametro().getByCodigo(OptionsCfg.REMITO_EXPORT_IMAGE);
            if (image_url!=null) IMAGE = image_url.getValor();
            Image image = Image.getInstance(IMAGE);
            image.scaleAbsolute(PageSize.A4);
@@ -165,7 +187,7 @@ public class ActivoPdf extends BasePdf{
     public static void main(String[ ] args){
         
         
-        //new TActivo().getList();
+        //new TRemito().getList();
         HashMap<String,String> mapFiltro = new HashMap<String,String>();       
 //        mapFiltro.put("id_estado","1");
 //        mapFiltro.put("id_resultado",OptionsCfg.CERTIFICADO_VENCIDO.toString());
@@ -173,12 +195,12 @@ public class ActivoPdf extends BasePdf{
         mapFiltro.put("id_contrato","12");
         
         
-        List<Activo> lista = new ArrayList<Activo>();
-        lista = new TActivo().getListaExport(mapFiltro);
+        List<Remito> lista = new ArrayList<Remito>();
+        lista = new TRemito().getListaExport(mapFiltro);
         Parametro parametro = new TParametro().getByCodigo(OptionsCfg.EXPORT_PATH);
             
         boolean generado = false;
-        String fileName  = "activos.pdf";
+        String fileName  = "remitos.pdf";
         String filePath  = parametro.getValor() + File.separator + fileName;
         System.out.println(filePath);
         System.out.println(lista.size());
@@ -189,8 +211,8 @@ public class ActivoPdf extends BasePdf{
         //mapFiltro.put("Contrato","Si");
         
         
-        ActivoPdf activoPdf = new ActivoPdf(lista,mapFiltro);
-        activoPdf.createPdf(filePath);
-        activoPdf.abrir(filePath);
+        RemitoExportPdf remitoPdf = new RemitoExportPdf(lista,mapFiltro);
+        remitoPdf.createPdf(filePath);
+        remitoPdf.abrir(filePath);
     }
 }

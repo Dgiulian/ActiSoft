@@ -9,9 +9,11 @@ import bd.Certificado;
 import bd.Cliente;
 import bd.Contrato;
 import bd.Contrato_detalle;
+import bd.Equipo;
 import bd.Kit;
 import bd.Kit_detalle;
 import bd.Parametro;
+import bd.Pozo;
 import bd.Remito;
 import bd.Remito_detalle;
 import bd.Remito_detalle_view;
@@ -40,9 +42,11 @@ import transaccion.TCertificado;
 import transaccion.TCliente;
 import transaccion.TContrato;
 import transaccion.TContrato_detalle;
+import transaccion.TEquipo;
 import transaccion.TKit;
 import transaccion.TKit_detalle;
 import transaccion.TParametro;
+import transaccion.TPozo;
 import transaccion.TRemito;
 import transaccion.TRemito_detalle;
 import transaccion.TRemito_detalle_view;
@@ -293,10 +297,15 @@ public class RemitoPdf extends BasePdf {
      public void printSite(PdfContentByte cb,Integer start){
          //start = 636;
         Integer lineHeight = 13;
+         Pozo p = new TPozo().getById(this.remito.getId_pozo());
+         Equipo e = new TEquipo().getById(this.remito.getId_equipo());
+        String pozo = p!=null?p.getNombre():site.getPozo();
+        String equipo = e!=null?e.getNombre():site.getEquipo();
+        
         if(this.site!=null){
              addText(cb,345,start,site.getArea());
-             addText(cb,345,start - lineHeight,site.getPozo());
-             addText(cb,480,start - lineHeight,site.getEquipo());
+             addText(cb,345,start - lineHeight,pozo);
+             addText(cb,480,start - lineHeight,equipo);
         }
      }
      private void printFooter(PdfContentByte cb,Integer start){

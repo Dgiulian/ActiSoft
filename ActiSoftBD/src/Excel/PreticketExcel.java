@@ -4,9 +4,13 @@
  */
 package Excel;
 
-import bd.Activo;
+import bd.Preticket;
 import bd.Certificado;
+import bd.Cliente;
+import bd.Contrato;
+import bd.Equipo;
 import bd.Parametro;
+import bd.Pozo;
 import bd.Rubro;
 import bd.Subrubro;
 import java.io.File;
@@ -21,9 +25,13 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 
 import org.apache.poi.ss.util.CellRangeAddress;
-import transaccion.TActivo;
+import transaccion.TPreticket;
 import transaccion.TCertificado;
+import transaccion.TCliente;
+import transaccion.TContrato;
+import transaccion.TEquipo;
 import transaccion.TParametro;
+import transaccion.TPozo;
 import transaccion.TRubro;
 import transaccion.TSubrubro;
 import utils.OptionsCfg;
@@ -33,19 +41,19 @@ import utils.TFecha;
  *
  * @author Diego
  */
-public class ActivoExcel extends BaseExcel<bd.Activo> {
-    private List<Activo> lista ;   
+public class PreticketExcel extends BaseExcel<bd.Preticket> {
+    private List<Preticket> lista ;   
     private HashMap<String,String> filtros;
     
-    public ActivoExcel(String sheetname){
+    public PreticketExcel(String sheetname){
         super(sheetname);
     }
-     public ActivoExcel(String sheetname, List<Activo> lista){
+     public PreticketExcel(String sheetname, List<Preticket> lista){
         super(sheetname);    
         this.lista = lista;        
         this.filtros = new HashMap<String,String>();
     }
-    public ActivoExcel(String sheetname, List<Activo> lista,HashMap filtros){
+    public PreticketExcel(String sheetname, List<Preticket> lista,HashMap filtros){
         super(sheetname);    
         this.lista = lista;        
         this.filtros = filtros;        
@@ -55,61 +63,54 @@ public class ActivoExcel extends BaseExcel<bd.Activo> {
         return this.createExcel(filename,this.lista);
     }
     public boolean createExcel(String filename, Integer pageNro) {
-        List<Activo> list = new TActivo().getList(pageNro, 10);
+        List<Preticket> list = new TPreticket().getList();
         return this.createExcel(filename,list);
     }
     @Override
-    public boolean createExcel(String filename, List<Activo> lista){
-        HashMap<Integer, Rubro> mapRubros        = new TRubro().getMap();
-        HashMap<Integer, Subrubro> mapSubrubros  = new TSubrubro().getMap();
-        HashMap<Integer, Certificado> mapValidos = new TCertificado().getMapValidos();
-        HashMap<Integer, OptionsCfg.Option> mapEstados = OptionsCfg.getMap( OptionsCfg.getEstadoActivo());
+    public boolean createExcel(String filename, List<Preticket> lista){
         
+        HashMap<Integer, Pozo>         mapPozos = new TPozo().getMap();
+        HashMap<Integer, Equipo>     mapEquipos = new TEquipo().getMap();
+        HashMap<Integer, Cliente>   mapClientes = new TCliente().getMap();
+        HashMap<Integer, Contrato> mapContratos = new TContrato().getMap();
+
+             
         this.estilo = setStyleBoldCenter();
         createHeader();
         Short rowIndex = new Integer(filtros.size() + 2).shortValue();
         this.estilo = estiloBase;
         Integer i = 1;
-        for(Activo activo: lista ){
-            String rubro = activo.getId_rubro().toString();         
-            String subrubro = activo.getId_subrubro().toString();
-            String estado = activo.getId_estado().toString();
-            String certificado = "";
+        for(Preticket preticket: lista ){
+            String cliente = "",
+                  contrato = "",
+                      tipo = "";
             
-            Rubro r = mapRubros.get(activo.getId_rubro());
-            if (r!=null){
-                rubro = r.getDescripcion();
+            
+            Cliente cli = mapClientes.get(preticket.getId_cliente());       
+            if (cli!=null) { cliente = cli.getNombre(); };
+            
+            Contrato c = mapContratos.get(preticket.getId_contrato());       
+            if (c!=null) { contrato = c.getNumero(); };
 
-            }
-            Subrubro s = mapSubrubros.get(activo.getId_subrubro());       
-            if (s!=null) {subrubro = s.getDescripcion();};
-
-            OptionsCfg.Option o = mapEstados.get(activo.getId_estado());
-            if(o!=null)
-                estado = o.getDescripcion();
-
-            Certificado cert = mapValidos.get(activo.getId());
-            if(cert==null) certificado = "No";
-            else { 
-                if(cert.getId_resultado()==OptionsCfg.CERTIFICADO_VENCIDO)  certificado = "Vencido";                            
-                else certificado = "Si";
-            }
+            
             sheet.createRow(rowIndex);
             i= 0;
-            
-            
-            createCell(rowIndex,i++, activo.getCodigo());
-            createCell(rowIndex,i++, activo.getDesc_larga());
-            createCell(rowIndex,i++, estado);
-            createCell(rowIndex,i++, String.format("%d",activo.getStock().intValue()));
-            createCell(rowIndex,i++, certificado);
+        createCell(rowIndex,i++, preticket.getNumero().toString());
+        createCell(rowIndex,i++, tipo);
+        createCell(rowIndex,i++, TFecha.formatearFechaBdVista(preticket.getFecha()));
+        createCell(rowIndex,i++, cliente);
+        createCell(rowIndex,i++, contrato);
+        createCell(rowIndex,i++, preticket.getNro_certificado());
+        createCell(rowIndex,i++, preticket.getNro_habilitacion());
+        createCell(rowIndex,i++, preticket.getNro_factura());
+        createCell(rowIndex,i++, preticket.getTotal().toString());
             rowIndex++;
         }
         sheet.autoSizeColumn(1);
         return save(filename);
     }
 
- public boolean createExcel(String filename, List<Activo> lista,HashMap filtros){
+ public boolean createExcel(String filename, List<Preticket> lista,HashMap filtros){
         this.lista = lista;        
         this.filtros = filtros;     
         return createExcel(filename,lista);
@@ -132,11 +133,15 @@ public class ActivoExcel extends BaseExcel<bd.Activo> {
         rowIndex++;
         Integer i = 0;
         sheet.createRow(rowIndex);       
-        createCell(rowIndex,i++,"Código");
-        createCell(rowIndex,i++,"Descripcion");        
-        createCell(rowIndex,i++,"Estado");
-        createCell(rowIndex,i++,"Stock");
-        createCell(rowIndex,i++,"Certificado");
+        createCell(rowIndex,i++, "Punto Venta");
+        createCell(rowIndex,i++, "Número");       
+        createCell(rowIndex,i++, "Fecha");
+        createCell(rowIndex,i++, "Cliente");
+        createCell(rowIndex,i++, "Contrato");
+        createCell(rowIndex,i++, "Certificado");
+        createCell(rowIndex,i++, "Habilitacion");            
+        createCell(rowIndex,i++, "Factura");
+        createCell(rowIndex,i++, "Total");
         
     }
 
@@ -145,12 +150,12 @@ public class ActivoExcel extends BaseExcel<bd.Activo> {
  public static void main(String[] args){
     HashMap<String,String> mapFiltro = new HashMap<String,String>();       
     mapFiltro.put("id_estado","2");
-    List<Activo> lista = new ArrayList<Activo>();
-    lista = new TActivo().getListaExport(mapFiltro);
+    List<Preticket> lista = new ArrayList<Preticket>();
+    lista = new TPreticket().getListFiltro(mapFiltro);
                 Parametro parametro = new TParametro().getByCodigo(OptionsCfg.EXPORT_PATH);
 
     boolean generado = false;
-    String fileName  = "activos.xlsx";
+    String fileName  = "pretickets.xlsx";
     String filePath  = parametro.getValor() + File.separator + fileName;
     
     mapFiltro.remove("id_estado");
@@ -158,7 +163,7 @@ public class ActivoExcel extends BaseExcel<bd.Activo> {
     mapFiltro.put("Estado","Disponible");
     mapFiltro.put("Stock","Todos");
     
-    new ActivoExcel("Listado de Activos",lista,mapFiltro).createExcel(filePath);
+    new PreticketExcel("Listado de Pretickets",lista,mapFiltro).createExcel(filePath);
  }
 
 

@@ -30,9 +30,11 @@
     }
     if(detalle==null) detalle = new ArrayList<Remito_detalle>();
 
-    Contrato contrato = new TContrato().getById(remito.getId_contrato());
-    if(contrato==null) contrato=new Contrato();
-
+    Contrato contrato = (Contrato) request.getAttribute("contrato");
+    if(contrato==null) {
+        contrato = new TContrato().getById(remito.getId_contrato());
+        if(contrato==null) contrato=new Contrato();
+    }
     Cliente cliente = new TCliente().getById(remito.getId_cliente());
     if(cliente==null) cliente = new Cliente();
 
@@ -241,7 +243,7 @@
                                </div>
                             <div class="col-lg-12">
                                 <button type="submit" class="btn btn-default" id="btnSubmit">Guardar</button>
-                                <a type="reset" class="btn btn-default" href="<%=PathCfg.REMITO%>">Cancelar</a>
+                                <a  class="btn btn-default" href="<%=PathCfg.REMITO%>">Cancelar</a>
                             </div>
                         </div>
                         </div>
@@ -297,47 +299,7 @@
                 selTodos('input.chkSelActivo',$(this).prop('checked'));
             });
 
-            $('#mdlActivo').on('show.bs.modal', function (e) {
-                 var $id_contrato = $('#id_contrato') ;
-                 if ($id_contrato===null || $id_contrato.val()===""){
-                      $('#mdlActivo').modal('hide');
-                     bootbox.alert("Ingrese el n&uacute;mero de contrato");
-                     return;
-                }
-                $invoker = $(e.relatedTarget);
-                $tr = $invoker.parent().parent().parent();
-                $codigo = $tr.find('input[name="codigoActivo"]');
-
-                $('#id_rubro').prop('disabled',false);
-                $('#id_subrubro').prop('disabled',false);
-                if ($codigo!==undefined){
-                    if ( $codigo.data('rubro')!== undefined && $codigo.data('rubro')!==''){
-//                        $('#id_rubro').val($codigo.data('rubro'));
-//                        $('#id_rubro').prop('disabled',true);
-                    }
-                    if ( $codigo.data('subrubro')!== undefined && $codigo.data('subrubro')!=='' ) {
-//                        $('#id_subrubro').val($codigo.data('subrubro'));
-//                        $('#id_subrubro').prop('disabled',true);
-                    }
-                }
-                var $id_rubro = $('#id_rubro');
-                var $id_subrubro = $('#id_subrubro');
-                $id_contrato = $('#id_contrato');
-                if ($id_contrato===null || $id_contrato.val()==="0" ){
-                     bootbox.alert("Ingrese el n&uacute;mero de contrato");
-                     return;
-                }
-                var data = { id_rubro: $id_rubro.val(),
-                              id_subrubro: $id_subrubro.val(),
-                              id_contrato: $id_contrato.val(),
-                };
-
-                loadDataActivo(data);
-                loadDataKit(data);
-
-
-
-            });
+            $('#mdlActivo').on('show.bs.modal', loadMdlActivo);
              $('#mdlActivo').on('hide.bs.modal', function (e) {
                  if($invoker!==null)
                     $invoker.parent().find('input').focus();
@@ -350,10 +312,8 @@
              $('#mdlContrato').on('shown.bs.modal', function (e) {
                 loadDataContrato();
             });
-             $('#mdlSite').on('shown.bs.modal', function (e) {
-                 $idCliente = $('#idCliente');
-
-                loadDataSite({id_cliente:$idCliente.val()});
+             $('#mdlSite').on('shown.bs.modal', function (e) {                 
+                loadDataSite({id_cliente:$('#idCliente').val()});
             });
 
              $('#mdlContratoView').on('show.bs.modal', function (e) {
@@ -395,15 +355,7 @@
                 if(!validar()) return false;
                 validarCertificados();
             });
-              $('#btnSiteNuevo').click(function(){
-                var id_cliente = $('#idCliente');
-                if(id_cliente===undefined ||  id_cliente.val() === '0' ) {
-                    bootbox.alert('Seleccione el cliente');
-                    $('#mdlSiteEdit').hide();
-                    return;
-                }
-                $('#mdlSiteEdit').modal('show');
-            });
+              $('#btnSiteNuevo').click(agregarSite);
             $('form').bind('keypress keydown',function(e){
                 var code = e.keyCode || e.which;
                 if(code===13){
@@ -415,16 +367,67 @@
 
 
         });
+        function agregarSite(){
+            var id_cliente = $('#idCliente');
+            if(id_cliente===undefined ||  id_cliente.val() === '0' ) {
+                bootbox.alert('Seleccione el cliente');
+                $('#mdlSiteEdit').hide();
+                return;
+            }
+            $('#mdlSiteEdit').modal('show');
+        }
+        function loadMdlActivo (e) {
+                 var $id_contrato = $('#id_contrato') ;
+                 if ($id_contrato===null || $id_contrato.val()===""){
+                      $('#mdlActivo').modal('hide');
+                     bootbox.alert("Ingrese el n&uacute;mero de contrato");
+                     return;
+                }
+                $invoker = $(e.relatedTarget);
+                $tr = $invoker.parent().parent().parent();
+                $codigo = $tr.find('input[name="codigoActivo"]');
 
+                $('#id_rubro').prop('disabled',false);
+                $('#id_subrubro').prop('disabled',false);
+                if ($codigo!==undefined){
+                    if ( $codigo.data('rubro')!== undefined && $codigo.data('rubro')!==''){
+//                        $('#id_rubro').val($codigo.data('rubro'));
+//                        $('#id_rubro').prop('disabled',true);
+                    }
+                    if ( $codigo.data('subrubro')!== undefined && $codigo.data('subrubro')!=='' ) {
+//                        $('#id_subrubro').val($codigo.data('subrubro'));
+//                        $('#id_subrubro').prop('disabled',true);
+                    }
+                }
+                var $id_rubro = $('#id_rubro');
+                var $id_subrubro = $('#id_subrubro');
+                $id_contrato = $('#id_contrato');
+                if ($id_contrato===null || $id_contrato.val()==="0" ){
+                     bootbox.alert("Ingrese el n&uacute;mero de contrato");
+                     return;
+                }
+                var data = { id_rubro: $id_rubro.val(),
+                              id_subrubro: $id_subrubro.val(),
+                              id_contrato: $id_contrato.val(),
+                };
+
+                loadDataActivo(data);
+                loadDataKit(data);
+
+
+
+            }
         function selActivos(){
             var $arr = $('input.chkSelActivo:checked');
             for(var i = 0;i<$arr.length;i++){
                 var $codigo = $($arr[i]).data('codigo');
+                var $id_activo = $($arr[i]).data('id_activo');
+                var $id_kit = $($arr[i]).data('id_kit');
                 var $descripcion = $($arr[i]).data('descripcion');
                 var $pos = $($arr[i]).data('pos');
                 var $cant = $tr.find('input[name="cantActivo"]');
                 if ($cant.val()==="") $cant.val(1);
-                var html = generarHtml({codigo:$codigo,pos:$pos ,cant:$cant.val(),descripcion:$descripcion,disabled:true});
+                var html = generarHtml({codigo:$codigo,id_activo:$id_activo, id_kit:$id_kit,pos:$pos ,cant:$cant.val(),descripcion:$descripcion,disabled:true});
                 //$tr.after(html);
                 $tr.before(html);
                 //agregarActivo({codigo:$codigo,pos:$pos.val(),cant:$cant.val(),descripcion:$descripcion});
@@ -450,9 +453,9 @@
 
 
              // Validar que ingrese los campos de detalle
-            rows = $('#tblRemito tbody tr');
-            arrCodigos = [];
-            arrPos = [];
+            var rows = $('#tblRemito tbody tr');
+            var arrCodigos = [];
+            var arrPos = [];
             var funcObjects = [];
             for(var i=0;i<rows.length;i++) {
                var row = $(rows[i]);
@@ -547,11 +550,7 @@
         function agregarActivo(data){
 
            var html = generarHtml(data);
-
-                        $('#tblRemito tbody').append(html);
-
-//                        $('#tblRemito').find('tbody').append(html);
-
+            $('#tblRemito tbody').append(html);
             var elem = $('#tblRemito tbody tr:last').find('.inCodigo');
             //elem.focusout(buscarActivo);
 
@@ -560,26 +559,20 @@
 
                 if(codigo ===13) {
                     e.preventDefault();
-//                    var elem = $('#tblRemito tbody tr:last').find('.inCodigo');
-//                    elem.css('background-color','#000');
                     buscarActivo.bind(this)();
-                    //$(this).trigger('focusout');
                 }
             });
-            //$('.inCodigo').trigger('focusout');
             $('.btnDelActivo').click(deleteActivo);
         }
 
         function deleteActivo(){
-//          bootbox.confirm("Esta seguro que desea eliminar el registro?",function(result){
-//             if(result) {
-                var $tr = $(this).parent().parent();
-                $tr.remove();
-//                }
-//            });
+            var $tr = $(this).parent().parent();
+            $tr.remove();
         }
         function generarHtml(data){
-           var codigo = (data.codigo !==undefined)? data.codigo:"";
+           var codigo    = (data.codigo !== undefined)? data.codigo:"";
+           var id_activo = (data.id_activo !== undefined)? data.id_activo:"0";
+           var id_kit    = (data.id_kit    !== undefined)? data.id_kit:"0";
            var pos = (data.pos !== undefined )?data.pos:"";
            var cant = (data.cant !== undefined )?data.cant:"";
            var descripcion = (data.descripcion!==undefined)?data.descripcion:"";
@@ -592,6 +585,8 @@
                            '<span class="input-group">' +
                                '<span class="input-group-addon"  data-toggle="modal" data-target="#mdlActivo"><span class="fa fa-search fa-fw"></span></span>' +
                                '<input type="text" class="form-control inCodigo" data-rubro="'+ rubro+'"  data-subrubro="'+ subrubro+'" name="codigoActivo" placeholder="C&oacute;digo" size="20" value="' + codigo +'">' +
+                               '<input type="hidden" name="id_activo" value="' + id_activo +'">' +
+                               '<input type="hidden" name="id_kit" value="' + id_kit +'">' +
                            '</span>' +
                        '</td>';
                 html+= '<td style="width:20px"><input type="number" name="posicion" class="posicion form-control" size="2" min="0" value="'+ pos +'" ' + disabled+ '>';

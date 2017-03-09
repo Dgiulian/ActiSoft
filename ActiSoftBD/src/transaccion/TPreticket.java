@@ -38,18 +38,23 @@ public class TPreticket extends TransaccionBase<Preticket> {
         TRemito tr = new TRemito();        
         HashMap<Integer,Remito> mapRemitos =  new HashMap<Integer,Remito>();
         for(Preticket_detalle d:lstDetalle){
-            Remito r_cierre =  mapRemitos.get(d.getRemito_cierre());
-            if (r_cierre!=null) continue; // Si existe en el map, ya se facturó
-            
-            r_cierre = tr.getByNumero(d.getRemito_cierre());
-            if (r_cierre!=null) { //Desmarco el remito como facturado
-                mapRemitos.put(d.getRemito_cierre(),r_cierre);
-                r_cierre.setFacturado(0);
-                tr.actualizar(r_cierre);
-            }
+            desmarcarRemito(d.getId_remito_inicio(),mapRemitos);
+            desmarcarRemito(d.getId_remito_cierre(),mapRemitos);
             tpd.baja(d);
         }
         return this.baja(preticket);
+    }
+    private void desmarcarRemito(Integer id_remito,HashMap<Integer,Remito> mapRemitos){
+        Remito remito =  mapRemitos.get(id_remito);
+        if (remito!=null) return; // Si existe en el map, ya se facturó
+        TRemito tr = new TRemito();
+        
+        remito = tr.getById(id_remito);
+        if (remito!=null) { //Desmarco el remito como facturado
+            mapRemitos.put(id_remito,remito);
+            remito.setFacturado(0);
+            tr.actualizar(remito);
+        }
     }
    
 

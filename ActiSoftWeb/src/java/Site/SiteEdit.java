@@ -5,6 +5,8 @@
 package Site;
 
 import bd.Cliente;
+import bd.Equipo;
+import bd.Pozo;
 import bd.Site;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -16,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import transaccion.TAuditoria;
 import transaccion.TCliente;
+import transaccion.TEquipo;
+import transaccion.TPozo;
 import transaccion.TSite;
 import utils.BaseException;
 import utils.JsonRespuesta;
@@ -104,6 +108,8 @@ public class SiteEdit extends HttpServlet {
         String nombre  = request.getParameter("nombre");
         String area = request.getParameter("area");
         String pozo = request.getParameter("pozo");
+        Integer id_pozo = Parser.parseInt(request.getParameter("id_pozo"));
+        Integer id_equipo = Parser.parseInt(request.getParameter("id_equipo"));
         String equipo = request.getParameter("equipo");
         String observaciones = request.getParameter("observaciones");
         
@@ -130,6 +136,8 @@ public class SiteEdit extends HttpServlet {
             
             Cliente cliente = new TCliente().getById(id_cliente);
             if (cliente == null) throw new BaseException("Cliente inexistente", "No se encontr&oacute; el cliente");
+            Pozo p = new TPozo().getById(id_pozo);
+            Equipo e = new TEquipo().getById(id_equipo);
             
             Site site;
             TSite tc = new TSite();
@@ -144,12 +152,15 @@ public class SiteEdit extends HttpServlet {
             }        
 
             Integer id_estado = idEstado!=null?1:0;
-
+            pozo = p!=null?p.getNombre():"";
+            equipo = e!=null?e.getNombre():"";            
             try{
                 site.setId_cliente(id_cliente);
                 site.setNombre(nombre);
                 site.setArea(area);
                 site.setPozo(pozo);
+                site.setId_pozo(id_pozo);
+                site.setId_equipo(id_equipo);
                 site.setEquipo(equipo);
                 site.setEncargado(encargado);
                 site.setTelefono(telefono);
