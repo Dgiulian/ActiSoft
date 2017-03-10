@@ -26,7 +26,7 @@ import transaccion.TActivo;
 import transaccion.TCliente;
 import transaccion.TContrato;
 import transaccion.TParametro;
-import utils.ActivoPdf;
+import utils.ActivoExportPdf;
 import utils.BaseException;
 import utils.JsonRespuesta;
 import utils.OptionsCfg;
@@ -106,7 +106,7 @@ public class ActivoExport extends HttpServlet {
             System.out.println(filePath);
             System.out.println(lista.size());
             if(id_reporte==1){
-                ActivoPdf pdf = new ActivoPdf(lista,filtros);
+                ActivoExportPdf pdf = new ActivoExportPdf(lista,filtros);
                      generado = pdf.createPdf(filePath);
             }else {
                 ActivoExcel excel = new ActivoExcel("Listado de Activos",lista,filtros);

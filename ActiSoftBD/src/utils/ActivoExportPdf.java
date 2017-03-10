@@ -20,10 +20,8 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import java.io.File;
 import java.io.IOException;
@@ -48,18 +46,18 @@ import transaccion.TSubrubro;
  *
  * @author Diego
  */
-public class ActivoPdf extends BasePdf{
+public class ActivoExportPdf extends BasePdf{
     List<Activo> lista ;
     private Integer hoja = 0;
     private Integer num_hojas = 0;
     private HashMap<String,String> filtros;
     private final Integer NUM_ACTIVOS = 32;
-    public ActivoPdf(List<Activo> lista){
+    public ActivoExportPdf(List<Activo> lista){
         this.lista = lista;
         this.num_hojas = (this.lista.size() / NUM_ACTIVOS) + 1 ;
         this.filtros = new HashMap<String,String>();        
     }
-     public ActivoPdf(List<Activo> lista,HashMap filtros){
+     public ActivoExportPdf(List<Activo> lista,HashMap filtros){
         this.lista = lista;
         this.num_hojas = (this.lista.size() / NUM_ACTIVOS) + 1;
         this.filtros = filtros;        
@@ -118,8 +116,10 @@ public class ActivoPdf extends BasePdf{
                 cant = 0;
                 start = 590;
             }
-            if(Objects.equals(activo.getId_estado(), OptionsCfg.ACTIVO_ESTADO_ALQUILADO) )
+            if(OptionsCfg.ACTIVO_ESTADO_ALQUILADO.equals(activo.getId_estado()))
                 remito = tr.getByIdActivo(activo.getId(), OptionsCfg.REMITO_ENTREGA, OptionsCfg.REMITO_ESTADO_ABIERTO);
+            else if (OptionsCfg.ACTIVO_ESTADO_KIT.equals(activo.getId_estado()))
+                remito = tr.getByIdActivoEnKit(activo.getId(), OptionsCfg.REMITO_ENTREGA, OptionsCfg.REMITO_ESTADO_ABIERTO);
             else remito = null;
             
             num_remito = "";
@@ -206,7 +206,7 @@ public class ActivoPdf extends BasePdf{
         
         //new TActivo().getList();
         HashMap<String,String> mapFiltro = new HashMap<String,String>();       
-        mapFiltro.put("id_estado","2");
+        mapFiltro.put("id_estado","9");
 //        mapFiltro.put("id_resultado",OptionsCfg.CERTIFICADO_VENCIDO.toString());
 //        mapFiltro.put("id_cliente","5");
 //        mapFiltro.put("id_contrato","12");
@@ -228,7 +228,7 @@ public class ActivoPdf extends BasePdf{
         //mapFiltro.put("Contrato","Si");
         
         
-        ActivoPdf activoPdf = new ActivoPdf(lista,mapFiltro);
+        ActivoExportPdf activoPdf = new ActivoExportPdf(lista,mapFiltro);
         activoPdf.createPdf(filePath);
         activoPdf.abrir(filePath);
     }

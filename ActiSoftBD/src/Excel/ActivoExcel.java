@@ -6,7 +6,10 @@ package Excel;
 
 import bd.Activo;
 import bd.Certificado;
+import bd.Equipo;
 import bd.Parametro;
+import bd.Pozo;
+import bd.Remito;
 import bd.Rubro;
 import bd.Subrubro;
 import java.io.File;
@@ -14,20 +17,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
 
-import org.apache.poi.ss.util.CellRangeAddress;
 import transaccion.TActivo;
 import transaccion.TCertificado;
+import transaccion.TEquipo;
 import transaccion.TParametro;
+import transaccion.TPozo;
+import transaccion.TRemito;
 import transaccion.TRubro;
 import transaccion.TSubrubro;
 import utils.OptionsCfg;
-import utils.TFecha;
+
 
 /**
  *
@@ -70,6 +70,11 @@ public class ActivoExcel extends BaseExcel<bd.Activo> {
         Short rowIndex = new Integer(filtros.size() + 2).shortValue();
         this.estilo = estiloBase;
         Integer i = 1;
+        TRemito tr = new TRemito ();
+        Remito remito;
+        TPozo tp = new TPozo();
+        TEquipo te = new TEquipo();
+        
         for(Activo activo: lista ){
             String rubro = activo.getId_rubro().toString();         
             String subrubro = activo.getId_subrubro().toString();
@@ -97,11 +102,29 @@ public class ActivoExcel extends BaseExcel<bd.Activo> {
             sheet.createRow(rowIndex);
             i= 0;
             
-            
+            if(OptionsCfg.ACTIVO_ESTADO_ALQUILADO.equals(activo.getId_estado()))
+                remito = tr.getByIdActivo(activo.getId(), OptionsCfg.REMITO_ENTREGA, OptionsCfg.REMITO_ESTADO_ABIERTO);
+            else if (OptionsCfg.ACTIVO_ESTADO_KIT.equals(activo.getId_estado()))
+                remito = tr.getByIdActivoEnKit(activo.getId(), OptionsCfg.REMITO_ENTREGA, OptionsCfg.REMITO_ESTADO_ABIERTO);
+            else remito = null;
+            String num_remito = "",
+                        pozo  = "",
+                       equipo = "";
+            if(remito!=null){
+                num_remito = remito.getNumero().toString();
+                Pozo p = tp.getById(remito.getId_pozo());                
+                Equipo e = te.getById(remito.getId_equipo());
+                pozo = p!=null?p.getNombre():"";
+                equipo = e!=null? e.getNombre():"";
+                
+            } 
             createCell(rowIndex,i++, activo.getCodigo());
             createCell(rowIndex,i++, activo.getDesc_larga());
             createCell(rowIndex,i++, estado);
             createCell(rowIndex,i++, String.format("%d",activo.getStock().intValue()));
+            createCell(rowIndex,i++, num_remito);
+            createCell(rowIndex,i++, pozo);
+            createCell(rowIndex,i++, equipo);
             createCell(rowIndex,i++, certificado);
             rowIndex++;
         }
@@ -136,6 +159,9 @@ public class ActivoExcel extends BaseExcel<bd.Activo> {
         createCell(rowIndex,i++,"Descripcion");        
         createCell(rowIndex,i++,"Estado");
         createCell(rowIndex,i++,"Stock");
+        createCell(rowIndex,i++,"Remito");
+        createCell(rowIndex,i++,"Pozo");
+        createCell(rowIndex,i++,"Equipo");
         createCell(rowIndex,i++,"Certificado");
         
     }

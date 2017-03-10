@@ -147,12 +147,23 @@ public class TRemito extends TransaccionBase<Remito> {
     }
     public Remito getByIdActivo(Integer id_activo, Integer id_tipo_remito,Integer id_estado){
         String query = String.format("select remito.*\n" +
-                                     " from remito_detalle,remito\n" +
-                                     " where remito_detalle.id_remito = remito.id\n" +
-                                     " and remito_detalle.id_activo = %d\n" +
-                                     " and remito.id_estado = %d \n" +
-                                     " and remito.id_tipo_remito = %d",id_activo,id_tipo_remito,id_estado);
-
+                                  " from remito_detalle,remito\n" +
+                                  " where remito_detalle.id_remito = remito.id\n" +
+                                  " and remito_detalle.id_activo = %d\n" +
+                                  " and remito.id_estado = %d \n" +
+                                  " and remito.id_tipo_remito = %d",id_activo,id_tipo_remito,id_estado);
+        //if(id_activo == 1254) System.out.println(query);
+        return this.getById(query);
+    }
+    
+    public Remito getByIdActivoEnKit(Integer id_activo, Integer id_tipo_remito,Integer id_estado){
+        String query = String.format("select remito.*\n" +
+                                 " from remito_detalle, remito, kit_detalle\n" +
+                                 " where remito_detalle.id_remito = remito.id\n" +
+                                 " and kit_detalle.id_activo = %d\n" +
+                                 " and remito.id_estado = %d\n" +
+                                 " and remito.id_tipo_remito = %d\n" +
+                                 " and remito_detalle.id_kit = kit_detalle.id_kit",id_activo,id_tipo_remito,id_estado);
         return this.getById(query);
     }
 
