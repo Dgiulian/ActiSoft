@@ -146,7 +146,7 @@ public class ActivoContratoList extends HttpServlet {
         Integer id_rubro = activo.getId_rubro();
         if(r!=null && r.getAplica_certificado()==1) {
              Certificado vigente = tc.getVigente(activo.id,fecha);
-             if (vigente !=null && vigente.getId_resultado()!=OptionsCfg.CERTIFICADO_APTO) this.certificado = vigente;
+             if (vigente !=null && vigente.getId_resultado().equals(OptionsCfg.CERTIFICADO_APTO)) this.certificado = vigente;
         } else this.certificado = new Certificado();
         
 //        if(this.certificado!=null)
