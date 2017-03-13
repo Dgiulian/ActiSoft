@@ -98,18 +98,19 @@ public class KitDel extends HttpServlet {
                for(Kit_detalle d:lstDetalle){
                     // Cuando se elimina un kit, hay que devolver el stock del activo.
                    Activo activo = ta.getById(d.getId_activo());
-                   if(activo!=null){
-                    activo.setStock(activo.getStock() + 1);
-                    activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
-                    ta.actualizar(activo);
+                   if(activo==null) continue;
+                   if(!activo.getId_estado().equals(OptionsCfg.ACTIVO_ESTADO_KIT)) continue;
+                   
+                   activo.setStock(activo.getStock() + 1);
+                   activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                   ta.actualizar(activo);
                     
-                    Kit_historia historia = new Kit_historia();
-                    historia.setId_activo(d.getId_activo());
-                    historia.setId_accion(OptionsCfg.ACCION_BAJA);
-                    historia.setFecha(TFecha.ahora(TFecha.formatoBD + " " + TFecha.formatoHora));
-                    th.alta(historia);
-                   }
-//                   tkd.baja(d);
+                   Kit_historia historia = new Kit_historia();
+                   historia.setId_activo(d.getId_activo());
+                   historia.setId_accion(OptionsCfg.ACCION_BAJA);
+                   historia.setFecha(TFecha.ahora(TFecha.formatoBD + " " + TFecha.formatoHora));
+                   th.alta(historia);                   
+                   tkd.baja(d);
                }
                jr.setResult("OK");
                 Integer id_usuario = 0;
