@@ -110,7 +110,8 @@ public class KitDel extends HttpServlet {
                    historia.setId_accion(OptionsCfg.ACCION_BAJA);
                    historia.setFecha(TFecha.ahora(TFecha.formatoBD + " " + TFecha.formatoHora));
                    th.alta(historia);                   
-                   tkd.baja(d);
+                   //tkd.baja(d);
+                   /* No se borra el detalle, ya que es un borrado lógico */
                }
                jr.setResult("OK");
                 Integer id_usuario = 0;
