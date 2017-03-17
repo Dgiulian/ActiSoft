@@ -24,6 +24,7 @@ public class OptionsCfg {
     public static final Integer ACTIVO_ESTADO_NO_APTO       = 8;
     public static final Integer ACTIVO_ESTADO_KIT           = 9;
     public static final Integer ACTIVO_ESTADO_ELIMINADO     = 10;
+    public static final Integer ACTIVO_ESTADO_VENDIDO       = 11;
     
     
     public static final Integer REMITO_ENTREGA = 1;
@@ -118,8 +119,9 @@ public class OptionsCfg {
     public static Integer ACCION_MODIFICAR = 3;
     
     public static final Integer KIT_ESTADO_DISPONIBLE = 1;
-    public static final Integer KIT_ESTADO_ALQUILADO = 2;
-    public static final Integer KIT_ESTADO_ELIMINADO = 3;
+    public static final Integer KIT_ESTADO_ALQUILADO  = 2;
+    public static final Integer KIT_ESTADO_ELIMINADO  = 3;
+    public static final Integer KIT_ESTADO_VENDIDO    = 4;
     
     public static final int COMPRA_NADA      = 0;
     public static final int COMPRA_REEMPLAZA = 1;
@@ -166,6 +168,7 @@ public class OptionsCfg {
 //        lista.add(new Option(ACTIVO_ESTADO_NO_APTO,String.format("%03d",ACTIVO_ESTADO_NO_APTO),"No Apto"));
         lista.add(new Option(ACTIVO_ESTADO_KIT,String.format("%03d",ACTIVO_ESTADO_KIT),"Kit"));
 //        lista.add(new Option(ACTIVO_ESTADO_ELIMINADO,String.format("%03d",ACTIVO_ESTADO_ELIMINADO),"Eliminado"));
+        lista.add(new Option(ACTIVO_ESTADO_VENDIDO,String.format("%03d",ACTIVO_ESTADO_VENDIDO),"Vendido"));
         
 //        lista.add(new Option(6,"003","Cabeza fractura 001"));        
         return lista;
@@ -271,6 +274,7 @@ public static ArrayList<Option> getTipoActividades(){
         lista.add(new Option(KIT_ESTADO_DISPONIBLE,String.format("%03d",KIT_ESTADO_DISPONIBLE),"Disponible"));
         lista.add(new Option(KIT_ESTADO_ALQUILADO,String.format("%03d",KIT_ESTADO_ALQUILADO),"Alquilado"));
         lista.add(new Option(KIT_ESTADO_ELIMINADO,String.format("%03d",KIT_ESTADO_ELIMINADO),"Eiiminado"));
+        lista.add(new Option(KIT_ESTADO_VENDIDO,String.format("%03d",KIT_ESTADO_VENDIDO),"Vendido"));
 //        lista.add(new Option(6,"003","Cabeza fractura 001"));        
         return lista;
    }
