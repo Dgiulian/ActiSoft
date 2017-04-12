@@ -20,6 +20,7 @@ import utils.BaseException;
 import utils.JsonRespuesta;
 import utils.OptionsCfg;
 import utils.OptionsCfg.Option;
+import utils.Parser;
 
 /**
  *
@@ -42,24 +43,25 @@ public class CertificadoList extends HttpServlet {
         response.setContentType("application/json; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
+        
+        String idActivo = request.getParameter("id_objeto");
+        Integer  id_modulo = Parser.parseInt(request.getParameter("id_modulo"));
+        Integer id_objeto = Parser.parseInt(request.getParameter("id_objeto"));
         String pagNro = request.getParameter("pagNro");
-        String idActivo = request.getParameter("id_activo");
-        
-        
         mapResultados = new HashMap<Integer,Option>();        
         for (Option o : OptionsCfg.getEstadoCertificados()) mapResultados.put(o.getId(),o);
 
         HashMap<String,String> mapFiltro = new HashMap<String,String>();
         Integer page = (pagNro!=null)?Integer.parseInt(pagNro):0;
-        Integer id_activo = (idActivo!=null)?Integer.parseInt(idActivo):0;
         
         JsonRespuesta jr = new JsonRespuesta();
         try {
             List<Certificado> lista;
             TCertificado tr = new TCertificado();
             tr.setOrderBy("fecha desc ");
-            if(id_activo==0) throw new BaseException("ERROR", "Debe seleccionar el cliente");
-            mapFiltro.put("id_activo",id_activo.toString());
+            if(id_objeto==0) throw new BaseException("ERROR", "Debe seleccionar el kit o activo");
+            mapFiltro.put("id_objeto",id_objeto.toString());
+            mapFiltro.put("id_modulo",id_modulo.toString());
             lista = tr.getListFiltro(mapFiltro);
             ArrayList<CertificadoDet> listaDet = new ArrayList<CertificadoDet>();
             for(Certificado c: lista){

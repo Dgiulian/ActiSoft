@@ -17,8 +17,8 @@ public class TCertificado extends TransaccionBase<Certificado>{
     public List<Certificado>getList(){
         return super.getList("select * from certificado");
     }
-    public List<Certificado>getByActivoId(Integer id_activo){
-        return super.getList("select * from certificado where certificado.id_activo = " + id_activo);
+    public List<Certificado>getByObjetoId(Integer id_modulo, Integer id_objeto){
+        return super.getList("select * from certificado where certificado.id_modulo = %d and certificado.id_objeto = " + id_objeto);
     }
     public Certificado getById(Integer id){
         String query = String.format("select * from certificado where certificado.id = %d",id);        
@@ -27,51 +27,54 @@ public class TCertificado extends TransaccionBase<Certificado>{
     public boolean actualizar(Certificado certificado){
         return super.actualizar(certificado, "id");
     }
-    /* Devuelve un certificado vigente si existiere para un activo */
-    public Certificado getVigente(Integer id_activo){
+    /* Devuelve un certificado vigente si existiere para un objeto */
+    public Certificado getVigente(Integer id_modulo, Integer id_objeto){
         /* Fecha desde: Desde */
         /* Fecha hasta: Hasta */
-        return this.getVigente(id_activo,TFecha.ahora(TFecha.formatoBD));
+        return this.getVigente(id_modulo,id_objeto,TFecha.ahora(TFecha.formatoBD));
         
     }
-     /* Devuelve un certificado vigente si existiere para un activo */
-    public Certificado getVigente(Integer id_activo,String fecha){
+     /* Devuelve un certificado vigente si existiere para un objeto */
+    public Certificado getVigente(Integer id_modulo, Integer id_objeto,String fecha){
         String query = String.format("select * from certificado\n" +
-                        " where certificado.id_activo = %d\n" +                        
+                        " where certificado.id_modulo = %d\n" +
+                        " and certificado.id_objeto = %d\n" +                        
                         " and certificado.fecha_desde <= '%s'" +
                         " and certificado.fecha_hasta >= '%s'" +
-//                        " and certificado.id_resultado = %d " +
-                        " and certificado.archivo_url <> '' ",id_activo,fecha,fecha);
+//                      " and certificado.id_resultado = %d " +
+                        " and certificado.archivo_url <> '' ",id_modulo,id_objeto,fecha,fecha);
         
         query = String.format("select * \n" +
                 "  from certificado\n" +
-                " where certificado.id_activo = %d\n" +
+                " where certificado.id_modulo = %d\n" +
+                " and certificado.id_objeto = %d\n" +
                 "   and certificado.fecha_desde <= '%s' \n" +
                 " order by certificado.fecha_hasta desc,\n" +
                 "	    certificado.id desc\n" +
-                " limit 0,1 ",id_activo,fecha);
+                " limit 0,1 ",id_modulo,id_objeto,fecha);
         //System.out.println(query);
         return super.getById(query);
     }
     /*
-     * Devuelve un Map con un certificado válido para cáda activo
-     * Donde la key del mapa es el Id de activo y el valor es un certificado válido.
-     * Pueden existir varios certificados válidos para un mismo activo.      
+     * Devuelve un Map con un certificado válido para cáda objeto
+     * Donde la key del mapa es el Id de objeto y el valor es un certificado válido.
+     * Pueden existir varios certificados válidos para un mismo objeto.      
      */
-public HashMap<Integer,Certificado> getMapValidos(){
+public HashMap<Integer,Certificado> getMapValidos(Integer id_modulo){
         HashMap<Integer,Certificado> mapa = new HashMap<Integer,Certificado>();
          String query = String.format("select * from certificado\n" +
-                                        "where certificado.id in (select max(id)\n" +
+                                        " where certificado.id in (select max(id)\n" +
                                         "         from certificado\n" +
-                                        "        where archivo <> '' \n" +
+                                        "        where certificado.id_modulo = %d " +
+                                        "          and archivo <> '' \n" +
                                         "          and fecha_desde <= curdate()\n" +
-                                        "        group by id_activo);" );
+                                        "        group by id_objeto);",id_modulo );
        //  System.out.println(query);
         List<Certificado> lstCertificados = this.getList(query);
         if (lstCertificados==null) return mapa;
         
         for(Certificado c:lstCertificados){
-            mapa.put(c.getId_activo(), c);
+            mapa.put(c.getId_objeto(), c);
         }
         return mapa;
     }
@@ -85,7 +88,7 @@ public HashMap<Integer,Certificado> getMapValidos(){
 //        if (lstCertificados==null) return mapa;
 //        
 //        for(Certificado c:lstCertificados){
-//            mapa.put(c.getId_activo(), c);
+//            mapa.put(c.getId_objeto(), c);
 //        }
 //        return mapa;
 //    }
@@ -134,13 +137,15 @@ public HashMap<Integer,Certificado> getMapValidos(){
 //      new TCertificado().vencerCertificados();
         
         TCertificado tc = new TCertificado();
-        HashMap<Integer, Certificado> mapValidos = tc.getMapValidos();
+        HashMap<Integer, Certificado> mapValidos = tc.getMapValidos(1);
         //System.out.println(mapValidos.get(717));
     }
 
-    public Certificado getValido(Integer id_activo) {
-        String query = "select * from certificado where certificado.id_activo = %d and certificado.id_resultado /* and certificado.fecha_desde <= curdate() and certificado.fecha_hasta >= curdate() */ ";
-        query = String.format(query,id_activo,OptionsCfg.CERTIFICADO_APTO);        
+    public Certificado getValido(Integer id_modulo,Integer id_objeto) {
+        String query = "select * from certificado where certificado.id_modulo = %d " +
+                       "and certificado.id_objeto = %d " + 
+                       "and certificado.id_resultado /* and certificado.fecha_desde <= curdate() and certificado.fecha_hasta >= curdate() */ ";
+        query = String.format(query,id_modulo,id_objeto,OptionsCfg.CERTIFICADO_APTO);        
         return this.getById(query);
     }
 }

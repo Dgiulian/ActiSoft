@@ -22,6 +22,7 @@ import transaccion.TRubro;
 import utils.BaseException;
 import utils.JsonRespuesta;
 import utils.OptionsCfg;
+import utils.Parser;
 
 /**
  *
@@ -44,12 +45,8 @@ public class ActivoCheck extends HttpServlet {
          response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String pagNro = request.getParameter("pagNro");
-        Integer id_activo = 0;
-        try{
-            id_activo = Integer.parseInt(request.getParameter("id_activo"));
-        } catch(NumberFormatException ex) {
-            id_activo = 0;
-        }        
+        Integer id_activo = Parser.parseInt(request.getParameter("id_activo"));
+        
         String codigo = request.getParameter("codigo");
         Activo activo = null;
         Kit kit = null;
@@ -75,7 +72,7 @@ public class ActivoCheck extends HttpServlet {
                 Rubro r = tr.getById(activo.getId_rubro());
                 if (r.getAplica_certificado()!=0){
 
-                    Certificado vigente = tc.getVigente(activo.getId()); //Buscamos el certificado vigente a la fecha
+                    Certificado vigente = tc.getVigente(OptionsCfg.MODULO_ACTIVO,activo.getId()); //Buscamos el certificado vigente a la fecha
                     if(vigente == null || vigente.getId_resultado()!= OptionsCfg.CERTIFICADO_APTO) throw new BaseException("ERROR","El activo " + activo.getCodigo() + " no tiene un certificado v&aacute;lido");
 
                 }

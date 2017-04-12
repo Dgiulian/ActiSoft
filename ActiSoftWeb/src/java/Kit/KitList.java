@@ -4,6 +4,7 @@
  */
 package Kit;
 
+import bd.Certificado;
 import bd.Kit;
 import bd.Rubro;
 import bd.Subrubro;
@@ -18,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import transaccion.TCertificado;
 import transaccion.TKit;
 import transaccion.TRubro;
 import transaccion.TSubrubro;
@@ -33,8 +35,9 @@ import utils.TFecha;
  */
 public class KitList extends HttpServlet {
     HashMap<Integer,Rubro> mapRubros;
-     HashMap<Integer,Subrubro> mapSubrubros;
-     HashMap<Integer,OptionsCfg.Option> mapEstados;
+    HashMap<Integer,Subrubro> mapSubrubros;
+    HashMap<Integer,OptionsCfg.Option> mapEstados;
+    HashMap<Integer, Certificado> mapValidos;
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -55,7 +58,7 @@ public class KitList extends HttpServlet {
         String codigo = request.getParameter("codigo");
         Integer id_activo = Parser.parseInt(request.getParameter("id_activo"));
         mapRubros = new TRubro().getMap();
-        
+        mapValidos = new TCertificado().getMapValidos(OptionsCfg.MODULO_KIT);
         mapSubrubros = new TSubrubro().getMap();
         
         mapEstados = new HashMap<Integer,OptionsCfg.Option>();
@@ -122,6 +125,8 @@ public class KitList extends HttpServlet {
      String cod_subrubro = "";
      String subrubro = "";
      String estado = "";
+     String certificado = "";
+     Integer id_certificado = 0;
      public KitDet(Kit kit){
          super(kit);
          // Por default devolvemos el Id
@@ -142,6 +147,18 @@ public class KitList extends HttpServlet {
          Option o = mapEstados.get(kit.getId_estado());
          this.estado = (o!=null)?o.getDescripcion():kit.getId().toString();
         } else this.estado = "Eliminado";
+        
+        if (r!=null && r.getAplica_certificado()==0) {
+             this.certificado = "No aplica";
+         } else {
+            Certificado cert = mapValidos.get(kit.getId());
+            if(cert==null) this.certificado = "No";
+            else { this.id_certificado = cert.getId();
+                if(cert.getId_resultado()==OptionsCfg.CERTIFICADO_VENCIDO)  this.certificado = "Vencido";                            
+                else certificado = "Si";
+             }
+        } 
+         
      }
  }
     /**

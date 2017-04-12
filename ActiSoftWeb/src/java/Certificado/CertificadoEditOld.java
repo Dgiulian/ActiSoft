@@ -54,7 +54,7 @@ public class CertificadoEditOld extends HttpServlet {
         
         String idCertif = request.getParameter("id");
         
-        String idActivo = request.getParameter("id_activo");
+        String idActivo = request.getParameter("id_objeto");
         Integer  id_certif;
         Certificado certificado;
         boolean nuevo = false;
@@ -66,16 +66,16 @@ public class CertificadoEditOld extends HttpServlet {
             nuevo = true;
         }
         try{
-            Integer id_activo;
+            Integer id_objeto;
             if(nuevo){                
                 try{
-                    id_activo = Integer.parseInt(idActivo);                
+                    id_objeto = Integer.parseInt(idActivo);                
                 } catch (NumberFormatException ex){
-                    id_activo = 0;
+                    id_objeto = 0;
                 }
-            } else id_activo = certificado.getId_activo();
+            } else id_objeto = certificado.getId_objeto();
             
-            Activo activo = new TActivo().getById(id_activo);
+            Activo activo = new TActivo().getById(id_objeto);
             if (activo == null) throw new BaseException("Activo inexistente", "No se encontr&oacute; el activo");
             
            
@@ -102,7 +102,7 @@ public class CertificadoEditOld extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String idActivo = request.getParameter("id_activo");
+        String idActivo = request.getParameter("id_objeto");
         String idCertif = request.getParameter("id");
         String codigo = request.getParameter("codigo");
         String precinto = request.getParameter("precinto");
@@ -112,15 +112,15 @@ public class CertificadoEditOld extends HttpServlet {
         String strExterno = request.getParameter("externo");
                 
         try{
-            Integer id_activo;
+            Integer id_objeto;
             Integer  id_certif;
             try{
-                id_activo = Integer.parseInt(idActivo);                
+                id_objeto = Integer.parseInt(idActivo);                
             } catch (NumberFormatException ex){
-                id_activo = 0;
+                id_objeto = 0;
             }
             
-            Activo activo = new TActivo().getById(id_activo);
+            Activo activo = new TActivo().getById(id_objeto);
             if (activo == null) throw new BaseException("Activo inexistente", "No se encontr&oacute; el activo");
             
             Certificado certificado;
@@ -133,20 +133,20 @@ public class CertificadoEditOld extends HttpServlet {
                 certificado = new Certificado();
                 nuevo = true;
             }            
-            certificado.setId_activo(id_activo);
+            certificado.setId_objeto(id_objeto);
             certificado.setFecha(TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));
             certificado.setCodigo(codigo);
             certificado.setPrecinto(precinto);
             certificado.setId_resultado(Integer.parseInt(idResult));
             certificado.setObservaciones(observaciones);
             boolean externo = strExterno!=null;
-            certificado.setExterno(externo);
+            certificado.setExterno(externo?1:0);
             boolean todoOk = true;
             if(nuevo) {
                 todoOk = tc.alta(certificado)!=0;
             } else todoOk = tc.actualizar(certificado);
             if(!todoOk) throw new BaseException ("Error","Ocurri&oacute; un error al guardar el certificado");
-            response.sendRedirect(PathCfg.CERTIFICADO + "?id_activo=" + certificado.getId_activo());
+            response.sendRedirect(PathCfg.CERTIFICADO + "?id_objeto=" + certificado.getId_objeto());
             
         } catch (BaseException ex){
             request.setAttribute("titulo", ex.getResult());

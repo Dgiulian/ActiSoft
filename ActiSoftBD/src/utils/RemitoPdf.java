@@ -472,7 +472,7 @@ public class RemitoPdf extends BasePdf {
          }
          
          for(Activo a:lstActivos){             
-             Certificado certificado = tc.getValido(a.getId());
+             Certificado certificado = tc.getValido(OptionsCfg.MODULO_ACTIVO, a.getId());
              if(certificado==null) continue;
              if(lstCertificados.contains(certificado)) continue;
              lstCertificados.add(certificado);

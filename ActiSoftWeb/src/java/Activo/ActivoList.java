@@ -65,7 +65,7 @@ public class ActivoList extends HttpServlet {
         mapRubros = new TRubro().getMap();
         
         mapSubrubros = new TSubrubro().getMap();
-        mapValidos = tcert.getMapValidos();
+        mapValidos = tcert.getMapValidos(OptionsCfg.MODULO_ACTIVO);
         
         mapEstados = OptionsCfg.getMap( OptionsCfg.getEstadoActivo());
 

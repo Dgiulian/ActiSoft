@@ -57,7 +57,7 @@
                     <% if (!nuevo) {%>                     
                     <div class="button-bar">
                        <% if(rubro.getAplica_certificado()!=0) {%>
-                        <a   class="btn btn-info" href="<%=PathCfg.CERTIFICADO %>?id_activo=<%= activo.getId()%>"><i class="fa fa-certificate fa-fw"></i> Certificados</a>
+                        <a   class="btn btn-info" href="<%=PathCfg.CERTIFICADO %>?id_modulo=<%=OptionsCfg.MODULO_ACTIVO%>&id_modulo=<%= activo.getId()%>"><i class="fa fa-certificate fa-fw"></i> Certificados</a>
                         <%}%>
                        <% if(activo.getAplica_compra()!=0) {%>
                             <a  class="btn btn-success" href="<%=PathCfg.COMPRA %>?id_activo=<%= activo.getId()%>"><i class="fa fa-money fa-fw"></i> Compras</a>

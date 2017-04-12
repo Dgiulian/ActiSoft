@@ -10,6 +10,7 @@ import bd.Rubro;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import utils.OptionsCfg;
 import utils.Parser;
 
 /**
@@ -127,7 +128,7 @@ public class TActivo extends TransaccionBase<Activo>{
                 TCertificado tc = new TCertificado();
                 ArrayList<Activo> listaArray = new ArrayList(lista);
                 for(Activo activo:listaArray){
-                    Certificado vigente = tc.getVigente(activo.getId());
+                    Certificado vigente = tc.getVigente(OptionsCfg.MODULO_ACTIVO,activo.getId());
                     System.out.println(activo.getId());
                     if (vigente==null) {
                         lista.remove(activo); 

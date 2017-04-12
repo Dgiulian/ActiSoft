@@ -122,6 +122,7 @@ public class OptionsCfg {
     public static final Integer KIT_ESTADO_ALQUILADO  = 2;
     public static final Integer KIT_ESTADO_ELIMINADO  = 3;
     public static final Integer KIT_ESTADO_VENDIDO    = 4;
+    public static final Integer KIT_ESTADO_NO_APTO    = 8;
     
     public static final int COMPRA_NADA      = 0;
     public static final int COMPRA_REEMPLAZA = 1;
@@ -275,6 +276,7 @@ public static ArrayList<Option> getTipoActividades(){
         lista.add(new Option(KIT_ESTADO_ALQUILADO,String.format("%03d",KIT_ESTADO_ALQUILADO),"Alquilado"));
         lista.add(new Option(KIT_ESTADO_ELIMINADO,String.format("%03d",KIT_ESTADO_ELIMINADO),"Eiiminado"));
         lista.add(new Option(KIT_ESTADO_VENDIDO,String.format("%03d",KIT_ESTADO_VENDIDO),"Vendido"));
+        lista.add(new Option(KIT_ESTADO_NO_APTO,String.format("%03d",KIT_ESTADO_NO_APTO),"No Apto"));
 //        lista.add(new Option(6,"003","Cabeza fractura 001"));        
         return lista;
    }

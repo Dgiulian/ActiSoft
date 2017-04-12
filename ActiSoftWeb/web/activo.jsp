@@ -248,9 +248,9 @@
            html +=wrapTag('td',htmlEstado,'');
            html += wrapTag('td',d.stock,'');
            if(d.id_certificado!==0){
-            var urlCertificado = '<%=PathCfg.CERTIFICADO_EDIT%>?id='+ d.id_certificado + '&id_activo=' + d.id;
+            var urlCertificado = '<%=PathCfg.CERTIFICADO_EDIT%>?id='+ d.id_certificado + '&id_modulo=1&id_objeto=' + d.id;
            } else {
-               var urlCertificado = '<%=PathCfg.CERTIFICADO%>?id_activo=' + d.id;
+               var urlCertificado = '<%=PathCfg.CERTIFICADO%>?id_modulo=1&id_objeto=' + d.id;
            }
            var htmlCertificado = '<a href="' + urlCertificado +'">'+ d.certificado +'</a>';
            html += wrapTag('td',htmlCertificado,'');

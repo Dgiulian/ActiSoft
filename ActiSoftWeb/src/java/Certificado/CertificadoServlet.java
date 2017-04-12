@@ -5,6 +5,7 @@
 package Certificado;
 
 import bd.Activo;
+import bd.Kit;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -13,7 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TActivo;
 import transaccion.TCertificado;
+import transaccion.TKit;
 import utils.BaseException;
+import utils.OptionsCfg;
+import utils.Parser;
 
 /**
  *
@@ -35,20 +39,25 @@ public class CertificadoServlet extends HttpServlet {
             throws ServletException, IOException {
         /* Modificamos el resultado de los certificados que ya vencieron*/
         //new TCertificado().vencerCertificados();
+        Integer  id_modulo = Parser.parseInt(request.getParameter("id_modulo"));
+        Integer id_objeto = Parser.parseInt(request.getParameter("id_objeto"));
         
-        String idActivo = request.getParameter("id_activo");
         try{
-            Integer id_activo;
-            try{
-                id_activo = Integer.parseInt(idActivo);
-            } catch (NumberFormatException ex){
-                id_activo = 0;
+            
+            if (id_modulo.equals(OptionsCfg.MODULO_KIT) ) {
+                Kit kit = new TKit().getById(id_objeto);
+                if (kit == null) throw new BaseException("Kit inexistente", "No se encontr&oacute; el kit");
+                request.setAttribute("kit", kit);
+                
+             } else {
+                Activo activo = new TActivo().getById(id_objeto);
+                if (activo == null) throw new BaseException("Activo inexistente", "No se encontr&oacute; el activo");
+                request.setAttribute("activo", activo);
             }
-            Activo activo = new TActivo().getById(id_activo);
             
-            if (activo == null) throw new BaseException("Activo inexistente", "No se encontr&oacute; el activo");
             
-            request.setAttribute("activo", activo);
+            request.setAttribute("id_modulo",id_modulo);
+            request.setAttribute("id_objeto",id_objeto);
             request.getRequestDispatcher("certificado.jsp").forward(request, response);
         } catch (BaseException ex){
             request.setAttribute("titulo", ex.getResult());

@@ -62,6 +62,13 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header"><% if(nuevo) {%>Nuevo<%}else {%>Editar<%}%> Kit</h1>
+                    <% if (!nuevo) {%>                     
+                    <div class="button-bar">
+                       <% if(rubro.getAplica_certificado()!=0) {%>
+                        <a   class="btn btn-info" href="<%=PathCfg.CERTIFICADO %>?id_modulo=<%=OptionsCfg.MODULO_KIT%>&id_objeto=<%= kit.getId()%>"><i class="fa fa-certificate fa-fw"></i> Certificados</a>
+                        <%}%>
+                    </div>
+                    <% } %>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>

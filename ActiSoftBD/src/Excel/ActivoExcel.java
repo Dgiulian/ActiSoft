@@ -62,7 +62,7 @@ public class ActivoExcel extends BaseExcel<bd.Activo> {
     public boolean createExcel(String filename, List<Activo> lista){
         HashMap<Integer, Rubro> mapRubros        = new TRubro().getMap();
         HashMap<Integer, Subrubro> mapSubrubros  = new TSubrubro().getMap();
-        HashMap<Integer, Certificado> mapValidos = new TCertificado().getMapValidos();
+        HashMap<Integer, Certificado> mapValidos = new TCertificado().getMapValidos(OptionsCfg.MODULO_ACTIVO);
         HashMap<Integer, OptionsCfg.Option> mapEstados = OptionsCfg.getMap( OptionsCfg.getEstadoActivo());
         
         this.estilo = setStyleBoldCenter();

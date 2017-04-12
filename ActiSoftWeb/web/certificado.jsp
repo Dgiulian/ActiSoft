@@ -5,15 +5,26 @@
 <%@page import="transaccion.TSubrubro"%>
 <%@page import="bd.Subrubro"%>
 <%@page import="bd.Rubro"%>
+<%@page import="bd.Kit"%>
 <%@page import="java.util.List"%>
 <%@page import="transaccion.TRubro"%>
 <%
-    Activo activo = (Activo) request.getAttribute("activo");
-    if(activo==null) activo = new Activo();
+    Activo activo = null;
+    Kit kit = null;
+    Integer id_modulo = (Integer) request.getAttribute("id_modulo");
+    Integer id_objeto;
+    boolean moduloKit = id_modulo.equals(OptionsCfg.MODULO_KIT);
+    if(moduloKit) {
+        kit    = (Kit) request.getAttribute("kit");
+        id_objeto = kit.getId();
+    } else {
+        activo = (Activo) request.getAttribute("activo");
+        id_objeto = activo.getId();
+    }
+    
 %>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
      <%@include  file="tpl_head.jsp" %>
       <style>
@@ -35,12 +46,20 @@
         <div id="page-wrapper">
              <div class="row">
                  <div class="col-lg-12">
-                     <h3><span class="activo-heading">Activo: <a href="<%=PathCfg.ACTIVO_EDIT%>?id=<%=activo.getId()%>"><%= activo.getCodigo() %> - <%= activo.getDesc_larga()%></a> </span></h3>
+                     <h3><span class="activo-heading">
+                        <% if(moduloKit) { %>
+                             Kit:    <a href="<%=PathCfg.KIT_EDIT%>?id=<%=kit.getId()%>"><%= kit.getCodigo() %> - <%= kit.getNombre()%></a> </span>                             
+                        <% } else { %>
+                             Activo: <a href="<%=PathCfg.ACTIVO_EDIT%>?id=<%=activo.getId()%>"><%= activo.getCodigo() %> - <%= activo.getDesc_larga()%></a> </span>
+                        <% } %>
+                     </h3>
                  </div>
              </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Certificados <a href="<%= PathCfg.CERTIFICADO_EDIT %>?id_activo=<%= activo.getId() %>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a></h1>
+                    <h1 class="page-header">Certificados <a href="<%= PathCfg.CERTIFICADO_EDIT %>?id_modulo=<%=id_modulo%>&id_objeto=<%= id_objeto %>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a></h1>
+                    <input type="hidden" id="id_objeto" name="id_objeto" value="<%= id_objeto %>">
+                    <input type="hidden" id="id_modulo" name="id_modulo" value="<%= id_modulo %>">
                 </div>
             </div>
             <!-- /.row -->
@@ -107,7 +126,9 @@
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        loadDataCertificado({id_activo:<%= activo.getId()%>});
+        var id_objeto = $('#id_objeto').val();
+        var id_modulo = $('#id_modulo').val();
+        loadDataCertificado({id_modulo:id_modulo,id_objeto:id_objeto});
     });
     function loadDataCertificado(data){
          var $tabla = $('#tblCertificado');
@@ -157,7 +178,7 @@
             var externo = (d.externo)?"Si":"No";
             html += wrapTag('td',externo,'');
             html += wrapTag('td',d.observaciones,'');
-           var htmlEdit = "<a href='<%= PathCfg.CERTIFICADO_EDIT%>?id="+ d.id +"&id_activo="+ d.id_activo +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
+           var htmlEdit = "<a href='<%= PathCfg.CERTIFICADO_EDIT%>?id="+ d.id +"&id_modulo="+ d.id_modulo +"&id_objeto="+ d.id_objeto +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
            var htmlDel = "<span href='' data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span>";
            html +=wrapTag('td',htmlEdit + htmlDel,'');
            html +="</tr>";

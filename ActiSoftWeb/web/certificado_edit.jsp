@@ -6,7 +6,7 @@
 <%@page import="utils.TFecha"%>
 <%@page import="bd.Certificado"%>
 <%@page import="bd.Rubro"%>
-
+<%@page import="bd.Kit"%>
 <%@page import="utils.OptionsCfg.Option"%>
 <%@page import="utils.OptionsCfg"%>
 <%@page import="utils.OptionsCfg"%>
@@ -14,13 +14,26 @@
 
 <% 
     Certificado certificado = (Certificado) request.getAttribute("certificado");
-    Activo activo = (Activo) request.getAttribute("activo");
+    Activo activo = null;
+    Kit kit = null;
+    Integer id_modulo = (Integer) request.getAttribute("id_modulo");
+    Integer id_objeto;
     boolean nuevo = false;
     if (certificado==null) {
         certificado= new Certificado();    
         certificado.setId_resultado(OptionsCfg.CERTIFICADO_APTO);
     }    
     nuevo = certificado.getId()==0;
+    boolean moduloKit = id_modulo.equals(OptionsCfg.MODULO_KIT);
+    if(moduloKit) {
+        kit    = (Kit) request.getAttribute("kit");
+        id_objeto = kit.getId();
+        
+    } else {
+        activo = (Activo) request.getAttribute("activo");
+        id_objeto = activo.getId();
+    }
+    
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,14 +65,20 @@
             </div>
                 
              <div class="row">
-                 <div class="col-lg-12">
-                     <h3><span class="activo-heading">Activo: <%= activo.getCodigo() %> - <%= activo.getDesc_larga()%> </span></h3>
+                 <div class="col-lg-12">                     
+                     <h3><span class="activo-heading">
+                        <% if(moduloKit) { %>
+                             Kit:    <%= kit.getCodigo() %> - <%= kit.getNombre()%> </span>                             
+                        <% } else { %>
+                             Activo: <%= activo.getCodigo() %> - <%= activo.getDesc_larga()%> </span>
+                        <% } %>
+                     </h3>
                  </div>
              </div>
             <div class="row">
                  <%
                     String action = PathCfg.CERTIFICADO_EDIT;
-                    action += "?id_activo=" + activo.getId();
+                    action += "?id_modulo=" + id_modulo + "&id_objeto=" + id_objeto;
                     action += (!nuevo)?"&id="+certificado.getId():"";
                 %>
                 <form role="form" method="POST" action="<%=action%>" enctype="multipart/form-data">                 
@@ -70,7 +89,8 @@
                       <div class="row">
                         <div class="col-lg-6" >
                             <fieldset>
-                                <input type="hidden" name="id_activo" value="<%= activo.getId()%>">
+                                <input type="hidden" name="id_modulo" value="<%= id_modulo%>">
+                                <input type="hidden" name="id_objeto" value="<%= id_objeto %>">
                                 <% if (!nuevo) {%>
                                     <input type="hidden" name="id" id="id" value="<%= certificado.getId()%>">                                    
                                 <% }%>
@@ -132,7 +152,7 @@
                                      <div class="form-group " >
                                          <div class="checkbox">
                                             <label for="externo">
-                                            <% String checked = (certificado.getExterno(true))?"checked":"";%>
+                                            <% String checked = (certificado.getExterno().equals(1))?"checked":"";%>
                                             <input class="" name="externo" id="externo" type="checkbox" value="1" <%= checked %>>
                                             Externo </label>
                                           </div>
@@ -238,7 +258,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <button type="submit" class="btn btn-default" name="btnSubmit" id="btnSubmit">Guardar</button>
-                                <a type="reset" class="btn btn-default" href="<%=PathCfg.CERTIFICADO%>?id_activo=<%= activo.getId() %>">Cancelar</a>
+                                <a type="reset" class="btn btn-default" href="<%=PathCfg.CERTIFICADO%>?id_modulo=<%=id_modulo%>&id_objeto=<%= id_objeto %>">Cancelar</a>
                             </div>
                         </div>
                           <!-- ./row -->

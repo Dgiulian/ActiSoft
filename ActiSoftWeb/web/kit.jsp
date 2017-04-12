@@ -80,6 +80,7 @@
                                             <th>Rubro</th>                                            
                                             <th>Subrubro</th>
                                             <th>Estado</th>
+                                            <th>Certificado</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -191,14 +192,20 @@
            html +="<tr class=''>";
            d = data[i];
 //            html += wrapTag('td',convertirFecha(d.fecha_creacion),'');            
-            html += wrapTag('td',d.codigo,'');            
-            html += wrapTag('td',d.nombre,'');            
-            html += wrapTag('td',d.rubro,'');            
-            html += wrapTag('td',d.subrubro,'');            
+            html += wrapTag('td',d.codigo,'');
+            html += wrapTag('td',d.nombre,'');
+            html += wrapTag('td',d.rubro,'');
+            html += wrapTag('td',d.subrubro,'');
             
             var htmlEstado = '<a href="#" data-toggle="modal" data-target="#mdlKitHistoria" data-index="'+ d.id + '" >' + d.estado + ' </a>';
             html += wrapTag('td',htmlEstado,'');            
-//          
+            if(d.id_certificado!==0){
+            var urlCertificado = '<%=PathCfg.CERTIFICADO_EDIT%>?id_modulo=20&id='+ d.id_certificado + '&id_activo=' + d.id;
+           } else {
+               var urlCertificado = '<%=PathCfg.CERTIFICADO%>?id_modulo=20&id_objeto=' + d.id;
+           }
+           var htmlCertificado = '<a href="' + urlCertificado +'">'+ d.certificado +'</a>';
+           html += wrapTag('td',htmlCertificado,'');
            var htmlEdit = "<a href='<%= PathCfg.KIT_EDIT%>?id="+ d.id +"' class='btn btn-xs btn-circle  btn-warning'><span class='fa fa-edit fw'></span></a> ";
             if(d.activo )
            var htmlDel = "<span href='' data-index='"+ d.id + "' class='btn btn-xs btn-danger btn-circle btn-del'><span class='fa fa-trash fw'></span></span>";

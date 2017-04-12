@@ -6,6 +6,7 @@ package Certificado;
 
 import bd.Activo;
 import bd.Certificado;
+import bd.Kit;
 import bd.Parametro;
 import bd.Rubro;
 import java.io.File;
@@ -26,6 +27,7 @@ import org.apache.commons.io.FilenameUtils;
 import transaccion.TActivo;
 import transaccion.TAuditoria;
 import transaccion.TCertificado;
+import transaccion.TKit;
 import transaccion.TParametro;
 import transaccion.TRubro;
 import utils.BaseException;
@@ -40,21 +42,6 @@ import utils.TFecha;
  */
 public class CertificadoEdit extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP
-     * <code>GET</code> and
-     * <code>POST</code> methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-    }
-
    
     /**
      * Handles the HTTP
@@ -68,40 +55,47 @@ public class CertificadoEdit extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {        
-        String idCertif = request.getParameter("id");        
-        String idActivo = request.getParameter("id_activo");
-        Integer  id_certif;
-        Certificado certificado = null;     
-        boolean nuevo = false;
+        Integer  id_certif = Parser.parseInt(request.getParameter("id"));
+        Integer  id_modulo = Parser.parseInt(request.getParameter("id_modulo"));        
+        Integer id_objeto = Parser.parseInt(request.getParameter("id_objeto"));
         
-        try{
-            id_certif = Integer.parseInt(idCertif);            
-        } catch (NumberFormatException ex){
-            id_certif = 0;
-        }
+        Certificado certificado = null;     
+        boolean nuevo = false;  
+        Integer id_rubro;
+
         certificado = new TCertificado().getById(id_certif);
         if(certificado==null) {
             certificado = new Certificado();
             certificado.setId_resultado(OptionsCfg.CERTIFICADO_APTO);
+            certificado.setId_modulo(id_modulo);
             nuevo = true;
+        } else {
+            id_modulo = certificado.getId_modulo();
+            id_objeto = certificado.getId_objeto();
         }
-        try{
-            Integer id_activo;
-            if(nuevo){                
-               id_activo = Integer.parseInt(idActivo);                
-               
-            } else id_activo = certificado.getId_activo();
+        try{            
+            if (id_modulo.equals(OptionsCfg.MODULO_KIT) ) {
+                Kit kit = new TKit().getById(id_objeto);
+                if (kit == null) throw new BaseException("Kit inexistente", "No se encontr&oacute; el kit");
+                id_rubro = kit.getId_rubro();
+                request.setAttribute("kit", kit);
+            } else{
+                Activo activo = new TActivo().getById(id_objeto);
+                if (activo == null) throw new BaseException("Activo inexistente", "No se encontr&oacute; el activo");
+                id_rubro = activo.getId_rubro();
+                if (nuevo) certificado.setId_objeto(activo.getId());
+                request.setAttribute("activo", activo);
+            }
+            if (nuevo) {
+                certificado.setId_modulo( id_modulo);
+                certificado.setId_objeto(id_objeto);
+            }
+            Rubro rubro = new TRubro().getById(id_rubro);
             
-            Activo activo = new TActivo().getById(id_activo);
-            if (activo == null) throw new BaseException("Activo inexistente", "No se encontr&oacute; el activo");
-            
-            Rubro rubro = new TRubro().getById(activo.getId_rubro());
             if(rubro==null) throw new BaseException("ERROR","Error de configuraci&oacute;n del activo");
             if(rubro.getAplica_compra()==0)  throw new BaseException("ERROR","El activo no aplica certificado");
             
-            if (nuevo) certificado.setId_activo(activo.getId());
-            
-            request.setAttribute("activo", activo);
+            request.setAttribute("id_modulo",id_modulo);
             request.setAttribute("certificado", certificado);
             request.getRequestDispatcher("certificado_edit.jsp").forward(request, response);
         } catch (BaseException ex){
@@ -128,6 +122,7 @@ public class CertificadoEdit extends HttpServlet {
             throws ServletException, IOException {
         //request.setCharacterEncoding("UTF-8");
         System.out.println(request.getCharacterEncoding());
+        String idModulo = "";
         String idActivo = "";
         String idCertif = "";
         String codigo = "";
@@ -197,7 +192,8 @@ public class CertificadoEdit extends HttpServlet {
                 // Process regular form field (input type="text|radio|checkbox|etc", select, etc).
                 String fieldName = item.getFieldName();
                 String fieldValue = item.getString("UTF-8");
-               if (fieldName.equalsIgnoreCase("id_activo"))                idActivo = fieldValue;
+               if (fieldName.equalsIgnoreCase("id_objeto"))                idActivo = fieldValue;
+               if (fieldName.equalsIgnoreCase("id_modulo"))                idModulo = fieldValue;
                if (fieldName.equalsIgnoreCase("id"))                       idCertif = fieldValue;
                if (fieldName.equalsIgnoreCase("codigo"))                   codigo = fieldValue;
                if (fieldName.equalsIgnoreCase("precinto"))                 precinto = fieldValue;
@@ -243,12 +239,19 @@ public class CertificadoEdit extends HttpServlet {
                 }
             }
 
-            Integer id_activo = Parser.parseInt(idActivo);
+            Integer id_modulo = Parser.parseInt(idModulo);
+            Integer id_objeto = Parser.parseInt(idActivo);
             Integer id_certif = Parser.parseInt(idCertif); 
-            
-            
-            Activo activo = new TActivo().getById(id_activo);
-            if (activo == null) throw new BaseException("Activo inexistente", "No se encontr&oacute; el activo");
+            Kit kit = null;
+            Activo activo = null;
+            if (id_modulo.equals(OptionsCfg.MODULO_KIT) ) {
+                 kit = new TKit().getById(id_objeto);
+                if (kit == null) throw new BaseException("Kit inexistente", "No se encontr&oacute; el kit");
+                
+             } else {
+                activo = new TActivo().getById(id_objeto);
+                if (activo == null) throw new BaseException("Activo inexistente", "No se encontr&oacute; el activo");
+            }                        
             
             Certificado certificado;
             TCertificado tc = new TCertificado();
@@ -259,7 +262,8 @@ public class CertificadoEdit extends HttpServlet {
                 certificado = new Certificado();
                 nuevo = true;
             }                        
-            certificado.setId_activo(id_activo);
+            certificado.setId_objeto(id_objeto);
+            certificado.setId_modulo(id_modulo);
             certificado.setFecha(TFecha.formatearFecha(fecha, TFecha.formatoVista, TFecha.formatoBD));
             certificado.setFecha_hasta(TFecha.formatearFecha(fecha_hasta, TFecha.formatoVista, TFecha.formatoBD));
             certificado.setFecha_desde(TFecha.formatearFecha(fecha_desde, TFecha.formatoVista, TFecha.formatoBD));
@@ -271,7 +275,7 @@ public class CertificadoEdit extends HttpServlet {
             
             certificado.setObservaciones(observaciones);
             boolean externo = strExterno!=null && !strExterno.equals("");
-            certificado.setExterno(externo);
+            certificado.setExterno(externo?1:0);
             
             certificado.setDesmontaje(desmontaje);
             certificado.setLimpieza(limpieza);
@@ -315,17 +319,25 @@ public class CertificadoEdit extends HttpServlet {
             id_usuario = (Integer) session.getAttribute("id_usuario");
             id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
             
-            
-            if(certificado.getId_resultado()==OptionsCfg.CERTIFICADO_NO_APTO){
-                activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_NO_APTO);
+            if (id_modulo.equals(OptionsCfg.MODULO_KIT) ) {
+                if(certificado.getId_resultado().equals(OptionsCfg.CERTIFICADO_NO_APTO)){
+                    kit.setId_estado(OptionsCfg.KIT_ESTADO_NO_APTO);
+                } else {
+                    kit.setId_estado(OptionsCfg.KIT_ESTADO_DISPONIBLE);
+                }
+                new TKit().actualizar(kit);
             } else {
-                activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                if(certificado.getId_resultado().equals(OptionsCfg.CERTIFICADO_NO_APTO)){
+                    activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_NO_APTO);
+                } else {
+                    activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                }
+                new TActivo().actualizar(activo);
             }
-            new TActivo().actualizar(activo);
-            TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_CERTIFICADO,OptionsCfg.ACCION_MODIFICAR,activo.getId());
+            TAuditoria.guardar(id_usuario,id_tipo_usuario,id_modulo,OptionsCfg.ACCION_MODIFICAR,id_objeto);
             
             TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_CERTIFICADO,nuevo?OptionsCfg.ACCION_ALTA:OptionsCfg.ACCION_MODIFICAR,certificado.getId());
-            response.sendRedirect(PathCfg.CERTIFICADO + "?id_activo=" + certificado.getId_activo());
+            response.sendRedirect(PathCfg.CERTIFICADO + "?id_modulo="+ certificado.getId_modulo()+"&id_objeto=" + certificado.getId_objeto());
             
         } catch (FileUploadException e) {
             throw new ServletException("Cannot parse multipart request.", e);
