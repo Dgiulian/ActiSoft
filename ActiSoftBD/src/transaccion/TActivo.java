@@ -174,9 +174,27 @@ public class TActivo extends TransaccionBase<Activo>{
         return lista;
     }
     public static void main(String[] args){
-        HashMap<String,String> filtros = new HashMap<String,String>();
-        filtros.put("fecha_hasta","2016-12-31");
-        new TActivo().getListaVencimiento(filtros);
+//        HashMap<String,String> filtros = new HashMap<String,String>();
+//        filtros.put("fecha_hasta","2016-12-31");
+//        new TActivo().getListaVencimiento(filtros);
+        
+        /* Pruebas de Equal  */
+        TActivo ta = new TActivo();
+        List<Activo> lstActivos = new TActivo().getList();
+        Activo a = lstActivos.get(3);
+        Activo a2 = ta.getById(a.getId());
+        Activo a3 = new Activo();
+        Activo a4 = new Activo();
+        Activo a5 = new Activo();
+        a3.setId(a.getId());
+        a4.setId(12);
+        a5.setId(6);
+        System.out.println(a.getId());
+        System.out.println(lstActivos.contains(a));
+        System.out.println(lstActivos.contains(a2));
+        System.out.println(lstActivos.contains(a3));
+        System.out.println(lstActivos.contains(a4));
+        System.out.println(lstActivos.contains(a5));
         
     }
 }

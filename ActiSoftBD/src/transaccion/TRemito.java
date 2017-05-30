@@ -22,6 +22,7 @@ import utils.OptionsCfg;
  */
 public class TRemito extends TransaccionBase<Remito> {
 //    private String orderBy = " remito.fecha desc ";
+    @Override
     public List<Remito>getList(){
         return super.getList("select * from remito");
     }
@@ -76,12 +77,12 @@ public class TRemito extends TransaccionBase<Remito> {
                 Activo activo = ta.getById(d.getId_activo());
                 if(activo==null) continue;
                 
-                if(remito.getId_tipo_remito()==OptionsCfg.REMITO_ENTREGA) { // Si es un remito de entrega, se devuelven los activos
+                if(remito.getId_tipo_remito().equals(OptionsCfg.REMITO_ENTREGA)) { // Si es un remito de entrega, se devuelven los activos
                     if(activo.getAplica_stock() == 1) {                
                         activo.setStock(activo.getStock() + d.getCantidad());
                      }             
                     activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
-                } else if(remito.getId_tipo_remito()==OptionsCfg.REMITO_DEVOLUCION) {
+                } else if(remito.getId_tipo_remito().equals(OptionsCfg.REMITO_DEVOLUCION)) {
                     if(activo.getAplica_stock() == 1) {
                         activo.setStock(activo.getStock() - d.getCantidad());
                      }
@@ -93,10 +94,10 @@ public class TRemito extends TransaccionBase<Remito> {
             } else {
                 Kit kit = tk.getById(d.getId_kit());
                 if (kit==null) continue;
-                if(remito.getId_tipo_remito()==OptionsCfg.REMITO_ENTREGA) { // Si es un remito de entrega, se devuelven los activos
+                if(remito.getId_tipo_remito().equals(OptionsCfg.REMITO_ENTREGA)) { // Si es un remito de entrega, se devuelven los activos
 //                    kit.setStock(kit.getStock() + d.getCantidad());
                     kit.setId_estado(OptionsCfg.KIT_ESTADO_DISPONIBLE);
-                } else if(remito.getId_tipo_remito()==OptionsCfg.REMITO_DEVOLUCION) {
+                } else if(remito.getId_tipo_remito().equals(OptionsCfg.REMITO_DEVOLUCION)) {
 //                    kit.setStock(kit.getStock() - d.getCantidad());
 //                    if(kit.getStock()<=0) 
                      kit.setId_estado(OptionsCfg.KIT_ESTADO_ALQUILADO);
@@ -105,7 +106,7 @@ public class TRemito extends TransaccionBase<Remito> {
             }
             td.baja(d);
         }
-        if(remito.getId_tipo_remito()==OptionsCfg.REMITO_DEVOLUCION){
+        if(remito.getId_tipo_remito().equals(OptionsCfg.REMITO_DEVOLUCION)){
             // Si es un remito de devolución, se tiene que volver a atrás el estado del remito de entrega
             Remito entrega = this.getById(remito.getId_referencia());
             if(entrega!=null){

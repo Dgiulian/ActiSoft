@@ -97,14 +97,17 @@ public class KitDel extends HttpServlet {
                TKit_historia th = new TKit_historia();
                for(Kit_detalle d:lstDetalle){
                     // Cuando se elimina un kit, hay que devolver el stock del activo.
-                   Activo activo = ta.getById(d.getId_activo());
+                   /*
+                    Activo activo = ta.getById(d.getId_activo());
                    if(activo==null) continue;
                    if(!activo.getId_estado().equals(OptionsCfg.ACTIVO_ESTADO_KIT)) continue;
                    
                    activo.setStock(activo.getStock() + 1);
                    activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
                    ta.actualizar(activo);
-                    
+                   */
+                   /* 24/04/2017 - No se modifica el stcok y el estado de un activo */
+                   
                    Kit_historia historia = new Kit_historia();
                    historia.setId_activo(d.getId_activo());
                    historia.setId_accion(OptionsCfg.ACCION_BAJA);

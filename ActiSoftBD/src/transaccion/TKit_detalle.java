@@ -5,8 +5,11 @@
 package transaccion;
 
 import bd.Activo;
+import bd.Kit;
 import bd.Kit_detalle;
+import java.util.ArrayList;
 import java.util.List;
+import utils.OptionsCfg;
 
 /**
  *
@@ -28,7 +31,30 @@ public class TKit_detalle extends TransaccionBase<Kit_detalle>{
         return super.actualizar(detalle, "id");
     }
     public List<Activo> getActivos(Integer id_kit){
-        String query = "";
-        return null;
+        List<Activo> lstActivos = new ArrayList<Activo>();
+        TActivo ta = new TActivo();
+        List<Kit_detalle> lstKit_detalle = this.getByKitId(id_kit);
+        for(Kit_detalle kd : lstKit_detalle){
+            Activo activo = ta.getById(kd.getId_activo());
+            if (activo!=null) lstActivos.add(activo);
+        }
+        return lstActivos;
+    }
+
+    public boolean controlarActivos(Kit kit) {
+        String query = String.format("select kit_detalle.* \n" +
+                                     "  from kit_detalle,activo\n" +
+                                     " where kit_detalle.id_activo = activo.id\n" +
+                                     "   and kit_detalle.id_kit = %d\n" +
+                                     " 	and activo.id_estado <> %d",kit.getId(),OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+        return this.getById(query)==null;
+    }
+    public static void main(String[] args){
+        //Kit kit = new TKit().getById(35);
+        //System.out.println(new TKit_detalle().controlarActivos(kit));
+        List<Activo> lstActivos = new TKit_detalle().getActivos(14);
+        System.out.println(lstActivos.size());
+        
+        
     }
 }

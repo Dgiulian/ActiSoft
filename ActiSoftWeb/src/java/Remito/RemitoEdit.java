@@ -27,6 +27,7 @@ import transaccion.TCliente;
 import transaccion.TContrato;
 import transaccion.TContrato_detalle;
 import transaccion.TKit;
+import transaccion.TKit_detalle;
 import transaccion.TRemito_detalle;
 import transaccion.TRemito;
 import transaccion.TSite;
@@ -111,31 +112,33 @@ public class RemitoEdit extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        HttpSession session = request.getSession();
+        Integer id_usuario = (Integer) session.getAttribute("id_usuario");
+        Integer id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
+        Integer id_remito      = Parser.parseInt(request.getParameter("id"));
+        Integer id_cliente     = Parser.parseInt(request.getParameter("idCliente"));
+        Integer id_site        = Parser.parseInt(request.getParameter("id_site"));
+        Integer id_contrato    = Parser.parseInt(request.getParameter("id_contrato"));
+        String ptoVta          = request.getParameter("punto_venta");
+        Integer numero         = Parser.parseInt(request.getParameter("numero"));        
+        String fecha           = request.getParameter("fecha");
+        String observaciones   = request.getParameter("observaciones");
         String[] codigoActivos = request.getParameterValues("codigoActivo");
         String[] arrId_activos = request.getParameterValues("id_activo");
         String[] arrId_kits    = request.getParameterValues("id_kit");
         String[] cantActivos   = request.getParameterValues("cantActivo");
-        String[] arrPos = request.getParameterValues("posicion");
-        String strCliente = request.getParameter("idCliente");
-        String strSite = request.getParameter("id_site");
-        String ptoVta = request.getParameter("punto_venta");
-        String numRemito = request.getParameter("numero");
-        String fecha = request.getParameter("fecha");
-        String observaciones = request.getParameter("observaciones");
-       
+        String[] arrPos        = request.getParameterValues("posicion");
+        
         ArrayList<Remito_detalle> lstDetalle = new ArrayList<Remito_detalle>();
         ArrayList<Activo> lstActivo = new ArrayList<Activo>();
         ArrayList<Kit> lstKit = new ArrayList<Kit>();
         
-        Integer id_remito = Parser.parseInt("id");
         
-        TRemito tr = new TRemito();
-        TRemito_detalle dm = new TRemito_detalle();
-        TActivo ta = new TActivo();
-        TKit    tk = new TKit();
-        HttpSession session = request.getSession();
-        Integer id_usuario = (Integer) session.getAttribute("id_usuario");
-        Integer id_tipo_usuario = (Integer) session.getAttribute("id_tipo_usuario");
+        TRemito tr         = new TRemito();
+        TRemito_detalle trd = new TRemito_detalle();
+        TActivo ta         = new TActivo();
+        TKit    tk         = new TKit();
+        TKit_detalle tkd   = new TKit_detalle();
         
         Remito remito;
         boolean nuevo = false;
@@ -145,21 +148,15 @@ public class RemitoEdit extends HttpServlet {
                 remito = new Remito();
                 nuevo = true;
             }
-                       
+            //Que signific que existe referencia?           
             if(!nuevo && tr.existeReferencia(remito)) throw new BaseException("ERROR","Existe un remito de referencia para este remito. No se puede editar");
             
-            if(strCliente ==null || strCliente.equals("")) {
-                throw new BaseException("Cliente inexistente","Debe seleccionar el cliente del remito");
-            }
-            if(numRemito ==null || numRemito.equals("")) {
-                throw new BaseException("N&uacute;mero de Remito","Debe ingresar el n&uacute;mero de remito");
-            }
-            Cliente cliente = new TCliente().getById(Parser.parseInt(strCliente));            
+           
+            Cliente cliente = new TCliente().getById(id_cliente);            
             if (cliente==null) throw new BaseException("Cliente inexistente","Seleccione el cliente del remito");
             
-            String id_contrato  = request.getParameter("id_contrato");
             
-            Contrato contrato = new TContrato().getById(Parser.parseInt(id_contrato));
+            Contrato contrato = new TContrato().getById(id_contrato);
             if(contrato==null) throw new BaseException("Contrato inexistente","Seleccione el contrato del remito");
             
             if(fecha==null||fecha.equals("")){
@@ -171,18 +168,19 @@ public class RemitoEdit extends HttpServlet {
                 mapDetalle.put(d.getPosicion(),d);
             }
             
-            Integer id_site = Parser.parseInt(strSite);                        
-            Site site = new TSite().getById(id_site);
+           
             // Controlar si existe el Site?
             
-            Integer numero = Parser.parseInt(numRemito);
+            
             Integer punto_venta = Parser.parseInt(ptoVta);            
             if(numero==0) throw new BaseException("ERROR","Ingrese el n&uacute;mero de remito");
             
             if(nuevo && new TRemito().getByNumero(numero)!=null) 
                  throw new BaseException("ERROR","Ya existe un remito con ese n&uacute;mero");
             
-            remito.setId_cliente(cliente.getId());
+            
+                                    
+            Site site = new TSite().getById(id_site);
             if(site!=null) {
                 remito.setId_site(site.getId());
                 remito.setId_pozo(site.getId_pozo());
@@ -195,6 +193,7 @@ public class RemitoEdit extends HttpServlet {
             remito.setId_tipo_remito(OptionsCfg.REMITO_ENTREGA);
             remito.setId_estado(OptionsCfg.REMITO_ESTADO_ABIERTO);
             remito.setId_contrato(contrato.getId());
+            remito.setId_cliente(cliente.getId());
             remito.setId_usuario(id_usuario);
             remito.setObservaciones(observaciones);
          // Verificamos que la longitud de los vectores sea la misa
@@ -208,22 +207,22 @@ public class RemitoEdit extends HttpServlet {
              
              if (codigoActivos[i].equals("")) continue;
              
-             Float cant = Parser.parseFloat(cantActivos[i]);
-             String codigo = codigoActivos[i].trim();
-             Integer pos = Parser.parseInt(arrPos[i]);
+             Float cant        = Parser.parseFloat(cantActivos[i]);
+             String codigo     = codigoActivos[i].trim();
+             Integer pos       = Parser.parseInt(arrPos[i]);
              Integer id_activo = Parser.parseInt(arrId_activos[i]);
-             Integer id_kit = Parser.parseInt(arrId_kits[i]);
+             Integer id_kit    = Parser.parseInt(arrId_kits[i]);
+             
              if (cant <= 0) continue;
              Remito_detalle detalle = new Remito_detalle();
              
-             
-//             Activo activo = ta.getByCodigo(codigo);
              Activo activo = ta.getById(id_activo);
              if(activo!=null) {
-                if(activo.getId_estado()!=OptionsCfg.ACTIVO_ESTADO_DISPONIBLE){
+                if (lstActivo.contains(activo)) throw new BaseException("ERROR","Existe al menos un Activo compartido en un Kit. No se puede generar el remito");
+                if(!OptionsCfg.ACTIVO_ESTADO_DISPONIBLE.equals(activo.getId_estado())){
                     throw new BaseException("Activo no disponible", String.format("El activo %s no est&aacute; disponible",activo.getCodigo()));
                 }
-                if(activo.getAplica_stock() == 1) {
+                if(activo.getAplica_stock().equals(1)) {
                    if(activo.getStock()<cant){
                        throw new BaseException("Cantidad insuficiente",String.format("El stock de %s es insuficiente. Stock actual: %.2f",activo.getCodigo(),activo.getStock()));
                    }
@@ -232,28 +231,44 @@ public class RemitoEdit extends HttpServlet {
                 detalle.setId_activo(activo.getId());
                lstActivo.add(activo);
              } else { // KIT
-//                 Kit kit = tk.getByCodigo(codigo);
-                 Kit kit = tk.getById(id_kit);
-                 if (kit==null)
-                     throw new BaseException("Activo o Kit inexistente", String.format("No existe el activo o el kit seleccionado: %s",codigo));
+                Kit kit = tk.getById(id_kit);
+                if (kit==null)
+                    throw new BaseException("Activo o Kit inexistente", String.format("No existe el activo o el kit seleccionado: %s",codigo));
                  
-                 if(kit.getId_estado()!=OptionsCfg.KIT_ESTADO_DISPONIBLE){
+                if(!OptionsCfg.KIT_ESTADO_DISPONIBLE.equals(kit.getId_estado())){
                     throw new BaseException("Kit no disponible", String.format("El kit %s no est&aacute; disponible",activo.getCodigo()));
                 }
-                
-//                if(kit.getStock()<cant){
-//                    throw new BaseException("Cantidad insuficiente",String.format("El stock de %s es insuficiente. Stock actual: %.2f",activo.getCodigo(),activo.getStock()));
-//                }
-//                kit.setStock(kit.getStock() - cant);                
+                // Controla si todos los activos del kit estan disponibles
+                if(!tkd.controlarActivos(kit)){
+                    throw new BaseException("ERROR","Alguno de los activos que componen el kit no est&aacue; disponible. No se puede generar el remito");
+                }
                 detalle.setId_kit(kit.getId());
+                
+                // Recorremos cada activo del Kit
+                List<Activo> activos = tkd.getActivos(kit.getId());
+                for (Activo a:activos){
+                   if (lstActivo.contains(a)) throw new BaseException("ERROR","Existe al menos un Activo compartido en un Kit. No se puede generar el remito");
+                   if(a.getAplica_stock().equals(1)) {
+                        if(a.getStock()<cant){
+                            throw new BaseException("Cantidad insuficiente",String.format("El stock de %s es insuficiente. Stock actual: %.2f",a.getCodigo(),a.getStock()));
+                        }
+                        a.setStock(a.getStock() - cant);
+                        
+                        lstActivo.add(a);
+                    }
+                   
+                }
+                 
+                
                 lstKit.add(kit);
-             }
+             } 
              
              detalle.setCantidad(cant);
              detalle.setPosicion(pos);
              lstDetalle.add(detalle);
              
          }
+         
          if(nuevo) {
            id_remito = tr.alta(remito);
             
@@ -262,29 +277,32 @@ public class RemitoEdit extends HttpServlet {
              tr.actualizar(remito);
          }
             
-            if(id_remito!=0){
-                remito.setId(id_remito);
-               for (Remito_detalle dr :lstDetalle){
-                   dr.setId_remito(id_remito);
-                   dm.alta(dr);
-               }
-               /* Cambio el estado de los activos a prestado */
-               for(Activo a: lstActivo){
-                   //a.setStock(a.getStock() );
-                   if (a.getAplica_stock() == 1 && a.getStock() <= 0){
-                        a.setId_estado(OptionsCfg.ACTIVO_ESTADO_ALQUILADO);
-                        ta.actualizar(a);
-                   }
-               }
-               for(Kit k:lstKit){
-//                   if ( k.getStock() <= 0)
-                    k.setId_estado(OptionsCfg.ACTIVO_ESTADO_ALQUILADO);
-                   tk.actualizar(k);
-               }
+        if(id_remito!=0){
+            remito.setId(id_remito);
+            for (Remito_detalle dr :lstDetalle){
+                dr.setId_remito(id_remito);
+                trd.alta(dr);
             }
+            /* Cambio el estado de los activos a prestado */
+            for(Activo a: lstActivo){
+                //a.setStock(a.getStock() );
+                if (a.getAplica_stock().equals(1) && a.getStock() <= 0){
+                     a.setId_estado(OptionsCfg.ACTIVO_ESTADO_ALQUILADO);
+                     TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_ACTIVO,OptionsCfg.ACCION_ALQUILER,a.getId());
+                     ta.actualizar(a);
+                }
+            }
+            
+            for(Kit k:lstKit){
+//                   if ( k.getStock() <= 0)
+                k.setId_estado(OptionsCfg.KIT_ESTADO_ALQUILADO);
+                tk.actualizar(k);
+                TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_KIT,OptionsCfg.ACCION_ALQUILER,k.getId());
+            }
+        }
            
-            TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_REMITO,OptionsCfg.ACCION_ALTA,remito.getId());
-            response.sendRedirect(PathCfg.REMITO);
+        TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_REMITO,OptionsCfg.ACCION_ALTA,remito.getId());
+        response.sendRedirect(PathCfg.REMITO);
          
             
         }catch(NumberFormatException ex){

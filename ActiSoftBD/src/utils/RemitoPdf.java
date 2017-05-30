@@ -297,15 +297,14 @@ public class RemitoPdf extends BasePdf {
      public void printSite(PdfContentByte cb,Integer start){
          //start = 636;
         Integer lineHeight = 13;
-         Pozo p = new TPozo().getById(this.remito.getId_pozo());
-         Equipo e = new TEquipo().getById(this.remito.getId_equipo());
-        String pozo = p!=null?p.getNombre():site.getPozo();
-        String equipo = e!=null?e.getNombre():site.getEquipo();
-        
+        Pozo p   = new TPozo().getById(this.remito.getId_pozo());
+        Equipo e = new TEquipo().getById(this.remito.getId_equipo());
         if(this.site!=null){
-             addText(cb,345,start,site.getArea());
-             addText(cb,345,start - lineHeight,pozo);
-             addText(cb,480,start - lineHeight,equipo);
+            String pozo = p!=null?p.getNombre():site.getPozo();
+            String equipo = e!=null?e.getNombre():site.getEquipo();
+            addText(cb,345,start,site.getArea());
+            addText(cb,345,start - lineHeight,pozo);
+            addText(cb,480,start - lineHeight,equipo);
         }
      }
      private void printFooter(PdfContentByte cb,Integer start){

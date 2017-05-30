@@ -108,7 +108,7 @@ public class KitEdit extends HttpServlet {
                 kit.setId_estado(OptionsCfg.KIT_ESTADO_DISPONIBLE);
             } //else { // Cuando se edita un kit, hay que incrementar 
                      // el stock de los activos que se eliminaron.
-            if(kit.getId_estado()==OptionsCfg.KIT_ESTADO_ALQUILADO ) throw new BaseException("ERROR","El Kit está alquilado y no puede ser editado");
+            if(OptionsCfg.KIT_ESTADO_ALQUILADO.equals(kit.getId_estado()) ) throw new BaseException("ERROR","El Kit está alquilado y no puede ser editado");
             
             if(nuevo && tk.getByCodigo(codigo)!=null) 
                  throw new BaseException("ERROR","Ya existe un kit con ese c&oacute;digo");
@@ -133,9 +133,13 @@ public class KitEdit extends HttpServlet {
              detalle.setCantidad(1);
              lstDetalle.add(detalle);
              mapActivos.put(activo.getId(),activo);
+             /*
              activo.setStock(0f);
              activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_KIT);
              lstActivos.add(activo);
+             */
+             /* 24/04/2017 - No se modifica el estado ni el stock de los activos */
+             
              Kit_historia historia = new Kit_historia();
              historia.setId_activo(activo.getId());
              historia.setId_accion(OptionsCfg.ACCION_ALTA);
@@ -156,14 +160,14 @@ public class KitEdit extends HttpServlet {
                     a = ta.getById(d.getId_activo());
                     if(a == null ) continue; // Si se elimino no hacemos nada 
                     
-                    a.setStock( 1f);
-                    a.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                    //a.setStock( 1f);
+                    //a.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
                     Kit_historia historia = new Kit_historia();
                     historia.setId_activo(d.getId_activo());
                     historia.setId_accion(OptionsCfg.ACCION_BAJA);
                     historia.setFecha(TFecha.ahora(TFecha.formatoBD + " " + TFecha.formatoHora));
                     lstHistoria.add(historia);
-                    lstActivos.add(a);
+                    //lstActivos.add(a);
                     lstBaja.add(d);
                 }
             }
@@ -184,9 +188,11 @@ public class KitEdit extends HttpServlet {
                    kd.setId_kit(id_kit);
                    tkd.alta(kd);
                }
+               /*
                for(Activo a:lstActivos){ //Actualizamos los activos
                    ta.actualizar(a);
                }
+               */
                for(Kit_historia h:lstHistoria){ //Agregamos la historia del kit
                    h.setId_kit(id_kit);
                    th.alta(h);

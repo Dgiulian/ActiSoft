@@ -416,4 +416,21 @@ public Activo(){}
    public void setFecha_alta(String fecha_alta) {
         this.fecha_alta = fecha_alta;
     }
+   
+    @Override
+    public boolean equals(Object obj) {
+            if (obj == this)
+                    return true;
+            if (obj == null)
+                    return false;
+            if (!(obj instanceof bd.Activo))
+                    return false;
+            return ((bd.Activo) obj).getId().equals(this.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) this.id;
+    }
+   
 }

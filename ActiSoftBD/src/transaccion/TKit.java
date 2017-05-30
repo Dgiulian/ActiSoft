@@ -43,6 +43,9 @@ public class TKit extends TransaccionBase<Kit>{
     public boolean actualizar(Kit kit){
         return super.actualizar(kit, "id");
     }
-    
+    public static void main(String[] args){
+        Kit kit = new TKit().getById(21);
+        System.out.println(kit.getNombre());
+    }
    
 }

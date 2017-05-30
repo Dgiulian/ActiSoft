@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import transaccion.TActivo;
 import transaccion.TAuditoria;
 import transaccion.TKit;
+import transaccion.TKit_detalle;
 import transaccion.TRemito;
 import transaccion.TRemito_detalle;
 import utils.BaseException;
@@ -100,21 +101,22 @@ public class RemitoDevolucion extends HttpServlet {
        try{
            TRemito tr = new TRemito();
            TRemito_detalle trd = new TRemito_detalle();
-           TActivo ta = new TActivo();
-           TKit tk    = new TKit();
-           
+           TActivo ta          = new TActivo();
+           TKit tk             = new TKit();
+           TKit_detalle tkd    = new TKit_detalle();
            HashMap<Integer,Remito> mapRemitos         = new HashMap<Integer,Remito>();
            HashMap<Integer,Remito_detalle> mapDetalle = new HashMap<Integer,Remito_detalle>();
            HashMap<Integer,Activo> mapActivo          = new HashMap<Integer,Activo>();
            HashMap<Integer,Kit> mapKit                = new HashMap<Integer,Kit>();
            List<Remito_detalle> lstEntrega            = new ArrayList<Remito_detalle>();
+           List<Activo> lstActivo = new ArrayList<Activo>();
            
            if(request.getParameter("id")==null)  throw new BaseException("Remito inexistente","Debe seleccionar el remito a devolver");
            Integer id = Parser.parseInt(request.getParameter("id"));
            remito = tr.getById(id);
            if (remito==null)
                throw new BaseException("ERROR","No se ha encontrado el remito");
-           if(remito.getId_estado()!= OptionsCfg.REMITO_ESTADO_ABIERTO)
+           if(!OptionsCfg.REMITO_ESTADO_ABIERTO.equals(remito.getId_estado()))
                 throw new BaseException("Remito no abierto","El remito no est&aacute; abierto. No se puede crear un remito de devoluci&oacute;n");
            
            boolean transitorio = tipoEntrega!=null && Integer.parseInt(tipoEntrega) ==1;
@@ -188,15 +190,18 @@ public class RemitoDevolucion extends HttpServlet {
                              if(det_dev.getId_activo()!=0) {
                                 Activo act_dev = ta.getById(det_dev.getId_activo());
                                 if(act_dev!=null){
-                                    if (act_dev.getId_rubro()==OptionsCfg.RUBRO_TRANSPORTE) continue;
+                                    if (OptionsCfg.RUBRO_TRANSPORTE.equals(act_dev.getId_rubro())) continue;
                                     /* En los remitos de devolución, no se duplica el transporte */ 
                                     
                                     if (act_dev.getAplica_stock() == 1) {
                                         act_dev.setStock(act_dev.getStock() + det_dev.getCantidad());
                                     }
-                                    if(act_dev.getId_estado()== OptionsCfg.ACTIVO_ESTADO_ALQUILADO)
+                                    /*                                    
+                                    if(OptionsCfg.ACTIVO_ESTADO_ALQUILADO.equals(act_dev.getId_estado()))
                                         act_dev.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
-                                    ta.actualizar(act_dev);
+                                     ta.actualizar(act_dev);
+                                    */
+                                    lstActivo.add(act_dev);
                                     mapActivo.put(act_dev.getId(),act_dev);
                                 }
                              } else {
@@ -205,15 +210,23 @@ public class RemitoDevolucion extends HttpServlet {
                                     kit_dev.setId_estado(OptionsCfg.KIT_ESTADO_DISPONIBLE);
                                     tk.actualizar(kit_dev);
                                     mapKit.put(kit_dev.getId(),kit_dev);
-                                 }
-                             }
+                                    List<Activo> activos = tkd.getActivos(kit_dev.getId());
+                                    
+                                    for (Activo act_dev:activos){
+                                       if(act_dev.getAplica_stock() == 1) {
+                                            act_dev.setStock(act_dev.getStock() + det_dev.getCantidad());                                            
+                                            lstActivo.add(act_dev);
+                                            mapActivo.put(act_dev.getId(),act_dev);                                            
+                                        }
+                                    }
+                                }                             
                              trd.alta(det_dev);      // Creo el detalle de la devolucion             
                              trd.actualizar(det); // Actualizo los items del remito de entrega
                        }
                 }
            }
-           
-           if(activo_transporte!=null && activo_transporte.getId_rubro()==OptionsCfg.RUBRO_TRANSPORTE){
+        }
+           if(activo_transporte!=null && OptionsCfg.RUBRO_TRANSPORTE.equals(activo_transporte.getId_rubro())){
                Remito_detalle det_transp = new Remito_detalle();
                det_transp.setId_activo(activo_transporte.getId());
                det_transp.setCantidad(transporte_cantidad);
@@ -224,8 +237,14 @@ public class RemitoDevolucion extends HttpServlet {
                det_transp.setId_referencia(dev.getId()); // Actualizo al referencia
                trd.alta(det_transp);
            }
-           
-           
+           for(Activo act_dev: lstActivo){
+                if(OptionsCfg.ACTIVO_ESTADO_ALQUILADO.equals(act_dev.getId_estado())) {
+                    act_dev.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                    TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_ACTIVO,OptionsCfg.ACCION_DEVOLUCION,act_dev.getId());
+                    ta.actualizar(act_dev);
+                }
+            }
+    
            if(transitorio) {
                 /* Creamos el nuevo remito de entrega como una copia del otro*/
                Remito ent = new Remito(remito);
@@ -250,7 +269,7 @@ public class RemitoDevolucion extends HttpServlet {
                    if(det_ent.getId_activo()!=0) {
                     Activo act_ent = mapActivo.get(det_ent.getId_activo());
                     
-                    if(act_ent!=null && act_ent.getId_rubro()==OptionsCfg.RUBRO_TRANSPORTE) continue;
+                    if(act_ent!=null && OptionsCfg.RUBRO_TRANSPORTE.equals(act_ent.getId_rubro())) continue;
                     
                     if(act_ent!=null){
                      if (act_ent.getAplica_stock() == 1) {
@@ -264,6 +283,20 @@ public class RemitoDevolucion extends HttpServlet {
                       if(kit_ent!=null){
                           kit_ent.setId_estado(OptionsCfg.KIT_ESTADO_ALQUILADO);
                           tk.actualizar(kit_ent);
+                          List<Activo> activos = tkd.getActivos(kit_ent.getId());
+                          for (Activo a:activos){
+                            if(a.getAplica_stock() == 1) {
+                                a.setStock(a.getStock() - det_ent.getCantidad());
+                                if (a.getAplica_stock() == 1 && a.getStock() <= 0){
+                                    a.setId_estado(OptionsCfg.ACTIVO_ESTADO_ALQUILADO);
+                                    TAuditoria.guardar(id_usuario,id_tipo_usuario,OptionsCfg.MODULO_ACTIVO,OptionsCfg.ACCION_ALQUILER,a.getId());
+                                    ta.actualizar(a);
+                                }
+                                mapActivo.put(a.getId(),a);
+                                 //lstActivo.add(act_dev);
+                             }
+
+                          }
                       }
                     }
                    }

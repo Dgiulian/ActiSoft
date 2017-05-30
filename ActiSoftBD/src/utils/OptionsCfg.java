@@ -117,6 +117,8 @@ public class OptionsCfg {
     public static Integer ACCION_ALTA      = 1;
     public static Integer ACCION_BAJA      = 2;
     public static Integer ACCION_MODIFICAR = 3;
+    public static Integer ACCION_ALQUILER  = 4;
+    public static Integer ACCION_DEVOLUCION  = 5;
     
     public static final Integer KIT_ESTADO_DISPONIBLE = 1;
     public static final Integer KIT_ESTADO_ALQUILADO  = 2;
@@ -268,6 +270,7 @@ public static ArrayList<Option> getTipoActividades(){
         mapa.put(ACCION_ALTA,     new Option(ACCION_ALTA,String.format("%3d",ACCION_ALTA),"Alta"));
         mapa.put(ACCION_BAJA,     new Option(ACCION_BAJA,String.format("%3d",ACCION_BAJA),"Baja"));
         mapa.put(ACCION_MODIFICAR,new Option(ACCION_MODIFICAR,String.format("%3d",ACCION_MODIFICAR),"Modificar"));
+        mapa.put(ACCION_ALQUILER,new Option(ACCION_ALQUILER,String.format("%3d",ACCION_ALQUILER),"Alquiler"));
         return mapa;
     }
     public static ArrayList<Option> getEstadoKit(){
