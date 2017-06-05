@@ -240,7 +240,13 @@ public class RemitoEdit extends HttpServlet {
                 }
                 // Controla si todos los activos del kit estan disponibles
                 if(!tkd.controlarActivos(kit)){
-                    throw new BaseException("ERROR","Alguno de los activos que componen el kit no est&aacue; disponible. No se puede generar el remito");
+                    List<Activo> activos = tkd.getActivos(kit.getId());
+                    String lstError = "";
+                    for (Activo a:activos) {
+                        if(!a.getId_estado().equals(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE))
+                            lstError+="<li>" + a.getCodigo() + "</li>";
+                    }
+                    throw new BaseException("ERROR","Alguno de los activos que componen el kit no est&aacue; disponible. No se puede generar el remito <ul>"+lstError+"</ul>");
                 }
                 detalle.setId_kit(kit.getId());
                 

@@ -94,13 +94,28 @@ public class TRemito extends TransaccionBase<Remito> {
             } else {
                 Kit kit = tk.getById(d.getId_kit());
                 if (kit==null) continue;
+                List<Activo> activos = new TKit_detalle().getActivos(kit.getId());
+                
                 if(remito.getId_tipo_remito().equals(OptionsCfg.REMITO_ENTREGA)) { // Si es un remito de entrega, se devuelven los activos
-//                    kit.setStock(kit.getStock() + d.getCantidad());
-                    kit.setId_estado(OptionsCfg.KIT_ESTADO_DISPONIBLE);
+                  kit.setId_estado(OptionsCfg.KIT_ESTADO_DISPONIBLE);                   
+                  for(Activo activo:activos){
+                    if(remito.getId_tipo_remito().equals(OptionsCfg.REMITO_ENTREGA)) { // Si es un remito de entrega, se devuelven los activos
+                      if(activo.getAplica_stock() == 1) {                
+                          activo.setStock(1f);
+                       }             
+                        activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_DISPONIBLE);
+                        } else if(remito.getId_tipo_remito().equals(OptionsCfg.REMITO_DEVOLUCION)) {
+                            if(activo.getAplica_stock() == 1) {
+                                activo.setStock(0f);
+                             }
+                            if(activo.getStock()<=0) 
+                                activo.setId_estado(OptionsCfg.ACTIVO_ESTADO_ALQUILADO);
+                        }
+                  ta.actualizar(activo);
+                  }
                 } else if(remito.getId_tipo_remito().equals(OptionsCfg.REMITO_DEVOLUCION)) {
-//                    kit.setStock(kit.getStock() - d.getCantidad());
-//                    if(kit.getStock()<=0) 
-                     kit.setId_estado(OptionsCfg.KIT_ESTADO_ALQUILADO);
+                    
+                    kit.setId_estado(OptionsCfg.KIT_ESTADO_ALQUILADO);
                 }
                 tk.actualizar(kit);
             }
