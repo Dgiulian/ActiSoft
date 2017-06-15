@@ -37,7 +37,7 @@
         <filter-name>AuthorizationEdit</filter-name>
         <url-pattern>/ActivoEdit</url-pattern>
         <url-pattern>/ClienteEdit</url-pattern>
-        <url-pattern>/RemitoEdit</url-pattern>
+        <url-pattern>/RemitoAlta</url-pattern>
         <url-pattern>/ContratoEdit</url-pattern>
         <url-pattern>/RubroEdit</url-pattern>
         <url-pattern>/SububroEdit</url-pattern>
@@ -70,7 +70,7 @@
         <url-pattern>/LocalidadList</url-pattern>
         <url-pattern>/Options</url-pattern>
         <url-pattern>/Remito</url-pattern>
-        <url-pattern>/RemitoEdit</url-pattern>
+        <url-pattern>/RemitoAlta</url-pattern>
         <url-pattern>/RemitoDel</url-pattern>
         <url-pattern>/RemitoList</url-pattern>
         <url-pattern>/ActivoSearch</url-pattern>
@@ -193,8 +193,8 @@
         <servlet-class>Remito.RemitoServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>RemitoEdit</servlet-name>
-        <servlet-class>Remito.RemitoEdit</servlet-class>
+        <servlet-name>RemitoAlta</servlet-name>
+        <servlet-class>Remito.RemitoAlta</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RemitoDel</servlet-name>
@@ -684,6 +684,10 @@
         <servlet-name>PreticketExport</servlet-name>
         <servlet-class>Preticket.PreticketExport</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RemitoEdit</servlet-name>
+        <servlet-class>Remito.RemitoEdit</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ActivoServlet</servlet-name>
         <url-pattern>/Activo</url-pattern>
@@ -737,8 +741,8 @@
         <url-pattern>/Remito</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>RemitoEdit</servlet-name>
-        <url-pattern>/RemitoEdit</url-pattern>
+        <servlet-name>RemitoAlta</servlet-name>
+        <url-pattern>/RemitoAlta</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RemitoDel</servlet-name>
@@ -1227,6 +1231,10 @@
     <servlet-mapping>
         <servlet-name>PreticketExport</servlet-name>
         <url-pattern>/PreticketExport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemitoEdit</servlet-name>
+        <url-pattern>/RemitoEdit</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

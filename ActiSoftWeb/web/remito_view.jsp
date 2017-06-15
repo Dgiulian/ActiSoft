@@ -80,12 +80,13 @@
                         <a class="btn btn-info" href="<%=PathCfg.PRETICKET_CREATE %>?id_remito=<%= remito.getId()%>"><i class="fa fa-dollar fa-fw"></i> Preticket</a>
                         <%}%>
                         </div>
-                        <input type="hidden" name="id_remito" id="id_remito" value="<%= remito.getId()%>">
+
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
             <div class="row">
                 <form action="<%= PathCfg.REMITO_EDIT%>" method="POST"  role="form">
+                    <input type="hidden" name="id_remito" id="id_remito" value="<%= remito.getId()%>">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                       <div class="panel-heading"> 
@@ -97,11 +98,11 @@
                       </div>
                       <div class="panel-body">
                           <div class="row">
-                              <fieldset disabled>
+                              <fieldset >
                                <div class="col-lg-3 " >
                                     <div class="form-group-sm">
                                        <label for="contrato">N&uacute;mero contrato</label>                                       
-                                       <input class="form-control" name="contrato" id="contrato" value="<%= contrato.getNumero() %>">                                        
+                                       <input class="form-control" name="contrato" id="contrato" value="<%= contrato.getNumero() %>" disabled>                                        
                                    </div>
                                </div>
                                    <div class="col-lg-2 " >
@@ -126,6 +127,7 @@
                                  </div> 
                                </fieldset>
                           </div>
+                    </form>               
                           <div class="row">
                               <div class="col-lg-12">
                                 <% String display= "";
@@ -143,8 +145,10 @@
                               
                               </div>
                           </div>
+                        
+                          
+                          <span class="pull-right btn btn-default fa fa-chevron-up" id="btnHideData"></span> 
                           <hr>
-                          <span class="pull-right btn btn-default fa fa-chevron-up" id="btnHideData"></span>
                       <div class="row" id="data">
                           
                         <div class="col-lg-6 " >
@@ -261,9 +265,13 @@
                             <div class="col-lg-12">
                                <div class="form-group">
                                    <label for="observaciones">Observaciones</label>
-                                   <textarea name="observaciones" id="observaciones" class="form-control" readonly=""><%=remito.getObservaciones()%></textarea>
+                                   <textarea name="observaciones" id="observaciones" class="form-control" ><%=remito.getObservaciones()%></textarea>
                                </div>
                            </div>
+                            <div class="col-lg-12">
+                                <button type="submit" class="btn btn-default" id="btnSubmit">Guardar</button>
+                                <a  class="btn btn-default" href="<%=PathCfg.REMITO%>">Cancelar</a>
+                            </div>    
                         </div>
                         </div>
                         <!-- /.panel-body -->
@@ -271,7 +279,7 @@
                     <!-- /.panel -->
                 </div>
                 <!-- /.col-lg-12 -->
-                </form>
+                
             </div>
             <!-- /.row -->
         </div>

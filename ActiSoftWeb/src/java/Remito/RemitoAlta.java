@@ -41,7 +41,7 @@ import utils.TFecha;
  *
  * @author Diego
  */
-public class RemitoEdit extends HttpServlet {
+public class RemitoAlta extends HttpServlet {
 
     
     /**
@@ -77,7 +77,7 @@ public class RemitoEdit extends HttpServlet {
             request.setAttribute("contrato", contrato);
         }
         
-        String view = "remito_edit.jsp";
+        String view = "remito_alta.jsp";
         if (remito!=null){
             String idRef = request.getParameter("ref");
             Integer id_ref = 0;

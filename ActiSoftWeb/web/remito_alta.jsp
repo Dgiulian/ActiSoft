@@ -64,7 +64,7 @@
             </div>
 
             <div class="row">
-                <form action="<%= PathCfg.REMITO_EDIT%>" method="POST"  role="form">
+                <form action="<%= PathCfg.REMITO_ALTA%>" method="POST"  role="form">
                     <input type="hidden" name="id" id="id" value="<%=remito.getId()%>">
                 <div class="col-lg-12">
                     <div class="panel panel-default">

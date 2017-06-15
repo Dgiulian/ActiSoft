@@ -59,6 +59,7 @@ public class PathCfg {
     
     public static final String REMITO ="Remito";
     public static final String REMITO_LIST  = REMITO + "List";
+    public static final String REMITO_ALTA  = REMITO + "Alta";
     public static final String REMITO_EDIT  = REMITO + "Edit";
     public static final String REMITO_VIEW  = REMITO + "View";
     public static final String REMITO_DEL   = REMITO + "Del";

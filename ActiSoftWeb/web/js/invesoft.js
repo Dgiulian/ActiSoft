@@ -45,6 +45,7 @@ var PathCfg = {
 
     REMITO          : "Remito",
     REMITO_LIST     : "RemitoList",
+    REMITO_ALTA     : "RemitoAlta",
     REMITO_EDIT     : "RemitoEdit",
     REMITO_VIEW     : "RemitoView",
     REMITO_DEL      : "RemitoDel",

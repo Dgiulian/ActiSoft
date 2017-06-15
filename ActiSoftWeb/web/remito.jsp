@@ -22,7 +22,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Remitos <a href="<%= PathCfg.REMITO_EDIT%>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a>
+                    <h1 class="page-header">Remitos <a href="<%= PathCfg.REMITO_ALTA%>" class="btn btn-primary"><span class="fa fa-file-o fa-fw"> </span>Nuevo</a>
                     <span class="btn btn-info" data-toggle="modal" data-target="#mdlRemitoExport"><span class="fa fa-file-excel-o fa-fw"></span> Exportar</a>
                     </h1>
                 </div>
