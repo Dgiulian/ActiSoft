@@ -111,14 +111,15 @@ public class RemitoList extends HttpServlet {
             if (id_site!=0)     mapFiltro.put("id_site",id_cliente.toString());
             if (id_pozo!=0)     mapFiltro.put("id_pozo",id_pozo.toString());
             if (id_equipo!=0)   mapFiltro.put("id_equipo",id_equipo.toString());
-            
+            tr.setOrderBy("fecha desc ");
             lista = tr.getListFiltro(mapFiltro);
             
             List<RemitoDet> listaDet = new ArrayList();
-            for(Remito activo:lista){
-                listaDet.add(new RemitoDet(activo));
-            }
+
             if (lista != null) {
+                for(Remito activo:lista){
+                    listaDet.add(new RemitoDet(activo));
+                }
                 jr.setTotalRecordCount(listaDet.size());
             } else {
                 jr.setTotalRecordCount(0);

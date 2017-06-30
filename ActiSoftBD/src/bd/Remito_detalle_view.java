@@ -115,4 +115,19 @@ public class Remito_detalle_view extends Remito_detalle{
     public void setExtension(Float extension) {
         this.extension = extension;
     }
+    public String getDescripcion(){
+     String descripcion = "";
+     if (!this.getDesc_opcional().equals("") ||
+        !this.getSubrubro_opcional().equals("") ||
+        !this.getRubro_opcional().equals("") ) {                                
+        if(!this.getDesc_opcional().equals(""))
+           descripcion = this.getDesc_opcional();
+        else if(!this.getSubrubro_opcional().equals(""))
+            descripcion = this.getSubrubro_opcional();
+        else if(!this.getRubro_opcional().equals("") )
+           descripcion = this.getRubro_opcional();
+        
+     } else {descripcion = this.getDesc_larga();}
+     return descripcion;
+    }
 }

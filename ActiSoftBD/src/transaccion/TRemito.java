@@ -44,6 +44,7 @@ public class TRemito extends TransaccionBase<Remito> {
     @Override
     public String getOrderBy(){
         if (this.orderBy.trim().equals("")) return "";
+        else if (this.orderBy.trim().startsWith("order by")) return this.orderBy;
         else return " order by " + this.orderBy;
     }    
     public boolean esTransitorio(Remito r){

@@ -170,7 +170,7 @@ public abstract class TransaccionBase<E> {
     }
      
      public TransaccionBase<E> setOrderBy(String orderBy){
-        if(!orderBy.startsWith("order by")) orderBy = " order by " + orderBy;
+        if(!orderBy.trim().startsWith("order by")) orderBy = " order by " + orderBy;
         this.orderBy = orderBy;
         return this;
         
