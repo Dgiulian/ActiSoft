@@ -51,6 +51,7 @@ public class Conexion {
             
 
            String propiedad = "zeroDateTimeBehavior=convertToNull";           
+           propiedad += "&useSSL=true";
             /* Para subir a produccion */
 //          String port = ":3306";
 //          String host = "127.0.0.1";
