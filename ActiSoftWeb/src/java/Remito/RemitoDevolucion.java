@@ -220,9 +220,11 @@ public class RemitoDevolucion extends HttpServlet {
                                         }
                                     }
                                 }                             
-                             trd.alta(det_dev);      // Creo el detalle de la devolucion             
-                             trd.actualizar(det); // Actualizo los items del remito de entrega
-                       }
+//                             trd.alta(det_dev);      // Creo el detalle de la devolucion             
+//                             trd.actualizar(det); // Actualizo los items del remito de entrega
+                        }    
+                    trd.alta(det_dev);      // Creo el detalle de la devolucion             
+                    trd.actualizar(det); // Actualizo los items del remito de entrega
                 }
            }
         }
