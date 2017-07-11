@@ -28,9 +28,7 @@
     nuevo = compra.getId()==0;
     List<Proveedor> lstProveedores = new TProveedor().getList();
     if ( lstProveedores==null) lstProveedores = new ArrayList<Proveedor>();
-    Parametro parametro = new TParametro().getByCodigo(OptionsCfg.COMPRA_URL);
-    String compra_url = "/compra/";
-    if (parametro!=null) compra_url = parametro.getValor() ;
+    String compra_url = PathCfg.DOWNLOAD;
             
 %>
 <!DOCTYPE html>
@@ -163,7 +161,7 @@
                                              display1 = "style='display: none'";     
                                     %>                                  
                                         <div class="form-group">                            
-                                            <a href='<%=compra_url + File.separator + compra.getCertificado_fabricacion()%>' target="_blank"><%=compra.getCertificado_fabricacion()%></a>
+                                            <a href='<%=compra_url + "?type=certificado_fabricacion&id="+ compra.getId()%>' target="_blank"><%=compra.getCertificado_fabricacion()%></a>
                                             </a>
                                              <span class="btn btn-default cambiarArchivo" data-target="selectFile1">Cambiar</span>
                                         </div>
@@ -182,7 +180,7 @@
                                              dspFactura_compra = "style='display: none'";     
                                     %>                                  
                                         <div class="form-group">                            
-                                            <a href='<%=compra_url + File.separator + compra.getFactura_compra()%>' target="_blank"><%=compra.getFactura_compra()%></a>
+                                            <a href='<%=compra_url + "?type=factura_compra&id="+ compra.getId()%>' target="_blank"><%=compra.getFactura_compra()%></a>
                                             </a>
                                              <span class="btn btn-default cambiarArchivo" data-target="selectFile2">Cambiar</span>
                                         </div>

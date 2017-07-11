@@ -5,6 +5,7 @@
 package utils;
 
 import bd.Certificado;
+import bd.Compra;
 import bd.Habilitacion;
 import bd.Parametro;
 import bd.Remito;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import transaccion.TCertificado;
+import transaccion.TCompra;
 import transaccion.THabilitacion;
 import transaccion.TParametro;
 import transaccion.TRemito;
@@ -112,6 +114,17 @@ public class DownloadServlet extends HttpServlet {
                 parametro = tp.getByCodigo(OptionsCfg.HABILITACION_PATH);
                 if(parametro==null) throw new BaseException("ERROR","Error de configuraci&oacute;n del sistema");   
                 filePath = parametro.getValor() + File.separator + habilitacion.getArchivo();
+            } else if(tipo.equalsIgnoreCase("factura_compra") || tipo.equalsIgnoreCase("certificado_fabricacion")  ){
+                Integer id_compra = Parser.parseInt(request.getParameter("id"));
+                Compra compra = new TCompra().getById(id_compra);
+                if (compra==null) throw new BaseException("ERROR","No se encontr&oacute; la compra");
+                parametro = tp.getByCodigo(OptionsCfg.COMPRA_PATH);
+                if(parametro==null) throw new BaseException("ERROR","Error de configuraci&oacute;n del sistema");   
+                if(tipo.equalsIgnoreCase("factura_compra")) {
+                    filePath = parametro.getValor() + File.separator + compra.getFactura_compra();
+                } else {
+                    filePath = parametro.getValor() + File.separator + compra.getCertificado_fabricacion();
+                }
             }
             else   throw new BaseException("Error","El tipo de documento a descargar no es v&aacute;lido");
             

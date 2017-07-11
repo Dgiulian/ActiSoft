@@ -53,8 +53,7 @@ public class OptionsCfg {
 
     public static final Integer ACTIVO_PATH = 3;
     public static final Integer ACTIVO_URL = 4;
-    public static final String  COMPRA_PATH = "compra_path";
-    public static final String  COMPRA_URL  = "compra_url";
+    public static final String  COMPRA_PATH = "compra_path";    
     public static final Integer PRETICKET_IMAGE = 5;
     public static final String  ETIQUETA_IMAGE  = "fondo_etiqueta";
     public static final String  REMITO_IMAGE    = "fondo_remito";
