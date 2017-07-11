@@ -60,9 +60,9 @@ public class ClienteList extends HttpServlet {
             
             List<Cliente> lista = new TCliente().getList();
             List<ClienteDet> listaDet = new ArrayList();            
-            for(Cliente c:lista) listaDet.add(new ClienteDet(c));
-            
+                        
             if (lista != null) {
+                for(Cliente c:lista) listaDet.add(new ClienteDet(c));
                 jr.setTotalRecordCount(listaDet.size());
             } else {
                 jr.setTotalRecordCount(0);
