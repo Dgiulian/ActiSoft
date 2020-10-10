@@ -14,16 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.poi.ss.usermodel.BorderStyle;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
@@ -195,10 +199,11 @@ public class TransportistaExcel extends BaseExcel<bd.Transportista>{
 
                 CellStyle cellStyle = this.workbook.createCellStyle();    
                 //XSSFCellStyle  cellStyle = (XSSFCellStyle) this.workbook.createCellStyle();    
-                cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-                cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+                cellStyle.setAlignment(HorizontalAlignment.CENTER);
+                
+                cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
                 cellStyle.setFillBackgroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-                cellStyle.setFillPattern(CellStyle.LEAST_DOTS);
+                cellStyle.setFillPattern(FillPatternType.LEAST_DOTS);
                 Font fuente = workbook.createFont();
                 fuente.setFontHeightInPoints((short) 10);
                 fuente.setBold(true);
@@ -215,14 +220,12 @@ public class TransportistaExcel extends BaseExcel<bd.Transportista>{
                     }
                 }
                 //this.sheet.autoSizeColumn(1,true);
-                short borderStyle = CellStyle.BORDER_THIN;
-                  for(CellRangeAddress region: lstRegiones){
+                for(CellRangeAddress region: lstRegiones){
                     sheet.addMergedRegion(region);
-                    RegionUtil.setBorderBottom(borderStyle, region, this.sheet, this.workbook);
-                    RegionUtil.setBorderTop(borderStyle,  region,this.sheet, this.workbook);
-                    RegionUtil.setBorderLeft(borderStyle,  region,this.sheet, this.workbook);
-                    RegionUtil.setBorderRight(borderStyle,  region,this.sheet, this.workbook);
-                  
+                    RegionUtil.setBorderBottom(BorderStyle.THIN, region, this.sheet);
+                    RegionUtil.setBorderTop(BorderStyle.THIN,  region,this.sheet);
+                    RegionUtil.setBorderLeft(BorderStyle.THIN,  region,this.sheet);
+                    RegionUtil.setBorderRight(BorderStyle.THIN,  region,this.sheet);
                 }
                 
         } catch (IOException ex) {

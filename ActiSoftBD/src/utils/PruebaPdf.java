@@ -57,7 +57,7 @@ import transaccion.TSubrubro;
  *
  * @author Diego
  */
-public class RemitoPdf extends BasePdf {
+public class PruebaPdf extends BasePdf {
      private Remito remito;
      private Cliente cliente;
      private Contrato contrato; 
@@ -66,7 +66,7 @@ public class RemitoPdf extends BasePdf {
      private Site site;
      private List<Remito_detalle_view> detalle;
      private HashMap<Integer,Activo> mapActivos;
-     public RemitoPdf(Remito remito){
+     public PruebaPdf(Remito remito){
          this.remito = remito;
          this.cliente = new TCliente().getById(remito.getId_cliente());
          this.contrato = new TContrato().getById(remito.getId_contrato());

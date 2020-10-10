@@ -12,9 +12,9 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Cell;
-//import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -59,7 +59,7 @@ public abstract class  BaseExcel<E> {
     }
     public CellStyle setStyleBoldCenter(){
         CellStyle estiloCelda = workbook.createCellStyle();
-        estiloCelda.setAlignment(CellStyle.ALIGN_CENTER);
+        estiloCelda.setAlignment(HorizontalAlignment.CENTER);
         Font fuente = workbook.createFont();
         fuente.setBold(true);
         estiloCelda.setFont(fuente);
